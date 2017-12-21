@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\adminapparticles;
+namespace app\modules\edbug;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'app\modules\adminapparticles\controllers';
+    public $controllerNamespace = 'app\modules\edbug\controllers';
     public $defaultRoute = 'index';
 
     public function init()

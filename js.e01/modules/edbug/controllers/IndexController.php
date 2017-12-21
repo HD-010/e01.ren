@@ -2,8 +2,10 @@
 namespace app\modules\edbug\controllers;
 
 use Yii;
+use yii\base\Controller;
 
-class IndexController 
+
+class IndexController extends Controller
 {
 
 
