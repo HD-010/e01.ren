@@ -1,0 +1,27 @@
+{
+    "name": "tsy/tsy-search",
+    "description": "The Search module for Taoshouyou",
+    "keywords": ["yii2",  "search"],
+    "type": "yii2-extension",
+    "authors": [
+        {
+            "name": "mufeng",
+            "email": "mufeng@taoshouyou.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ruflin/elastica": "5.3.0",
+        "yiisoft/yii2": ">=2.0.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "tsy\\search\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
