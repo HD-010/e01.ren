@@ -101,7 +101,7 @@ var common = {
 var logObj = {
 	// 调试环境baseUrl
 	baseUrl : document.location.origin,
-	serverUrl : "http://js.e01.com",
+	serverUrl : "http://js.e01.ren/?r=edbug",
 	//格式化的json代码
 	code:"",
 	//格式化代码展示背景色

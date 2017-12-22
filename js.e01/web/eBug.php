@@ -31,7 +31,7 @@ class EDebug
     // 配置读日志文件路径
     public $readPath = '';
     
-    public $baseUri = 'http://js.e01.com';
+    public $baseUri = 'http://js.e01.ren?r=edbug';
     // 显示日志的最后20条
     public $lines = 20;
     
@@ -98,7 +98,7 @@ class EDebug
     // 查看日志
     public function printLog()
     {
-        echo '<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>' . '<script src="' . $this->baseUri . '/?oper=layout"></script>' . '<script src="' . $this->baseUri . '/?oper=ebug"></script>';
+        echo '<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>' . '<script src="' . $this->baseUri . '&oper=layout"></script>' . '<script src="' . $this->baseUri . '&oper=ebug"></script>';
     }
     
     // 设置错误显示级别

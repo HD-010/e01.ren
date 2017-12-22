@@ -1,23 +1,25 @@
 <?php
 namespace app\modules\edbug\models;
 
+use \Yii;
+
 class Parse
 {
     //查看日志
     public function getLayout(){
-        $content = file_get_contents('./view/eBug.htm');
+        $content = file_get_contents(Yii::getAlias('@app/modules/edbug/views/layouts/eBug.htm'));
         $content = str_replace("\r", '', $content);
         $content = str_replace("\n", '', $content);
         echo "var bodyContents ='". $content."'";
     }
     
     public function getEbug(){
-        $contents = file_get_contents('./static/js/eBug.js');
+        $contents = file_get_contents(Yii::getAlias('@app/assets/static/js/eBug.js'));
         echo $contents;
     }
     
     public function getEBugStyle(){
-        $contents = file_get_contents('./static/js/eBugStyle.js');
+        $contents = file_get_contents(Yii::getAlias('@app/assets/static/js/eBugStyle.js'));
         echo $contents;
     
     }
@@ -26,7 +28,7 @@ class Parse
     public function getWget(){
         global $data;
         header("Access-Control-Allow-Origin:*");
-        $contents = file_get_contents('./view/wget/'.$data.'.htm');
+        $contents = file_get_contents(Yii::getAlias('@app/assets/static/wget/'.$data.'.htm'));
         echo $contents;
     }
     
