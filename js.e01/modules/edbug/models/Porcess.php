@@ -9,7 +9,7 @@ class Porcess
         $keys = array_keys($_REQUEST);
         extract($_REQUEST);
         for($i = 0; $i < count($keys); $i ++){
-            $keyName = $keys[$i];
+            $keyName = htmlspecialchars($keys[$i]);
             $GLOBALS[$keys[$i]] = $$keyName;
         }
     }
