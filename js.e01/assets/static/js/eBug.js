@@ -55,6 +55,14 @@ auto.process = setInterval(auto.run,1000);
 
 //公共对象
 var common = {
+	inArray : function(value,array){
+		for(var k in array){
+			if(array[k] === value){
+				return true;
+			}
+		}
+		return false;
+	},
 	//将字符串的首字母大写
 	ucFirst : function (str){
 		return str.substring(0,1).toUpperCase()+str.substring(1);

@@ -33,3 +33,6 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+
+# 忽略调试生成 的日志文件
+elog.html

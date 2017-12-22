@@ -17,9 +17,7 @@ $(document).ready(function() {
 
 var styles = {
 	//设置取消遮罩事件
-	cancleMask : function(obj){
-		$("div[name=maskParent]").remove();
-	},
+	
 }
 
 
@@ -28,6 +26,9 @@ var styles = {
 var wget = {
 	//小部件数据容器
 	data : "",
+	
+	//已经打开的小部件（注：该标识用于，如是某小部件已经打开则不能重复打开）
+	isOn : [],
 	
 	//小部件数据控制器，检测data是否为空，如果不为空则执行下的语句，如果为空则向服务端请求数据
 	dataControl : function(funcName){
@@ -52,21 +53,33 @@ var wget = {
 		this.setWget(str);
 	},
 	
-	//属性设置视图部件
+	/**
+	 * 属性设置视图部件
+	 */
 	setSys : function (){
-		var data = this.dataControl("sysAttr");	//如果 wget.data为空，则从getSysAttr()获取数据
+		//当前小部件名称
+		var name = "wgetSys";
+		//检查妆前小部件是否已经开启，如果已经开启则不需要重复开启
+		if(common.inArray(name,this.isOn)){return false;}
+		//如果 wget.data为空，则从getSysAttr()获取数据
+		var data = this.dataControl("sysAttr");	
 		if(!data){return;}
-		str = this.addFunc("setUpBack",data);	//添加内容到容器
-		str = this.addFunc("mask",str);			//添加内容到蒙版
-		str = this.addFunc("fullMask",str);		//添加内容到全屏蒙版
+		//添加内容到容器
+		str = this.addFunc("setUpBack",data);
+		//添加内容到蒙版
+		str = this.addFunc("mask",str);	
+		//添加内容到全屏蒙版
+		str = this.addFunc("fullMask",str);		
 		this.setWget(str);
+		//打开小部件后，将其名称加入isOn数组
+		this.isOn.push(name);
 	},
 	
 	/*-------------------------------------以下为视图部件区--------------------------------------*/
 	// 全屏遮罩
 	fullMask : function(content) {
 		content = content || "这里添加内容";
-		return "<div name=maskParent><div name=maskParentTag onclick=styles.cancleMask()></div>" + content + "</div>";
+		return "<div name=maskParent><div name=maskParentTag onclick=wget.cancleMask()></div>" + content + "</div>";
 	},
 	
 	//部份遮罩
@@ -97,9 +110,19 @@ var wget = {
 		$(obj).append(contents);
 	},
 	
-	//关闭提示信息
+	/**
+	 * 关蒙版信息
+	 */
 	closeBox : function (){
+		alert("该方法已经转移到wget.cancleMask（）");
 		$("div[name=maskParent]").remove();
+	},
+	
+	cancleMask : function(obj){
+		//移出蒙版内容
+		$("div[name=maskParent]").remove();
+		//清空isOn是的元素
+		this.isOn = [];
 	},
 	
 	closeBt : function (){
