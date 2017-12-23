@@ -39,8 +39,7 @@ class EDebug
     {
         // 初始化日志路径
         self::$logPath = self::$basePath . $this->writePath;
-        global $oper;
-        global $debug;
+        global $oper,$debug;
         $this->processData();
         $oper = $oper ? $oper : "print";
         if (! isset($debug)) {
@@ -114,16 +113,12 @@ class EDebug
     public static function writeLog($info)
     {
         $filename = self::$logPath;
-        // 确保文件可写,如果文件不存在则创建一个空文件
-        is_writable($filename) or file_put_contents($filename, '');
-        // 创建文件失败则退出
-        if (! is_writable($filename))
-            return;
-        if (! $handle = fopen($filename, 'a'))
-            return;
-        
-        fwrite($handle, $info);
-        fclose($handle);
+        // 打开文件失败则退出
+        $handle = @fopen($filename, 'a+');
+        if ($handle){
+            fwrite($handle, $info);
+            fclose($handle);
+        }
     }
     
     // 设置PHP的error_reporting错误级别变量对照表
