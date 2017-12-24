@@ -1,13 +1,15 @@
 <style type="text/css">
 /* 用户偏好设置样式 */
 .wgetTitle{
-    height: 36px;
+height: 32px;
     border: 0;
     border-top: 12px solid #FFFFFF;
     margin-top: 6px;
     padding-left: 12px;
-    background-color: aliceblue;
-    line-height: 36px;
+    background-color: gray;
+    line-height: 32px;
+    color: white;
+    font-size: 13px;
 }
 .showLines{
 	height:24px;
@@ -27,10 +29,10 @@
 	line-height:24px;
 }
 .autoFresh dd{
-	height:16px;
+	height:18px;
     border: 0;
-	padding-left:13px;
-	line-height:16px;
+	padding-left:12px;
+	line-height:18px;
 }
 </style>
 
@@ -40,10 +42,12 @@
 <dl class="autoFresh">
 	<dt>开启自动刷新 <input name="showOnChang" onchange=common.setCookieOption(this) type="checkbox"  /></dt>
 	<dd>自格式化最后条记录<input name="autoFormate" onchange=common.setCookieOption(this) disabled=disabled type="checkbox"  /></dd>
+	<dd>检测登录状态<input name="loginState" onchange=common.setCookieOption(this) disabled=disabled type="checkbox"  /></dd>
+	<dd>监测好友状态<input name="friendsState" onchange=common.setCookieOption(this) disabled=disabled type="checkbox"  /></dd>
 </dl>
 <script>
 //定义元素和当前元素的关系:格式[[元素1名称，元素2名称，...],当前元名称,动作名称1｜动作名称2｜动作名称3...]
-common.append.push([["autoFormate"],"showOnChang","disabled|enlabled"]);
+common.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
 
 $(document).ready(function(){
 	//设置type=text项初始值
