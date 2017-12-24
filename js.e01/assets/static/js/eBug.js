@@ -6,15 +6,17 @@ $(document).ready(function() {$("body").html(bodyContents);});
  * 启动项的值 以'true'或'false'两种状态存在于cookie中，值为'true'的项将跟随进程自动启动
  */
 var auto = {
+	state : 'off',
 	//设置启动项,将需要自启动的项名称加入setOption
 	setOption : [
 	    'showOnChang',
+	    'autoFormate'
 	],
 	//启动进程
 	process : '',	
 	//启动项（该值对应相应的函数）
 	option : [],
-	//检查启动项
+	//检查启动项,将需要启动的项目添加到option中
 	check : function(){
 		auto.option = [];
 		for(var o in auto.setOption){
@@ -28,10 +30,14 @@ var auto = {
 	run : function (){
 		auto.check();
 		//如果启动项为空，则关掉进程
-		if(auto.option.length === 0){
+		if(auto.option.length == 0){
 			//clearInterval(autoRun);
+			auto.state = "off";
 			clearInterval(auto.process);
+			return;
 		}
+		//修改启动状态为on
+		auto.state = "on";
 		//执行启动项动作
 		for(var a in auto.option){
 			eval("(auto."+auto.option[a]+"())");
@@ -39,11 +45,18 @@ var auto = {
 	},
 	
 	/*---------------以下是启动项对应的动作-----------------------*/
+	//自动刷新页面显示
 	showOnChang : function (){
 		console.log(1);
 		// 获取日志内容并将日志内容显示到布局中
 		logObj.tranceData('debug','read',logObj.tranceLog,logObj.baseUrl+"/?debug");
 	},
+	//自动格式化最后一条记录
+	autoFormate : function (){
+		$("[name=codeList]").children().remove();
+		var codes = $("span[name=ft]");
+		logObj.formateCode(codes.eq(0),'auto');
+	}
 	/*------------------------------------------------------*/
 }
 
@@ -55,6 +68,9 @@ auto.process = setInterval(auto.run,1000);
 
 //公共对象
 var common = {
+	//定义元素和当前元素的关系:格式[[元素1名称，元素2名称，...],当前元名称,动作名称(或动作类型)1｜动作名称(或动作类型)2｜动作名称(或动作类型)3...]
+	append:[],
+	
 	inArray : function(value,array){
 		for(var k in array){
 			if(array[k] === value){
@@ -84,19 +100,69 @@ var common = {
 		return null;
 	},
 	
-	//将表单属性写入cookie,时长7天
+	//将表单属性写入cookie,时长7天,affect boolen 最不影响其他输入对象
 	setCookieOption : function (obj){
+		//暂停自动调用进程
 		clearInterval(auto.process);
 		var name,val,type;
 		
+		//输入对象的名称 
 		name = $(obj).attr('name');
+		//输入对象的值
 		val = $(obj).val();
+		//输入对象的类型
 		type = $(obj).attr('type');
 		
+		//为输入对象的类型为checkbox的val赋值
 		if(type == 'checkbox'){
 			val =  $(obj).is(":checked");
+			console.log($("input[name=autoFormate]").is(":disabled"));
+			for(var e in common.append){
+				//如果当前元素在append中，则检查和它相关边的元素，并使用相关动作进行作用
+				if(name == common.append[e][1]){
+					for(var a in common.append[e][0]){
+						//元素名称对应的对象
+						var appendA = $("input[name="+common.append[e][0][a]+"]");
+						//当前元的值
+						if(val){
+							appendA.removeAttr("disabled");
+						}else{
+							appendA.attr("disabled",true);
+						}
+					}
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/*if(length = common.disabledOrEnabled.length){
+				for(var i = 0; i < length; i++){
+					var obj = $("input[name="+common.disabledOrEnabled[i]+"]");
+					var isDisabled = obj.is(":disabled");
+					console.log(isDisabled);
+					if(isDisabled && val){
+						//obj.disabled = "false";
+						obj.removeAttr("disabled");
+					}else{
+						obj.attr("disabled",true);
+					}
+					
+				}
+			}*/
 		}
+		
+		
+		//将输入对象的名称和值写入cookie
 		common.setCookie(name,val,7);
+		
+		//开启自动调用进程
 		auto.process = setInterval(auto.run,1000);
 	},
 }
@@ -122,7 +188,8 @@ var logObj = {
 	sialize : "",
 	// 日志读取标识
 	readTag : 'log',
-	
+	//调用来源控制
+	souce : ["auto"],
 	// 按块显示日志
 	viewLog:function(data, status) {
 		if (status == 'success') {
@@ -160,10 +227,10 @@ var logObj = {
 			});
 			$(o).text("取消格式化");
 			$("div[sialize=" + sialize + "]").css("background-color", this.color);
+			this.baseColor.push(this.color);
 		} else {
 			this.color = $(o).css("background-color");
 			$(o).text("格式化代码");
-			this.baseColor.push(this.color);
 			$(o).css("background-color", "#9F9F9F");
 		}
 	},
@@ -171,7 +238,7 @@ var logObj = {
 	setViewSize:function() {
 		var views = $("div[name=codeList]").children().length;
 		views = views > 4 ? 4 : views;
-		var width = 95 / views + "%";
+		var width = 80 / views + "%";
 		$("div[name=list]").width(width);
 		var height = screen.availHeight - 180 + "px";
 		$("div[name=list]").height(height);
@@ -225,8 +292,14 @@ var logObj = {
 		this.tranceData(code,'codeFormate',logObj.viewCode);
 	},
 	
-	//格式化代码
-	formateCode:function(o){
+	//格式化o对象中的代码,souce为调用来源，当souce="auto"为auto对象调用
+	formateCode:function(o,souce){
+		//当开启自动刷新，则禁止手动格式化代码
+		if(auto.state == "on" && !common.inArray(souce, this.souce)){
+			alert("自动刷新状态，禁止手动格式化代码");
+			return;
+		}
+		//手动格式化代码
 		this.logData = o;
 		this.logData.sialize = $(this.logData).attr("sialize");
 		//sialize不知存在则添加格式代码，存在则删除

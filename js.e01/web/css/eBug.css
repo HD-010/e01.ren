@@ -17,7 +17,7 @@ font[name=tag]{height:16px;border-radius:8px;line-height:16px;color:red;border:1
 span[name="code"]{;border:1px solid #DFDFDF;padding:4px;display:block;word-wrap:break-word; word-break:break-all; }
 font[source="array"]{padding:1px 4px 1px 4px;margin:2px;border-radius:4px;display:inline-block;border:0;background-color:#D2691E;color:#FFFFFF;word-wrap:break-word; word-break:break-all; }
 font[source="object"]{padding:1px 4px 1px 4px;margin:2px;border-radius:4px;display:inline-block;border:0;background-color:;color:#FFFFFF;word-wrap:break-word; word-break:break-all; }
-div[name="list"]{overflow:scroll;display:block;padding:6px;border:1px solid #F0F8FF;background-color:white;float:right;margin-top:1%;color:#FFFFFF;}
+div[name="list"]{overflow:scroll;float:right;display:block;padding:6px;border:1px solid #F0F8FF;margin-top:1%;color:#FFFFFF;}
 div[name="codeList"]{max-width:75%;display:block;border:0;background:rgba(255,255,255,0);position:fixed;height:100%;right:0;top:56px;overflow-y:scroll;}
 font{display: inline-block;border: 0;}
 
@@ -44,8 +44,8 @@ div[name="mask"]{
 	border: 1px solid black;
     min-width: 250px;
     height: 100%;
-	padding-left:50px;
-	padding-right:50px;
+	padding-left:10px;
+	padding-right:10px;
     background-color: black;
     float: right;
     position: fixed;
@@ -81,10 +81,10 @@ div[name="noticeBack"]{
 	background-color:#FFFFFF;
 }
 
-/* 用户偏好设置样式 */
+/*用户属性设置背景*/
 div[name="setUpBack"]{
 	width:500px;
-	padding:24px 6px 24px 6px;
+	padding:0;
 	border:0;
 	opacity:1;
 	position: relative;
