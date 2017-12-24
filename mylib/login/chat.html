@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta name="author" content="弘德誉曦">
+  <title>创享聊天室</title>
+
+  <!--[if lt IE 9]>
+  <![endif]-->
+  <script src="./static/js/ajax.js"></script>
+  <script src="./static/js/jquery.min.js"></script>
+  <script src="./static/js/jquery.form.js"></script>
+  <script src="./static/js/md51.0.1.js"></script>
+  <script src="./static/js/tools.js"></script>
+ 
+  <link type="text/css"  rel="stylesheet" href='./static/style/index.css' />
+</head>
+ <body>
+<!--  聊天窗口 -->
+
+ <div class="chat_box">
+ 	<div class="chat_box_head chat_box_margin">
+ 	</div>
+ 	
+ 	<!-- 信息展示窗口 -->
+ 	<div id="chat_box_view" class="chat_box_view chat_box_margin"></div>
+ 	
+ 	
+ 	<div class="chat_box_input chat_box_margin">
+ 		
+ 		<!-- 聊天表情输入功能 区  -->
+ 		<div class='chat_box_tools chat_box_margin'>
+ 			<label for='chatimage'><img src='#' alt='图片'/></label>
+ 			<label for='chatvideo'><img src='#' alt='视频'/></label>
+ 		</div>
+ 		<form id='inputdata' class='chat_box_margin' method='post' enctype='multipart/form-data	
+ 		'>
+ 			<!-- 聊天内容输入框  -->
+ 			<textarea id='chatcontent' name='chatcontent'></textarea>
+ 			<input id='chatimage' type='file' name='image' value='' />
+ 			<input id='chatvideo' type='file' name='video' value='' />
+ 			
+ 		</form>
+ 	</div>
+ 	<div class="chat_box_foot chat_box_margin">
+ 			<input type='hidden' name='ac' value='test' />
+ 			<!-- 聊天内容控制区  -->
+ 			<input type="button" onclick="send_infotoservice()" value="发送" /><!-- 发送按钮  -->
+ 			<font>[广告]<a href="">坚持玩三天冲到全服第一</a></font>
+ 	</div>
+ </div>
+ 
+ 
+ 
+ 
+<script defer="defer" src="./static/js/login.js" ></script>
+ <script defer="defer">
+ /*******************************************/
+ /*****************判断用户是否登录**************/
+ /*******************************************/
+ login.isLogin();
+ 
+ //创建聊天内容 展示模型
+ console.log(localStorage)
+ var contentsModel = new Object();
+ contentsModel.gettime = 2000;		//获取消息的时间间隔（毫秒）
+ contentsModel.api = 'http://localhost/mylib/chatroom/api.php';
+ contentsModel.serverInfo;
+ contentsModel.chat_box = document.getElementById("chat_box_view");
+ contentsModel.fromUin = localStorage.fromUin;		//聊天场景中，我的id号
+ contentsModel.toUin = localStorage.toUin;		//聊天场景中，你(们)的id号
+ contentsModel.log = "";			//聊天记录
+ contentsModel.chatContent;			//编辑框消息内容
+ contentsModel.failsInfo = {} 		//信息发送失败
+
+ //展示我发送的信息内容
+ contentsModel.me = function(o){
+	 var str = "";
+	 str += '<dl class="infor_me chat_box_view_layout">';
+	 	str += '<dt>昵称：'+ o.fromid +' '+ o.sendtime +'</dt>';
+ 		str += '<dd>'+ o.content +'</dd>';
+	 str += '</dl>';
+	 contentsModel.log += str;
+ }
+ //展示我收到的信息内容
+ contentsModel.you = function(o){
+	 var str = "";
+	 str += '<dl class="infor_you chat_box_view_layout">';
+	 	str += '<dt>昵称：'+ o.fromid +' '+ o.sendtime +'</dt>';
+		str += '<dd>'+ o.content +'</dd>';
+	 str += '</dl>';
+	 contentsModel.log += str;
+ }
+ 
+//将信息内容追加到聊天窗口
+contentsModel.addinfo = function(res){
+	if(! res.state) return;
+	var res = res.data;
+	for(var i = 0;i < res.length; i ++){
+		if(res[i].fromid == contentsModel.fromUin) contentsModel.me(res[i]);
+		if(res[i].fromid == contentsModel.toUin) contentsModel.you(res[i]);
+	}
+	var o = document.getElementById("chat_box_view");		//聊天窗口对象
+	o.innerHTML = contentsModel.log;
+	flushdata();
+}
+ 
+ //从服务器获取新的聊天信息内容的结构如下：
+ function get_infofromservice(){
+	var data = 'ct=chat&ac=chatlog';	//设定post数据
+	ajax('post',contentsModel.api,'json',contentsModel.addinfo,data); 
+ }
+ 
+ //清空编辑框编辑内容
+ function clear_contenttext(){
+	 document.getElementById('chatcontent').value='';
+ }
+ 
+ //发送消息到服务器
+ function send_infotoservice(){
+	 if(!contentsModel.chatContent){
+		 var data = $('#inputdata').serialize();
+		 
+		 //检测输入内容是否为空
+		 var arrVal = data.split('&');
+		 for(var i in arrVal){
+			 var tmp = arrVal[i].split('=');
+			 arrVal[i]=tmp[1];
+		 }
+		 
+		 if(!isValid(arrVal,checkValue)) {
+			 contentsModel.chatContent = '';	//清除容器中的消息
+			 return;
+		 }
+		 
+		 data += '&ct=chat&ac=sendinfo&fromid='+contentsModel.fromUin+'&toid='+contentsModel.toUin; 
+		 //记录发送的消息，若失败则重新发送该消息
+		 contentsModel.chatContent = data;
+	 }
+	 clear_contenttext()
+	 ajax('post',contentsModel.api,'json',sendsate,contentsModel.chatContent); 
+ }
+
+ //键盘事件控制
+ document.onkeydown = function(event){
+	 var e = event || window.event || arguments.callee.caller.arguments[0];
+	 //禁止f5刷新页面
+	 if(e.keyCode==116){
+	 	e.keyCode = 0;
+	 	return false;
+	 } 
+ 	 //回车发送消息
+	 if(e.ctrlKey && e.keyCode==13){
+		 send_infotoservice();
+	 }
+ }
+ 
+//滚动聊天信息到最底部
+function flushdata(){
+	contentsModel.chat_box.scrollTop = contentsModel.chat_box.scrollHeight;
+}
+
+//监视消息发送的状态并执行相应的操作
+function sendsate(res){
+	if(res){
+		contentsModel.chatContent = '';//消息发送成功，则清空被发送的内容
+	}else{
+		send_infotoservice();		//如果发送失败则重新发送
+	}
+}
+ 
+ //从服务器读取数据，每隔2秒读取一次
+ var requiredata = window.setInterval("get_infofromservice()",contentsModel.gettime);
+ 
+ 
+ //遍历对象(对象中有一个为真，则为真。全假则为假)
+ function isValid(obj,func){
+	 for(var i in obj){
+		if(func(obj[i])) return 1;
+	 }
+	 return 0;
+ }
+ 
+ 
+ //检查值的有效性，返回 0|1
+ function checkValue(v){
+	 return (v || v === 0) ? 1 : 0;
+ }
+ 
+//提取多维数组的所有值作为一个新数组的值
+ function toSimpleArr(arr){
+	 for(var i in arr){
+		 if(typeof arr[i] == 'object'){
+			toSimpleArr(arr[i]);
+		 }else{
+			tmpArr.push(arr[i]);
+		 }
+	 }
+ }
+ 
+ </script>
+  
+ </body>
+</html>

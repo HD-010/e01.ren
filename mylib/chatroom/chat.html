@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta name="author" content="弘德誉曦">
+  <title>创享聊天室</title>
+
+  <!--[if lt IE 9]>
+  <![endif]-->
+  <script src="./static/js/ajax.js"></script>
+  <script src="./static/js/jquery.min.js"></script>
+  <script src="./static/js/jquery.form.js"></script>
+  <script src="./static/js/md51.0.1.js"></script>
+  <script src="./static/js/tools.js"></script>
+  <script src="./static/js/easyform.js"></script>
+ 
+  <link type="text/css"  rel="stylesheet" href='./static/style/chat.css' />
+</head>
+ <body>
+<!--  聊天窗口 -->
+
+ <div class="chat_box">
+ 	<div class="chat_box_head chat_box_margin">
+ 	</div>
+ 	
+ 	<!-- 信息展示窗口 -->
+ 	<div id="chat_box_view" class="chat_box_view chat_box_margin"></div>
+ 	
+ 	
+ 	<div class="chat_box_input chat_box_margin">
+ 		
+ 		<!-- 聊天表情输入功能 区  -->
+ 		<div class='chat_box_tools chat_box_margin'>
+ 			<label for='chatimage'><img src='#' alt='图片'/></label>
+ 			<label for='chatvideo'><img src='#' alt='视频'/></label>
+ 		</div>
+ 		<form id='inputdata' class='chat_box_margin' method='post' enctype='multipart/form-data	
+ 		'>
+ 			<!-- 聊天内容输入框  -->
+ 			<textarea id='chatcontent' name='chatcontent'></textarea>
+ 			<input id='chatimage' type='file' name='image' value='' />
+ 			<input id='chatvideo' type='file' name='video' value='' />
+ 			
+ 		</form>
+ 	</div>
+ 	<div class="chat_box_foot chat_box_margin">
+ 			<input type='hidden' name='ac' value='test' />
+ 			<!-- 聊天内容控制区  -->
+ 			<input type="button" onclick="send_infotoservice()" value="发送" /><!-- 发送按钮  -->
+ 			<font>[广告]<a href="">坚持玩三天冲到全服第一</a></font>
+ 	</div>
+ </div>
+ 
+ 
+ 
+ 
+<script  src="./static/js/login.js" ></script>
+ <script defer="defer">
+ /*******************************************/
+ /*****************判断用户是否登录**************/
+ /*******************************************/
+ login.isLogin();
+ 
+ //创建聊天内容 展示模型
+ var contentsModel = new Object();
+ contentsModel.gettime = 5000;		//获取消息的时间间隔（毫秒）
+ contentsModel.api = 'http://192.168.1.100/mylib/chatroom/api.php';
+ contentsModel.serverInfo;
+ contentsModel.chat_box = document.getElementById("chat_box_view");
+ contentsModel.nickName = sessionStorage.nickName;
+ contentsModel.fromUin = sessionStorage.fromUin;		
+ contentsModel.toUin = localStorage.toUin;		
+ contentsModel.log = "";			//聊天记录
+ contentsModel.chatContent;			//编辑框消息内容
+ contentsModel.failsInfo = {} 		//信息发送失败
+ //发送信息内容格式
+ contentsModel.formatNews = {state:1,data:[{content:'melody',fromid:contentsModel.fromUin,id:'',nickname:contentsModel.nickName,readed:0,sendtime:'',toid:contentsModel.toUin}]};
+ 
+ var requiredata = window.setInterval("get_infofromservice()",contentsModel.gettime);		
+ 
+ //展示我发送的信息内容
+ contentsModel.me = function(o){
+	 if(rule.isUrl(o.content)){o.content = '<a href="'+o.content+'">'+o.content+'</a>'}
+	 
+	 var str = "";
+	 str += '<dl class="infor_me chat_box_view_layout"><dt>';
+	 	str += o.nickname +' '+ o.sendtime;
+ 		str += '</dt><dd>';
+ 		str += o.content;
+	 str += '</dd></dl>';
+	 contentsModel.log += str;
+ }
+ //展示我收到的信息内容
+ contentsModel.you = function(o){
+	 var str = "";
+	 str += '<dl class="infor_you chat_box_view_layout">';
+	 	str += '<dt>'+ o.nickname +' '+ o.sendtime +'</dt>';
+		str += '<dd>'+ o.content +'</dd>';
+	 str += '</dl>';
+	 contentsModel.log += str;
+ }
+ 
+//将收到的信息内容追加到聊天窗口
+contentsModel.addinfo = function(res){
+	console.log(res)
+	if(! res.state) return;
+	var res = res.data;
+	res = res.reverse();
+	for(var i = 0;i < res.length; i ++){
+		if(res[i].fromid == contentsModel.fromUin) contentsModel.me(res[i]);
+		if(res[i].fromid == contentsModel.toUin) contentsModel.you(res[i]);
+	}
+	var o = document.getElementById("chat_box_view");		//聊天窗口对象
+	o.innerHTML = contentsModel.log;
+	flushdata();
+}
+
+//组织消息体
+ function currentNews(arrVal){
+	 var tmpArr = new Array();
+	 for(var i in arrVal){
+		 tmpArr[i] = arrVal[i].split('=');
+	 }
+	 for(var i in tmpArr){
+		 var k = tmpArr[i][0];
+		 var v = tmpArr[i][1];
+		 //添加发送内容 
+		 eval(k+'("'+v+'")');
+	 }
+ }
+ function chatcontent(v){							//添加发送的文本消息内容
+	 var d = new Date();
+ 	 var content = decodeURI(v);
+	 contentsModel.formatNews.data[0].content = content;
+	 contentsModel.formatNews.data[0].sendtime = (d.getMonth()+1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+ }
+ function image(v){									//添加发送的图片消息内容
+	 //数据处理.....
+	 //contentsModel.formatNews.data[0].content = v;
+ }
+ function video(v){									//添加发送的视频消息内容
+	 //数据处理.....
+	 //contentsModel.formatNews.data[0].content = v;
+ }
+ 
+ 
+ 
+ 
+ //从服务器获取新的聊天信息内容的结构如下：
+ function get_infofromservice(){
+	var data = 'ct=chat&ac=chatlog&fromuin='+contentsModel.fromUin+'&touin='+contentsModel.toUin;	//设定post数据
+	ajax('post',contentsModel.api,'json',contentsModel.addinfo,data); 
+ }
+ 
+ //清空编辑框编辑内容
+ function clear_contenttext(){
+	 document.getElementById('chatcontent').value='';
+ }
+ 
+ //发送消息到服务器
+ function send_infotoservice(){
+	 if(!contentsModel.chatContent){
+		 var data = $('#inputdata').serialize();		//表单内容
+		 
+		 //检测输入内容是否为空
+		 //将表单数据转换成数组
+		 var arrVal = data.split('&');
+		 
+		 
+		 
+		 //验证表单有效性，无效则返回 
+		 for(var i in arrVal){
+			 var tmp = arrVal[i].split('=');
+			 arrVal[i]=tmp[1];
+		 }
+		 if(isValid(arrVal,checkValue) === false) {
+			 contentsModel.chatContent = '';	//清空历史消息容器
+			 return;
+		 }
+		
+		 //将发送的数据写到消息框 
+		 currentNews(data.split('&'));		//组织消息体
+		 contentsModel.addinfo(contentsModel.formatNews)
+		 
+		 data += '&ct=chat&ac=sendinfo&fromid='+contentsModel.fromUin+'&toid='+contentsModel.toUin; 
+		 //记录发送的消息到历史消息容器，若失败则重新发送该消息
+		 contentsModel.chatContent = data;
+		 
+	 }
+	 
+	 //停止定时器以防干扰
+	 window.clearInterval(requiredata);
+	 
+	 clear_contenttext();			//清空输入框内容 
+	 
+	 ajax('post',contentsModel.api,'json',sendsate,contentsModel.chatContent);
+	 
+ }
+
+ //键盘事件控制
+ document.onkeydown = function(event){
+	 var e = event || window.event || arguments.callee.caller.arguments[0];
+	 //禁止f5刷新页面
+	 if(e.keyCode==116){
+	 	e.keyCode = 0;
+	 	return false;
+	 } 
+ 	 //回车发送消息
+	 if(e.ctrlKey && e.keyCode==13){
+		 send_infotoservice();
+	 }
+ }
+ 
+//滚动聊天信息到最底部
+function flushdata(){
+	contentsModel.chat_box.scrollTop = contentsModel.chat_box.scrollHeight;
+}
+
+//监视消息发送的状态并执行相应的操作
+function sendsate(res){
+	if(res){
+		contentsModel.chatContent = '';//消息发送成功，则清空被发送的内容
+		//从服务器读取数据，每隔10秒读取一次
+		requiredata = window.setInterval("get_infofromservice()",contentsModel.gettime);
+	}else{
+		send_infotoservice();		//如果发送失败则重新发送
+	}
+}
+
+
+/*******************************************/
+/******************设置页面样式****************/
+/*******************************************/ 
+ 
+ var clientHeight = window.screen.availHeight;			//640
+ var scrollTop = document.body.scrollTop;
+ var headheight = $('.chat_box_head').height();		//80
+ var inputheight = $('.chat_box_input').height();	//108
+ var footheight = $('.chat_box_foot').height();		//40
+ $('.chat_box_view').height(clientHeight-headheight-inputheight-footheight-scrollTop-120);		//360
+ 
+ </script>
+  
+ </body>
+</html>

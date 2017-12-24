@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta name="author" content="弘德誉曦">
+  <title>创享聊天室</title>
+
+  <!--[if lt IE 9]>
+  <![endif]-->
+  <script src="./static/js/ajax.js"></script>
+  <script src="./static/js/jquery.min.js"></script>
+  <script src="./static/js/jquery.form.js"></script>
+  <script src="./static/js/md51.0.1.js"></script>
+  <script src="./static/js/tools.js"></script>
+ 
+  <link type="text/css"  rel="stylesheet" href='./static/style/friendslist.css' />
+</head>
+ <body>
+ 
+ <!--  好友列表页 -->
+ <div class="friendslist_box">
+ 	<!-- 好友列表头部-->
+ 	<div class="friendslist_box_head friendslist_box_margin">
+ 	好友列表头部
+ 	</div>
+ 	
+ 	
+ 	
+ 	<!-- 好友列表页列表 -->
+ 	<div id="friendslist_box_view" class="friendslist_box_view friendslist_box_margin">
+ 		<ul>
+ 			
+ 		</ul>
+ 	</div>
+ 	
+ 	
+ 	
+ </div>
+<!-- 列表页底部导航  -->
+<div class="friendslist_box_foot"><ul></ul></div>
+ <script defer="defer" src="./static/js/login.js" ></script>
+ <script defer="defer">
+ /*******************************************/
+ /*****************判断用户是否登录**************/
+ /*******************************************/
+ login.isLogin();
+ 
+ 
+ /*******************************************/
+ /******************聊天对象*******************/
+ /*******************************************/
+ //注释：在chatObj中uin的角色转变
+ //从使用场景来说：在好友列表中点击某一个好友，跳转到聊天窗口。便可以主动向好友发出信息。
+ //以发出的信息为参照，该信息由我(fromUin)发出,到好友(toUin)那儿被收到。以此确定uin的角色
+
+ var chatObj = new Object();
+ chatObj.fromUin = sessionStorage.fromUin;			//当用户登录成功时，存储sessionStorage.fromUin
+ chatObj.toUin = localStorage.toUin;
+ chatObj.uins = function (){}			//好友列表
+ chatObj.api = './chat.html';
+ chatObj.setUin = function (){			
+ }
+ 
+ 
+ 
+ 
+ /*******************************************/
+ /**************好友列表页列表对象***************/
+ /*******************************************/
+ var friendsListObj = $('.friendslist_box_view ul').eq(0);
+ friendsListObj.api = 'http://localhost/mylib/chatroom/api.php';			//获取好友列表的api
+ friendsListObj.data;
+ friendsListObj.newsindex = $('.friendslist_box_view ul .newsindex');		//消息缩影
+ 
+ 
+ /*******************************************/
+ /**************列表页底部导航对象***************/
+ /*******************************************/
+ var footerObj = $('.friendslist_box_foot ul').eq(0);
+ 
+ footerObj.data = [{name:'好友',tagpic:'./static/images/sys/1.gif',url:'http://www.baidu.com'},
+ 					{name:'记录',tagpic:'./static/images/sys/3.gif',url:'http://www.baidu.com'},
+                   {name:'我的',tagpic:'./static/images/sys/2.gif',url:'http://www.baidu.com'}];
+
+footerObj.html(set_footer());
+footerObj.option = footerObj.children();
+
+footerObj.option.width(set_footerOptionWidth() + "%");
+
+
+
+
+/*******************************************/
+/****************style函数区*****************/
+/*******************************************/
+//设置好友列表内容
+function set_friendsList(){
+	var str = '';
+	for(var i=0 ;i < friendsListObj.data.length ; i ++){
+		str += '<li onclick="chat(' + friendsListObj.data[i].friendsid + ')"><span class="face"><img src="' + friendsListObj.data[i].face + '" /><font class="remind">' + friendsListObj.data[i].remind + '</font></span><span class="newsindex"><font class="nickname">' + friendsListObj.data[i].nickname + '</font><font class="news">' + friendsListObj.data[i].news  + '</font></span><span class="newstime">' + friendsListObj.data[i].newstime  + '</span></li><div class="space"></div>';
+	}
+	return str;
+}
+//设置 消息缩影的宽度
+function set_newsIndexWidth(){
+	var width = friendsListObj.width() - $('.friendslist_box_view .face').eq(0).width() - $('.friendslist_box_view .newstime').eq(0).width() - 20;
+	return width;
+}
+
+//设置底部导航栏内容
+function set_footer(){
+	var str = '';
+	for(var i=0 ;i < footerObj.data.length ; i ++){
+		str += '<li><span><img src="' + footerObj.data[i].tagpic + '" /></span><a href="' + footerObj.data[i].url + '" >' + footerObj.data[i].name + '</a></li>';
+	}
+	return str;
+}
+
+//设置底部导航选项宽度
+function set_footerOptionWidth(){
+	return (1/footerObj.data.length)*100;
+}
+
+//发起聊天请求
+function chat(toUin){
+	localStorage.toUin = toUin;
+	location.href = chatObj.api;
+}
+
+//从服务器获取好友列表
+function get_friendsList(){
+	//假设chatObj.fromUin
+	chatObj.fromUin = 10003;
+	 var data = "ct=uins&ac=uins&fromuin="+chatObj.fromUin;
+	 ajax('post',friendsListObj.api,'json',set_listDate,data); 
+}
+
+//赋值给好友列表对象
+function set_listDate(res){
+	console.log(res)
+	friendsListObj.data = res;
+	//设置消息缩影的内容 
+	friendsListObj.html(set_friendsList());
+	//设置消息缩影的样式
+	//friendsListObj.newsindex.width(set_newsIndexWidth());
+}
+
+
+/*******************************************/
+/***************页面加载时加载对象***************/
+/*******************************************/
+function onload(){
+	 get_friendsList();
+}
+onload()
+ </script>
+ 
+ 
+
+  
+ </body>
+</html>

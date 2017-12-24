@@ -1,0 +1,127 @@
+@CHARSET "UTF-8";
+<style>
+*{
+padding:0;
+margin:0;
+}
+body { 
+	font: normal 100% Helvetica, Arial, sans-serif;
+	background-color:#F7F7F7;
+	border:0;
+	margin:0;
+}
+.friendslist_box{
+max-width:750px;
+border:0;
+}
+a{text-decoration:none;}
+ul{
+list-style-type: none;
+-webkit-margin-before:0;
+-webkit-margin-after:0;
+-webkit-padding-start: 0;
+}
+
+
+
+.top {
+    height: 36px;
+    border: 0;
+	background-color:#FFFFFF;
+	
+}
+.top span {
+	height: 36px;
+    display: block;
+	vertical-align:middle;
+	line-height:36px;
+}
+.top .back {
+    width: 14px;
+	border:0;
+	position:absolute;
+	margin-left:2%;
+}
+.top .back img {
+    width: 100%;
+	vertical-align: middle;
+}
+.top .titl{
+	border:0;
+	text-align:center;
+}
+.loginlog{
+	width:100%;
+	height:70px;
+	border:0;
+	
+	line-height:70px;
+	text-align:center;
+	font-size:24px;
+	color:#FF6600;
+	font-weight:700;
+}
+.loginform{
+	border:0;
+}
+.loginform ul{
+	background-color:#FFFFFF;
+}
+.loginform li{
+	height:42px;
+	line-height:42px;
+	border:0;
+	border-bottom:1px solid #E0E0E0;
+}
+.loginform span{
+	display:inline-block;
+	border:0;
+}
+.loginform .name{
+	width:23%;
+	padding-left:2%;
+	color:#707070;
+}
+.loginform .value ,.loginform .value input{
+	border:0;
+	outline:none;
+}
+.loginform .value{
+	width:70%;
+}
+.loginform .value input{
+	width:100%;
+}
+.loginform div{
+	background-color:#F7F7F7;
+}
+.loginform .btsubmit{
+	border:0;
+	height:60px;
+	width:100%;
+	text-align:center;
+}
+.loginform .btsubmit input{
+	width:94%;
+	height:36px;
+	margin-top:12px;
+	border-radius:8px;
+	background-color:#FF6600;
+	color:#FFFFFF;
+	font-size:15px;
+}
+.loginform .notice{
+	border:0;
+	width:96%;
+	margin:0 auto;
+}
+.loginform .notice span{
+	display:inline-block;
+	width:50%;
+}
+.loginform .notice .lostpws{
+	text-align:right;
+}
+.loginform .notice span a{
+	
+}
