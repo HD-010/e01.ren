@@ -171,9 +171,6 @@ var logObj = {
 		}
 	},
 	
-	
-
-	
 	// 获取要显示的日志内容
 	tranceLog:function(data, status) {
 		if (status == 'success') {

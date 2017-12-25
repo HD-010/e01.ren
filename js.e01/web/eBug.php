@@ -194,6 +194,7 @@ class EDebug
             $totalLines = count($contents) - 1;
             $lines = $this->get_array_value($_COOKIE,"showLines",5);
             for ($i = $totalLines; $i > $totalLines - $lines; $i --) {
+                if(strlen($contents[$i]) === 0 ){continue;}
                 $lineContet[] = trim($contents[$i]);
             }
             $lineContet[] = '`DE`';
