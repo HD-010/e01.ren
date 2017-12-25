@@ -47,7 +47,6 @@ var auto = {
 	/*---------------以下是启动项对应的动作-----------------------*/
 	//自动刷新页面显示
 	showOnChang : function (){
-		console.log(1);
 		// 获取日志内容并将日志内容显示到布局中
 		logObj.tranceData('debug','read',logObj.tranceLog,logObj.baseUrl+"/?debug");
 	},
@@ -116,7 +115,7 @@ var common = {
 		//为输入对象的类型为checkbox的val赋值
 		if(type == 'checkbox'){
 			val =  $(obj).is(":checked");
-			console.log($("input[name=autoFormate]").is(":disabled"));
+			//console.log($("input[name=autoFormate]").is(":disabled"));
 			for(var e in common.append){
 				//如果当前元素在append中，则检查和它相关边的元素，并使用相关动作进行作用
 				if(name == common.append[e][1]){
@@ -132,32 +131,7 @@ var common = {
 					}
 				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			/*if(length = common.disabledOrEnabled.length){
-				for(var i = 0; i < length; i++){
-					var obj = $("input[name="+common.disabledOrEnabled[i]+"]");
-					var isDisabled = obj.is(":disabled");
-					console.log(isDisabled);
-					if(isDisabled && val){
-						//obj.disabled = "false";
-						obj.removeAttr("disabled");
-					}else{
-						obj.attr("disabled",true);
-					}
-					
-				}
-			}*/
 		}
-		
 		
 		//将输入对象的名称和值写入cookie
 		common.setCookie(name,val,7);
@@ -311,7 +285,7 @@ var logObj = {
 		var url = this.baseUrl+"/?debug";
 		this.tranceData('clear','func',function(data){
 			logObj.tranceData(data,'func',function(data){
-				location.href=this.baseUrl+"/?debug";
+				location.href = url;
 			},url);
 		});
 	},
