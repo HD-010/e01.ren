@@ -10,7 +10,9 @@ var auto = {
 	//设置启动项,将需要自启动的项名称加入setOption
 	setOption : [
 	    'showOnChang',
-	    'autoFormate'
+	    'autoFormate',
+	    'loginState',
+	    'friendsState'
 	],
 	//启动进程
 	process : '',	
@@ -55,7 +57,15 @@ var auto = {
 		$("[name=codeList]").children().remove();
 		var codes = $("span[name=ft]");
 		logObj.formateCode(codes.eq(0),'auto');
-	}
+	},
+	//检测登录状态
+	loginState : function(){
+		
+	},
+	//监测好友状态
+    friendsState : function(){
+    	
+    }
 	/*------------------------------------------------------*/
 }
 
