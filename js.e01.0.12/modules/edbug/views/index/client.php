@@ -1,5 +1,1 @@
-<?php 
-    echo $message;
-
-?>
-<script data-main="<?=Yii::getAlias("@webAssets/js/app/"); ?>client" src="<?=Yii::getAlias("@webAssets/js/"); ?>require.js"></script>
+<script data-main="<?=$app ?>client" src="<?=$js ?>require.js"></script>

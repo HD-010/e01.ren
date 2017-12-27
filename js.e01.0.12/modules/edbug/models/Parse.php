@@ -37,7 +37,7 @@ class Parse
     public function getWget(){
         global $data;
         header("Access-Control-Allow-Origin:*");
-        $contents = file_get_contents(Yii::getAlias('@app/assets/static/wget/'.$data.'.htm'));
+        $contents = file_get_contents(Yii::getAlias('@app/components/views/wget/'.$data.'.htm'));
         echo $contents;
     }
     
@@ -86,7 +86,7 @@ class Parse
             $strEnd = substr($line,-1);
             if(($strStart == '{' && $strEnd== '}') ||
                 ($strStart == '[' && $strEnd == ']')){
-                    $contents .= "<div><span name='ft' onclick=logObj.formateCode(this)>格式化代码</span><span name='code'>" . $line . "</span></div>\r\n";
+                    $contents .= "<div><span name='ft'>格式化代码</span><span name='code'>" . $line . "</span></div>\r\n";
             }else{
                 $contents .= "<p>".$line."</p>\r\n";
             }

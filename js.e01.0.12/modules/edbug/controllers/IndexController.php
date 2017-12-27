@@ -16,6 +16,8 @@ class IndexController extends Controller
         Porcess::request();     
     }
     
+    
+    
     public function actionIndex(){
         global $oper;
         $main = ucfirst($oper ? $oper : "main"); 
@@ -26,6 +28,7 @@ class IndexController extends Controller
     }
     
     
+    
     /**
      * 客户端首页
      * @return string
@@ -33,8 +36,15 @@ class IndexController extends Controller
     public function actionClient(){
         global $clientUrl;
         setcookie('clientUrl',$clientUrl,time() * 1.05);
-        return $this->render('client',['message' => "okkljhlk"]);
+        
+        return $this->render('client',[
+            "app" => Yii::getAlias("@webAssets/js/app/"),
+            "js" => Yii::getAlias("@webAssets/js/")
+        ]);
     }
+    
+    
+    
 }
 
 ?>
