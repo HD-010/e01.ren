@@ -39,7 +39,7 @@ define(["jquery","common","logObj","auto"],function($,common,logObj,auto){
 			//当前小部件名称
 			var name = "wgetSys";
 			//检查妆前小部件是否已经开启，如果已经开启则不需要重复开启
-			if(common.inArray(name,this.isOn)){return false;}
+			if(common.inArray(name,this.isOn) != -1){return false;}
 			//如果 wget.data为空，则从getSysAttr()获取数据
 			var data = this.dataControl("sysAttr");	
 			if(!data){return;}

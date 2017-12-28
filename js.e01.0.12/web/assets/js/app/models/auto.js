@@ -31,7 +31,7 @@ define(["jquery","common","logObj"],function($,common,logObj){
          run : function (){
         	 auto.check();
         	 //如果启动项为空，或则父级开关关闭，则关掉进程
-        	 if(auto.option.length == 0 || !common.inArray("showOnChang",auto.option)){
+        	 if(auto.option.length == 0 || (common.inArray("showOnChang",auto.option) == -1)){
         		 //关闭自动刷新状态
         		 auto.state = "off";
         		 //关闭自动格式化日志状态
