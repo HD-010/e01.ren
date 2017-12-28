@@ -3,7 +3,8 @@
  */
 define([ "jquery" ], function($) {
 	var common = {
-
+		//元素名称与其属性的依赖关系	//common.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
+		append : [],
 		/** 
 		 * 无刷新设置url参数
 		 *@param arr= New Array('key'=>'value');

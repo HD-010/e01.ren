@@ -1,6 +1,7 @@
 /**
  * 系统属性设置
  */
+
 require(["jquery","common"],function($,common){
 	common.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
 	
