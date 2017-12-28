@@ -6,9 +6,9 @@
 	<ul name=func>
 		<li name=t1><a href="">关于</a>
 			<ul name=t2>
-				<li><a name="setSys">个性设置</a></li>
-				<li><a href="javascript:logObj.clear()">清空日志</a></li>
-				<li><a href="javascript:alert()">退出 [->]</a></li>
+				<li><a href="javascript:" name="setSys">个性设置</a></li>
+				<li><a href="javascript:" name="journal">清空日志</a></li>
+				<li><a href="javascript:">退出 [->]</a></li>
 			</ul>
 		</li>
 	</ul>

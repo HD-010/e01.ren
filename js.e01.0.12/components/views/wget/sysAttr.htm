@@ -46,32 +46,4 @@ height: 32px;
 	<dd>监测好友状态<input name="friendsState" disabled=disabled type="checkbox"  /></dd>
 </dl>
 
-
-
-<script>
-require(["jquery","common"],function($,common){
-	common.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
-	
-	//设置type=text项初始值
-	var lines = common.getCookies("showLines") || 5;
-	$("input[name=showLines]").val(lines);
-	
-	//设置type=checkbox项初始值
-	var checkBox = $("input[type=checkbox]");
-	for(var o in checkBox){
-		var attName = checkBox[o].name;
-		var checkStats = common.getCookies(attName);
-		checkStats = (checkStats == 'true') ? true : false;
-		checkBox[o].checked=checkStats;
-		
-		//根据父元素的状态设置以下元素的初始状态
-		var initVal = $("input[name=showOnChang]").is(":checked")
-		console.log(initVal);
-		if(initVal){
-			$("input[name=autoFormate]").removeAttr("disabled");
-		}
-	}
-});
-</script>
-
-
+<script  src="/assets/js/app/sysAttr.js"></script>

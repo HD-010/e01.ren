@@ -67,6 +67,7 @@ class EDebug
         $filename = $this->readPath ? self::$basePath . $this->readPath : self::$logPath;
         // 确保文件可写,如果文件不存在则创建一个空文件
         file_put_contents($filename, '');
+        header("Access-Control-Allow-Origin:*");
         echo "success";
     }
     
@@ -181,6 +182,7 @@ class EDebug
     // 读取日志内容
     public function readLog()
     {
+        global $showLines;
         $readPath = $this->readPath ? self::$basePath . $this->readPath : self::$logPath;
         
         $lineContet = [];
@@ -192,13 +194,13 @@ class EDebug
             $lineContet[] = 'T'; // 添加日志读取成功状态
             $contents = file($readPath, FILE_IGNORE_NEW_LINES);
             $totalLines = count($contents) - 1;
-            $lines = $this->get_array_value($_COOKIE,"showLines",5);
-            for ($i = $totalLines; $i > $totalLines - $lines; $i --) {
+            for ($i = $totalLines; $i > $totalLines - $showLines; $i --) {
                 if(strlen($contents[$i]) === 0 ){continue;}
                 $lineContet[] = trim($contents[$i]);
             }
             $lineContet[] = '`DE`';
         }
+        header("Access-Control-Allow-Origin:*");
         echo implode('`p`', $lineContet);
     }
     
