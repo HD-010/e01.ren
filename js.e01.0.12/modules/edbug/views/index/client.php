@@ -1,0 +1,1 @@
+<script data-main="<?=$app ?>client" src="<?=$js ?>require.js"></script>

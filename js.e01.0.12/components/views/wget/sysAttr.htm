@@ -1,0 +1,49 @@
+<style type="text/css">
+/* 用户偏好设置样式 */
+.wgetTitle{
+height: 32px;
+    border: 0;
+    border-top: 12px solid #FFFFFF;
+    margin-top: 6px;
+    padding-left: 12px;
+    background-color: gray;
+    line-height: 32px;
+    color: white;
+    font-size: 13px;
+}
+.showLines{
+	height:24px;
+    border: 0;
+    padding-left:13px;
+    line-height:24px;
+	font-size:13px;
+}
+.autoFresh{
+	border: 0;
+    padding-left:13px;
+	font-size:13px;
+}
+.autoFresh dt{
+	height:24px;
+    border: 0;
+	line-height:24px;
+}
+.autoFresh dd{
+	height:18px;
+    border: 0;
+	padding-left:12px;
+	line-height:18px;
+}
+</style>
+
+
+<div name="wgetTitle" class="wgetTitle">用户偏好设置</div>
+<div class="showLines">每页显示日志 <input name="showLines" type="number" min="1" max="99" value="5" />条</div>
+<dl class="autoFresh">
+	<dt>开启自动刷新 <input name="showOnChang" type="checkbox"  /></dt>
+	<dd>自格式化最后条记录<input name="autoFormate" disabled=disabled type="checkbox"  /></dd>
+	<dd>检测登录状态<input name="loginState" disabled=disabled type="checkbox"  /></dd>
+	<dd>监测好友状态<input name="friendsState" disabled=disabled type="checkbox"  /></dd>
+</dl>
+
+<script  src="/assets/js/app/sysAttr.js"></script>
