@@ -1,1 +1,1 @@
-<script data-main="<?=$app ?>client" src="<?=$js ?>require.js"></script>
+<script src="<?=$app ?>client.js"></script>

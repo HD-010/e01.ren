@@ -4,7 +4,6 @@ namespace app\components;
 use yii\base\Widget;
 
 class Header extends Widget{
-    public $datId = 5566;
     public function init(){
         parent::init();
     }

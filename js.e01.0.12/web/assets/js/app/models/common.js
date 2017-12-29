@@ -90,6 +90,7 @@ define([ "jquery" ], function($) {
 			URL.revokeObjectURL(url);
 		},
 
+		/************************数组常用方法****************************/
 		/**
 		 * 判断值是否是数组中的元素，是则反键名。否则返回-1
 		 */
@@ -101,7 +102,21 @@ define([ "jquery" ], function($) {
 			}
 			return -1;
 		},
+		
+		/**
+		 * 判断key是否是存在，是则反回1。否则返回-1
+		 */
+		arrayKeyExists : function(key, array) {
+			for ( var k in array) {
+				if (k === key) {
+					return true;
+				}
+			}
+			return false;
+		},
+		
 
+		/************************end****************************/
 		//将字符串的首字母大写
 		ucFirst : function(str) {
 			return str.substring(0, 1).toUpperCase() + str.substring(1);

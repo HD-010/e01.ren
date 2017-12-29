@@ -3,7 +3,7 @@
  */
 
 require(["jquery","common","auto"],function($,common,auto){
-	auto.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
+	auto.append.push([["autoFormate","friendsState"],"showOnChang","disabled|enlabled"]);
 	
 	//设置type=text项初始值
 	var lines = common.getCookies("showLines") || 5;
@@ -30,8 +30,6 @@ require(["jquery","common","auto"],function($,common,auto){
 			//$("input[name=showOnChang]").parent().siblings("dd input").removeAttr("disabled");
 			
 			$("input[name=autoFormate]").removeAttr("disabled");
-			$("input[name=loginState]").removeAttr("disabled");
-			$("input[name=loginState]").removeAttr("disabled");
 			$ ("input[name=friendsState]").removeAttr("disabled");
 		}
 	}

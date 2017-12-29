@@ -3,7 +3,9 @@
  * 设置启动项,将需要自启动的项名称加入setOption
  * 启动项的值 以'true'或'false'两种状态存在于cookie中，值为'true'的项将跟随进程自动启动
  */
-define(["jquery","common","logObj"],function($,common,logObj){
+define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
+	//将当前模块的进程的启动管理名称写入系统进程管理项
+	sys.regest('auto.run');
 	var auto = {
 		//启动状态 string on | off
 		state : 'off',
@@ -14,7 +16,7 @@ define(["jquery","common","logObj"],function($,common,logObj){
 	         'loginState',
 	         'friendsState'
          ],
-         //元素名称与其属性的依赖关系	//common.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
+         //元素名称与其属性的依赖关系	//common.append.push([["autoFormate","friendsState"],"showOnChang","disabled|enlabled"]);
  		 append : [],
          //启动进程
          process : '',	
@@ -32,6 +34,7 @@ define(["jquery","common","logObj"],function($,common,logObj){
          
          //运行启动项
          run : function (){
+        	 console.log("auto.run运行成功...");
         	 auto.check();
         	 //如果启动项为空，或则父级开关关闭，则关掉进程
         	 if(auto.option.length == 0 || (common.inArray("showOnChang",auto.option) == -1)){
@@ -40,7 +43,8 @@ define(["jquery","common","logObj"],function($,common,logObj){
         		 //关闭自动格式化日志状态
         		 logObj.auto = false;
         		 //关闭自动运行进程
-        		 clearInterval(auto.process);
+        		 //clearInterval(auto.process);
+        		 sys.stop('auto.run');
         		 return;
         	 }
         	 //修改启动状态为on
@@ -70,10 +74,7 @@ define(["jquery","common","logObj"],function($,common,logObj){
         		 $("[name=codeList]").children().remove();
         	 }
          },
-         //检测登录状态
-         loginState : function(){
-        	 
-         },
+         
          //监测好友状态
          friendsState : function(){
         	 
@@ -81,8 +82,9 @@ define(["jquery","common","logObj"],function($,common,logObj){
          
        //将表单属性写入cookie,时长7天,affect boolen 最不影响其他输入对象
  		setCookieOption : function (obj){
- 			//暂停自动调用进程
- 			clearInterval(auto.process);
+ 			//暂停进程
+ 			//clearInterval(auto.process);
+ 			sys.stop();
  			var name,val,type;
  			
  			//输入对象的名称 
@@ -116,8 +118,9 @@ define(["jquery","common","logObj"],function($,common,logObj){
  			//将输入对象的名称和值写入cookie
  			common.setCookie(name,val,7);
  			
- 			//开启自动调用进程
- 			auto.process = setInterval(auto.run,1000);
+ 			//开启进程
+ 			//auto.process = setInterval(auto.run,1000);
+ 			sys.start();
  		},
          /*------------------------------------------------------*/
 	};
