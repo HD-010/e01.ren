@@ -5,6 +5,7 @@
  */
 define(["jquery","common","logObj"],function($,common,logObj){
 	var auto = {
+		//启动状态 string on | off
 		state : 'off',
 		//设置启动项,将需要自启动的项名称加入setOption
 		setOption : [
@@ -13,6 +14,8 @@ define(["jquery","common","logObj"],function($,common,logObj){
 	         'loginState',
 	         'friendsState'
          ],
+         //元素名称与其属性的依赖关系	//common.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
+ 		 append : [],
          //启动进程
          process : '',	
          //启动项（该值对应相应的函数）
@@ -93,12 +96,12 @@ define(["jquery","common","logObj"],function($,common,logObj){
  			if(type == 'checkbox'){
  				val =  $(obj).is(":checked");
  				//console.log($("input[name=autoFormate]").is(":disabled"));
- 				for(var e in common.append){
+ 				for(var e in auto.append){
  					//如果当前元素在append中，则检查和它相关边的元素，并使用相关动作进行作用
- 					if(name == common.append[e][1]){
- 						for(var a in common.append[e][0]){
+ 					if(name == auto.append[e][1]){
+ 						for(var a in auto.append[e][0]){
  							//元素名称对应的对象
- 							var appendA = $("input[name="+common.append[e][0][a]+"]");
+ 							var appendA = $("input[name="+auto.append[e][0][a]+"]");
  							//当前元的值
  							if(val){
  								appendA.removeAttr("disabled");

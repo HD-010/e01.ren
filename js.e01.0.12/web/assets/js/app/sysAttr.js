@@ -2,8 +2,8 @@
  * 系统属性设置
  */
 
-require(["jquery","common"],function($,common){
-	common.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
+require(["jquery","common","auto"],function($,common,auto){
+	auto.append.push([["autoFormate","loginState","friendsState"],"showOnChang","disabled|enlabled"]);
 	
 	//设置type=text项初始值
 	var lines = common.getCookies("showLines") || 5;
