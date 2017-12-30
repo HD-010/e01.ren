@@ -14,52 +14,67 @@ define(function(require){
 		 * 该项的值以两种形式存在，第一种是固定存在的，为当前模块启动的项 
 		 * 第二种是由程序临时添加的，为后代模块的运行的项
 		 */
-		option:["loginState"],
+		option:[],
 		
 		//进程管理——暂停(指定的进程或所有进程);
 		stop : function(processName){
 			processName = processName || "";
 			//如果processName进程名存在则将其关闭
-			if(processName && (common.arrayKeyExists(processName,this.process) )){
-				clearInterval(this.process[processName]);
+			if(processName && (common.arrayKeyExists(processName,sys.process) )){
+				clearInterval(sys.process[processName]);
+				sys.process = common.unset(processName,sys.process);
+				console.log(processName + "进程已关闭");
 			}
 			//如果processName为空则关闭所有运行的进程
 			if(processName == ""){
-				for(var pn in this.process){
-					clearInterval(this.process[pn]);
+				for(var pn in sys.process){
+					clearInterval(sys.process[pn]);
+					sys.process = [];
+					console.log("所有进程已关闭");
 				}
 			}
 		},
 		
-		//进程管理——启动
-		start : function(){
-			for(var op in this.option){
-				if(this.option[op].indexOf('.') == -1){
+		//进程管理——控制
+		ctl : function(){
+			for(var op in sys.option){
+				if(common.arrayKeyExists(sys.option[op],sys.process)){
+					continue;
+				}
+				if(sys.option[op].indexOf('.') == -1){
 					//启动系统级（sys自有）进程
-					eval("(this.process['"+this.option[op]+"'] = setInterval(this."+this.option[op]+",1000))");
+					eval("(sys.process['"+sys.option[op]+"'] = setInterval(sys."+sys.option[op]+",3000))");
 				}else{
+					
 					//自动载入没有加载的模块(就近加载)
-					var chain = this.option[op];
+					var chain = sys.option[op];
 					var model = chain.substr(0,chain.indexOf('.'));
 					eval("("+model+" = require('"+model+"')"+")");
-					eval("(this.process['"+this.option[op]+"'] = setInterval("+this.option[op]+",1000))");
+					eval("(sys.process['"+sys.option[op]+"'] = setInterval("+sys.option[op]+",3000))");
 				}
 			}
+			console.log(sys.process);
 		},
 		
 		//注册进程，如果当前注册项已经存在则不予处理
 		regest : function(processName){
-			if(common.inArray(processName,this.option) == -1){
-				this.option.push(processName);
+			if(common.inArray(processName,sys.option) == -1){
+				sys.option.push(processName);
 				console.log(processName + "注册成功...");
 			}
 		},
 		
-        /*---------------以下是系统进程执行的动作-----------------------*/
-		//检测登录状态
-        loginState : function(){
-       	 console.log(sys.process);
-        },
-	}
+		//进程管理——启动
+		start:function(){
+			sys.process['main'] = setInterval(sys.ctl,3000);
+			console.log("所有进程开启");
+		}
+		
+	};
+	
+	(function(){
+		sys.start();
+	})();
+	
 	return sys;
 });

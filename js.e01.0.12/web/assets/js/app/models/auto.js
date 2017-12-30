@@ -34,8 +34,10 @@ define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
          
          //运行启动项
          run : function (){
-        	 console.log("auto.run运行成功...");
+        	 
+        	 console.log("auto.run准备运行...");
         	 auto.check();
+        	 console.log("auto.run运行成功...");
         	 //如果启动项为空，或则父级开关关闭，则关掉进程
         	 if(auto.option.length == 0 || (common.inArray("showOnChang",auto.option) == -1)){
         		 //关闭自动刷新状态

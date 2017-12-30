@@ -114,6 +114,19 @@ define([ "jquery" ], function($) {
 			}
 			return false;
 		},
+		/**
+		 * 删除数组中的元素,返回新的数组
+		 */
+		unset:function(key,array){
+			var arr = [];
+			for(var k in array){
+				if(key == k){
+					continue;
+				}
+				arr[k] = array[k];
+			}
+			return arr;
+		},
 		
 
 		/************************end****************************/

@@ -8,14 +8,12 @@ require.config({
 		wget : "./models/wget",
 		logObj : "./models/logObj",
 		sys : "./models/sys",
+		login:"./models/login"
 	}
 });
 
-require(["sys","jquery","logObj","wget"],function(sys,$,logObj,wget){
-	//开启系统进程
-	sys.start();
-	//向系统进程注册用户昵称显示控制
-	sys.regest('loginState.showNick');
+require(["sys","jquery","logObj","wget","login"],function(sys,$,logObj,wget,login){
+	
 	
 	/*-----------------------根据实际情况展示用户登录状态------------------------*/
 	if(typeof(Storage)!=="undefined"){
