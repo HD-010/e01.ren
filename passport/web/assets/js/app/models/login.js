@@ -7,7 +7,7 @@ define(["sys","jquery","common"], function(sys,$,common) {
 	sys.regest('login.run');
 	var login = {
 		//服务地址
-		url : "http://passport.e01.ren/?r=openapi/login",
+		url : "http://js.e01.ren/?r=passport/login",
 		//运行管理——项（该值对应相应的函数）
 		option : ["nick","stateCtl"],	
 		
@@ -47,9 +47,9 @@ define(["sys","jquery","common"], function(sys,$,common) {
 		},
 		
 		//登录管理action为操作方法的名称
-		//loginOut : function(action){
-			//eval("(login."+action+"())");
-		//},
+		loginOut : function(action){
+			eval("(login."+action+"())");
+		},
 		
 		//登录方法
 		login : function(){

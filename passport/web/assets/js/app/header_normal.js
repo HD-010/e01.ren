@@ -70,6 +70,7 @@ require(["sys","jquery","logObj","wget","login"],function(sys,$,logObj,wget,logi
 		});
 		
 		
+		//login.loginOut(action);
 	});
 	
 	//展示登录框 

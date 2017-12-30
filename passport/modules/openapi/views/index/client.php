@@ -1,0 +1,1 @@
+<script src="<?=$app ?>client.js"></script>
