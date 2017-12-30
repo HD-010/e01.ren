@@ -15,12 +15,17 @@ define(function(require){
 		 * 第二种是由程序临时添加的，为后代模块的运行的项
 		 */
 		option:[],
+		//当前检测启动的进程数量
+		pn : 0,
 		
 		//系统自动加载的模型名称
 		loadModel : [],
 		
 		//进程管理——暂停(指定的进程或所有进程);
 		stop : function(processName){
+			//初始化休眠状态
+			sys.initSleep();
+			
 			processName = processName || "";
 			//如果processName进程名存在则将其关闭
 			if(processName && (common.arrayKeyExists(processName,sys.process) )){
@@ -46,12 +51,13 @@ define(function(require){
 		
 		//进程管理——控制
 		ctl : function(){
+			//初始化休眠状态
+			sys.initSleep();
 			for(var op in sys.option){
 				if(!common.arrayKeyExists(sys.option[op],sys.process)){
-					
 					if(sys.option[op].indexOf('.') == -1){
 						//启动系统级（sys自有）进程
-						eval("(sys.process['"+sys.option[op]+"'] = setInterval(sys."+sys.option[op]+",6000))");
+						eval("(sys.process['"+sys.option[op]+"'] = setInterval(sys."+sys.option[op]+",5000))");
 					}else{
 						//自动载入没有加载的模块(就近加载)
 						var chain = sys.option[op];
@@ -62,16 +68,37 @@ define(function(require){
 							sys.loadModel.push(model);
 							eval("("+model+" = require('"+model+"')"+")");
 						}
-						eval("(sys.process['"+sys.option[op]+"'] = setInterval("+sys.option[op]+",6000))");
+						eval("(sys.process['"+sys.option[op]+"'] = setInterval("+sys.option[op]+",5000))");
 					}
+					//记录pn值
+					sys.pn ++;
 				}
 			}
+			//休眠主进程
+			sys.sleep();
 			console.log("已经注册的进程：");
 			console.log(sys.option);
 			console.log("正在运行的进程：");
 			console.log(sys.process);
 			console.log("-----------------");
 		},
+		
+		/**
+		 * 休眠主进程：当应该启动的进程都已经启动完毕，main进程进入休眠。等待下次sys.start()唤醒
+		 */
+		sleep:function(){
+			if(sys.pn === 0){
+				sys.stop("main");
+				console.log("main进程已经进入休眠...");
+			}
+		},
+		/**
+		 * 初始化休眠姿态
+		 */
+		initSleep : function(){
+			sys.pn = 0;
+		},
+		
 		
 		//注册进程，如果当前注册项已经存在则不予处理
 		regest : function(processName){
@@ -83,7 +110,7 @@ define(function(require){
 		
 		//进程管理——启动
 		start:function(){
-			sys.process['main'] = setInterval(sys.ctl,6000);
+			sys.process['main'] = setInterval(sys.ctl,5000);
 			console.log("所有进程开启");
 		}
 		

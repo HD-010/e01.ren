@@ -11,8 +11,8 @@ define(["sys","jquery"], function(sys,$) {
 		 * 当前操作已经在header_normal.js向系统进程sys.js注册过
 		 */
 		nick : function(){
-			console.log("login.nick运行成功...");
-			if(sessionStorage.isGuest == 'fase'){
+			console.log(sessionStorage.isGuest);
+			if(sessionStorage.isGuest == 'false'){
 				$("li[name=nickName]").text(sessionStorage.nick);
 			}else{
 				$("li[name=nickName]").text("");
