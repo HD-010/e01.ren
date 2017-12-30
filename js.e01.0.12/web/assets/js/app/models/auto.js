@@ -13,7 +13,6 @@ define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
 		setOption : [
 	         'showOnChang',
 	         'autoFormate',
-	         'loginState',
 	         'friendsState'
          ],
          //元素名称与其属性的依赖关系	//common.append.push([["autoFormate","friendsState"],"showOnChang","disabled|enlabled"]);
@@ -22,6 +21,7 @@ define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
          process : '',	
          //启动项（该值对应相应的函数）
          option : [],
+         
          //检查启动项,将需要启动的项目添加到option中
          check : function(){
         	 auto.option = [];
@@ -34,10 +34,7 @@ define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
          
          //运行启动项
          run : function (){
-        	 
-        	 console.log("auto.run准备运行...");
         	 auto.check();
-        	 console.log("auto.run运行成功...");
         	 //如果启动项为空，或则父级开关关闭，则关掉进程
         	 if(auto.option.length == 0 || (common.inArray("showOnChang",auto.option) == -1)){
         		 //关闭自动刷新状态
@@ -45,12 +42,12 @@ define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
         		 //关闭自动格式化日志状态
         		 logObj.auto = false;
         		 //关闭自动运行进程
-        		 //clearInterval(auto.process);
         		 sys.stop('auto.run');
         		 return;
         	 }
-        	 //修改启动状态为on
-        	 auto.state = "on";
+        	 
+    		 //修改启动状态为on
+    		 auto.state = "on";
         	 //开启自动格式化日志状态
         	 logObj.auto = true;
         	 //执行启动项动作
@@ -85,7 +82,6 @@ define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
        //将表单属性写入cookie,时长7天,affect boolen 最不影响其他输入对象
  		setCookieOption : function (obj){
  			//暂停进程
- 			//clearInterval(auto.process);
  			sys.stop();
  			var name,val,type;
  			
@@ -121,7 +117,6 @@ define(["sys","jquery","common","logObj"],function(sys,$,common,logObj){
  			common.setCookie(name,val,7);
  			
  			//开启进程
- 			//auto.process = setInterval(auto.run,1000);
  			sys.start();
  		},
          /*------------------------------------------------------*/

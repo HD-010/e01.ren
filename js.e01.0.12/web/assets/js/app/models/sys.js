@@ -16,44 +16,61 @@ define(function(require){
 		 */
 		option:[],
 		
+		//系统自动加载的模型名称
+		loadModel : [],
+		
 		//进程管理——暂停(指定的进程或所有进程);
 		stop : function(processName){
 			processName = processName || "";
 			//如果processName进程名存在则将其关闭
 			if(processName && (common.arrayKeyExists(processName,sys.process) )){
+				//关闭进程
 				clearInterval(sys.process[processName]);
-				sys.process = common.unset(processName,sys.process);
+				//这里是关闭指定的进程，不清空进程名称，以防止main进程加载它
+				//sys.process = common.unset(processName,sys.process);
 				console.log(processName + "进程已关闭");
 			}
 			//如果processName为空则关闭所有运行的进程
 			if(processName == ""){
 				for(var pn in sys.process){
+					//关闭进程
 					clearInterval(sys.process[pn]);
+					//清空进程名称
 					sys.process = [];
 					console.log("所有进程已关闭");
 				}
 			}
+			
+			console.log(sys.process);
 		},
 		
 		//进程管理——控制
 		ctl : function(){
 			for(var op in sys.option){
-				if(common.arrayKeyExists(sys.option[op],sys.process)){
-					continue;
-				}
-				if(sys.option[op].indexOf('.') == -1){
-					//启动系统级（sys自有）进程
-					eval("(sys.process['"+sys.option[op]+"'] = setInterval(sys."+sys.option[op]+",3000))");
-				}else{
+				if(!common.arrayKeyExists(sys.option[op],sys.process)){
 					
-					//自动载入没有加载的模块(就近加载)
-					var chain = sys.option[op];
-					var model = chain.substr(0,chain.indexOf('.'));
-					eval("("+model+" = require('"+model+"')"+")");
-					eval("(sys.process['"+sys.option[op]+"'] = setInterval("+sys.option[op]+",3000))");
+					if(sys.option[op].indexOf('.') == -1){
+						//启动系统级（sys自有）进程
+						eval("(sys.process['"+sys.option[op]+"'] = setInterval(sys."+sys.option[op]+",6000))");
+					}else{
+						//自动载入没有加载的模块(就近加载)
+						var chain = sys.option[op];
+						var model = chain.substr(0,chain.indexOf('.'));
+						//如果model没有加载，则进行加载
+						if(common.inArray(model,sys.loadModel) == -1){
+							//记录系统自动加载的模型
+							sys.loadModel.push(model);
+							eval("("+model+" = require('"+model+"')"+")");
+						}
+						eval("(sys.process['"+sys.option[op]+"'] = setInterval("+sys.option[op]+",6000))");
+					}
 				}
 			}
+			console.log("已经注册的进程：");
+			console.log(sys.option);
+			console.log("正在运行的进程：");
 			console.log(sys.process);
+			console.log("-----------------");
 		},
 		
 		//注册进程，如果当前注册项已经存在则不予处理
@@ -66,7 +83,7 @@ define(function(require){
 		
 		//进程管理——启动
 		start:function(){
-			sys.process['main'] = setInterval(sys.ctl,3000);
+			sys.process['main'] = setInterval(sys.ctl,6000);
 			console.log("所有进程开启");
 		}
 		

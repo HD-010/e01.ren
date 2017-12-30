@@ -104,7 +104,7 @@ define([ "jquery" ], function($) {
 		},
 		
 		/**
-		 * 判断key是否是存在，是则反回1。否则返回-1
+		 * 判断key是否是存在，是则反回true。否则返回false
 		 */
 		arrayKeyExists : function(key, array) {
 			for ( var k in array) {
