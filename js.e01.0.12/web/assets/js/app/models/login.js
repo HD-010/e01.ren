@@ -2,7 +2,7 @@
  * 用户登录状态管理
  * 
  */
-define(["sys","jquery","common"], function(sys,$,common) {
+define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 	//向系统进程注册用户昵称显示控制
 	sys.regest('login.run');
 	var login = {
@@ -24,8 +24,8 @@ define(["sys","jquery","common"], function(sys,$,common) {
 		 * 当前操作已经在header_normal.js向系统进程sys.js注册过
 		 */
 		nick : function(){
-			if(sessionStorage.isGuest == 'false'){
-				$("li[name=nickName]").text(sessionStorage.nick);
+			if(!sessionStorage.getItem("isGuest") == "false"){
+				$("li[name=nickName]").text(sessionStorage.getItem("nick"));
 			}else{
 				$("li[name=nickName]").text("");
 			}
@@ -33,7 +33,7 @@ define(["sys","jquery","common"], function(sys,$,common) {
 		
 		//登录与退出的状态控制
 		stateCtl : function (){
-			if(sessionStorage.isGuest == 'true'){
+			if(sessionStorage.getItem("isGuest") != "false"){
 				//显示登录按钮
 				$("a[name='login|out']").text("登录系统");
 				//清除用户昵称
@@ -42,7 +42,7 @@ define(["sys","jquery","common"], function(sys,$,common) {
 				//显示退出按钮
 				$("a[name='login|out']").text("退出 [->]");
 				//显示用户昵称
-				$("li[name='nickName']").text(sessionStorage.nick);
+				$("li[name='nickName']").text(sessionStorage.getItem("nick"));
 			}
 		},
 		
@@ -52,18 +52,70 @@ define(["sys","jquery","common"], function(sys,$,common) {
 		//},
 		
 		//登录方法
-		login : function(){
-			
-			
+		singin : function(){
 			
 			console.log("登录成功...")
 		},
 		//登录方法
-		out : function(){
-			sessionStorage.isGuest = 'true';
-			sessionStorage.nick = "";
+		singout : function(){
+			sessionStorage.removeItem("isGuest");
+			sessionStorage.removeItem("nick");
 			console.log("退出成功...")
-		}
+		},
+		
+		/*---------------------用户登录验证-----------------------*/
+		/**
+		 * 验证用户名是否存在
+		 */
+		checkUName : function(ojb){
+			console.log("用户名不存在");
+			return "用户名不存在";
+		},
+		/**
+		 * 验证用户密码是否正确
+		 */
+		checkPswd : function(ojb){
+			return "密码不存在";
+		},
+		/**
+		 * 验证用户名是否存在
+		 */
+		toSubmit : function(ojb){
+			return "登录成功";
+		},
+		
+		/*-------------------------用户注册验证-----------------------*/
+		/**
+		 * 验证注册用户名
+		 */
+		singUpUName : function(o){
+			console.log($(o).val())
+		},
+		/**
+		 * 验证用户密码
+		 */
+		singUpPswd : function(ojb){
+			console.log($(ojb).val())
+		},
+		/**
+		 * 验证用户密码确认
+		 */
+		singUpPswd2 : function(ojb){
+			console.log($(ojb).val())
+		},
+		/**
+		 * 验证验证码有效性
+		 */
+		singUpVerification : function(ojb){
+			console.log($(ojb).val())
+		},
+		/**
+		 * 完成注册表单提交
+		 */
+		singUpSubmit : function(){
+			console.log($e("form[name='singUp']").sialize());
+		},
+		
 	};
 	
 	return login;

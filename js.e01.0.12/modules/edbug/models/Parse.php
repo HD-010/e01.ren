@@ -36,7 +36,6 @@ class Parse
     //获取视图小部件
     public function getWget(){
         global $data;
-        header("Access-Control-Allow-Origin:*");
         $contents = file_get_contents(Yii::getAlias('@app/components/views/wget/'.$data.'.htm'));
         echo $contents;
     }
@@ -44,7 +43,6 @@ class Parse
     //解析日志类型
     public function getParseFormate(){
         //$data = htmlspecialchars($data);
-        header("Access-Control-Allow-Origin:*");
         $strHtml = $this->logFormate();
         echo $strHtml;
     }
@@ -52,7 +50,6 @@ class Parse
     //格式化json代码
     public function getCodeFormate(){
         global $data;
-        header("Access-Control-Allow-Origin:*");
         $data = json_decode($data);
         $strHtml = $this->eachElement($data);
         echo $strHtml;
@@ -60,7 +57,6 @@ class Parse
     
     //获取格式化后的代码列表
     public function getCodeList(){
-        header("Access-Control-Allow-Origin:*");
         $strHtml = $this->eachElement();
         echo $strHtml;
     }

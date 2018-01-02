@@ -5,22 +5,45 @@ require.config({
 	baseUrl : "/assets/js/app",
 	paths : {
 		jquery : "./lib/jquery",
+		easyForm : "./lib/easyForm",
+		
 		wget : "./models/wget",
 		logObj : "./models/logObj",
 		sys : "./models/sys",
-		login:"./models/login"
+		login:"./models/login",
+		wgetSysAttr:"./models/wgetSysAttr",
+		wgetSingIn:"./models/wgetSingIn",
+		wgetSingUp :"./models/wgetSingUp",
 	}
 });
 
-require(["sys","jquery","logObj","wget","login"],function(sys,$,logObj,wget,login){
+require([
+		"sys",
+		"jquery",
+		"logObj",
+		"wget",
+		"login",
+		"wgetSysAttr",
+		"wgetSingIn",
+		"wgetSingUp"
+	],function(
+		sys,
+		$,
+		logObj,
+		wget,
+		login,
+		wgetSysAttr,
+		wgetSingIn,
+		wgetSingUp
+	){
 	
 	
 	/*-----------------------根据实际情况展示用户登录状态------------------------*/
 	if(typeof(Storage)!=="undefined"){
 		
 		/**start 预置系统参数**/
-		sessionStorage.isGuest = false;
-		sessionStorage.nick = "婉清";
+		sessionStorage.setItem("isGuest",true);
+		sessionStorage.setItem("nick","");
 		/**end**/
 		
 	}else{
@@ -45,7 +68,8 @@ require(["sys","jquery","logObj","wget","login"],function(sys,$,logObj,wget,logi
 	});
 	//设置用户属性
 	$("a[name=setSys]").on("click",function(){
-		wget.setSys();
+		//wget.setSysAttr();
+		wgetSysAttr.loadWget();
 	});
 	//点击空白处移除蒙版
 	$("div[name=maskTag]").on("click",function(){
@@ -56,28 +80,17 @@ require(["sys","jquery","logObj","wget","login"],function(sys,$,logObj,wget,logi
 	//访客操作项目
 	//点击登录链接，在蒙版上显示登录框
 	$("a[name='login|out']").on("click",function (){
-		var action = (sessionStorage.isGuest == 'false') ? 'out' : 'login';
-		//数据传输
-		$.ajax({
-			url : login.url + "/" +action,
-			type : 'POST',
-			dataType : 'TEXT',
-			data : {distinctId:"246546366-265115965-156335135"},
-			success : showLogin,
-			error : function(data) {
-				console.log(data);
-			},
-		});
-		
+		var action = (sessionStorage.getItem("isGuest") == "false") ? "singout" : "singin";
+		if(action == "singin"){
+			//设置用户登录框 
+			wgetSingIn.loadWget();
+		}else{
+			//用户退出系统
+			login.singout();
+			console.log("用户退出系统");
+		}
 		
 	});
-	
-	//展示登录框 
-	function showLogin(data){
-		console.log(data);
-	}
-	
-	
 	
 	
 });

@@ -57,7 +57,7 @@ define(function(require){
 				if(!common.arrayKeyExists(sys.option[op],sys.process)){
 					if(sys.option[op].indexOf('.') == -1){
 						//启动系统级（sys自有）进程
-						eval("(sys.process['"+sys.option[op]+"'] = setInterval(sys."+sys.option[op]+",3000))");
+						eval("(sys.process['"+sys.option[op]+"'] = setInterval(sys."+sys.option[op]+",2000))");
 					}else{
 						//自动载入没有加载的模块(就近加载)
 						var chain = sys.option[op];
@@ -68,7 +68,7 @@ define(function(require){
 							sys.loadModel.push(model);
 							eval("("+model+" = require('"+model+"')"+")");
 						}
-						eval("(sys.process['"+sys.option[op]+"'] = setInterval("+sys.option[op]+",3000))");
+						eval("(sys.process['"+sys.option[op]+"'] = setInterval("+sys.option[op]+",2000))");
 					}
 					//记录pn值
 					sys.pn ++;

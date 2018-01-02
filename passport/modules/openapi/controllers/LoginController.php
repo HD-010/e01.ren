@@ -12,15 +12,25 @@ class LoginController extends Controller
         Yii::setAlias("@js", "");
         Yii::setAlias("@webAssets", "");
         //处理传入的参数
-        Porcess::request();     
+        Porcess::request();
     }
     
     
-
-    public function actionOut(){
-        header("Access-Control-Allow-Origin:*");
-        echo "退出成功";
+    
+    /**
+     * 用户退出系统
+     */
+    public function actionSingout(){
+        echo "success";
         //$this->render('out',[456]);
+    }
+    /**
+     * 用户登录系统
+     */
+    public function actionSingin(){
+        global $distinctId;
+        
+        return $this->renderPartial("singin",['df'=>"kddk"]);
     }
     
     

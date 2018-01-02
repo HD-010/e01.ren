@@ -1,0 +1,63 @@
+<style>
+form[name='singIn']{
+	margin-top:6px;
+}
+div[name='singInTitle']{
+	height:32px;
+	border:0;
+	border-top:12px solid white;
+    line-height: 32px;
+    background-color: gray;
+	font-size: 13px;
+    font-weight: 300;
+	color:white;
+	text-align:center;
+}
+
+form[name='singIn'] ul{
+	margin-top:12px;
+}
+form[name='singIn'] ul li{
+	height:20px;
+	margin-bottom:12px;
+	text-align:center;
+}
+form[name='singIn'] ul li input{
+	text-align: center;
+	height:20px;
+	border-radius: 2px;
+	font-size:11px;
+}
+form[name='singIn'] ul li a{
+	font-size:10px;
+}
+li[name='singInTitle']{
+}
+li[name='singInUName']{
+}
+li[name='singInPswd']{
+}
+li[name='singInBt']{
+	margin-top:10px;
+}
+li[name='singCue']{
+	border-bottom: 12px solid white;
+}
+
+</style>
+
+<form name="singIn" method="post">
+    <div name="singInTitle">用户登录</div>
+    <ul>
+    	<li name="singInUName"><span><input type="text" name="uname" value="" placeholder="请输入用户名或手机号码" /></span></li>
+    	<li name="singInPswd"><span><input type="password" name="pswd" placeholder="请输入登录密码"</span></li>
+    	<li name="singInBt">
+    		<span><input type="reset" value=" 重置 "</span>&nbsp;&nbsp;
+    		<span><input type="submit" name="singinSubmit" value=" 登录 "</span>
+    	</li>
+    	<li name="singCue">
+    		<a name="modifyPwsd" href="javascript:">忘记密码？</a>
+    		<a name="regest" href="javascript:">注册</a>
+    	</li>
+    </ul>
+</form>

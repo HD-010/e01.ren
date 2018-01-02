@@ -12,6 +12,8 @@ class Porcess
             $keyName = htmlspecialchars($keys[$i]);
             $GLOBALS[$keys[$i]] = $$keyName;
         }
+        //设置跨访问
+        header("Access-Control-Allow-Origin:*");
     }
 }
 
