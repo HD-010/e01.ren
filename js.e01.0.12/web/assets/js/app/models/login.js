@@ -67,20 +67,20 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		/**
 		 * 验证用户名是否存在
 		 */
-		checkUName : function(ojb){
+		checkUName : function(obj){
 			console.log("用户名不存在");
 			return "用户名不存在";
 		},
 		/**
 		 * 验证用户密码是否正确
 		 */
-		checkPswd : function(ojb){
+		checkPswd : function(obj){
 			return "密码不存在";
 		},
 		/**
 		 * 验证用户名是否存在
 		 */
-		toSubmit : function(ojb){
+		toSubmit : function(obj){
 			return "登录成功";
 		},
 		
@@ -89,31 +89,45 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 * 验证注册用户名
 		 */
 		singUpUName : function(o){
-			console.log($(o).val())
+			$e("form[name='singUp']").valid({
+				option : [["input[name=uname]"]],
+				rule : "isTrueName", 
+				message : "只能输入1-30个以字母开头的字串",
+			});
 		},
 		/**
 		 * 验证用户密码
 		 */
-		singUpPswd : function(ojb){
-			console.log($(ojb).val())
+		singUpPswd : function(obj){
+			//console.log($(obj).val())
 		},
 		/**
 		 * 验证用户密码确认
 		 */
-		singUpPswd2 : function(ojb){
-			console.log($(ojb).val())
+		singUpPswd2 : function(obj){
+			//console.log($(obj).val())
 		},
 		/**
 		 * 验证验证码有效性
 		 */
-		singUpVerification : function(ojb){
-			console.log($(ojb).val())
+		singUpVerification : function(obj){
+			$e("form[name='singUp']").valid({
+				option : [["input[name=Verification]"]],
+				rule : "isEmail", 
+				message : "电子邮箱模式错误",
+			});
 		},
 		/**
 		 * 完成注册表单提交
 		 */
 		singUpSubmit : function(){
-			console.log($e("form[name='singUp']").sialize());
+			
+			$e("form[name='singUp']").required([
+			    "input[name=uname]",                                
+			    "input[name=pswd1]",                                
+			    "input[name=pswd2]",                                
+			    "input[name=Verification]"                              
+			]).submit();
 		},
 		
 	};
