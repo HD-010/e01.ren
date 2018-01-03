@@ -100,7 +100,7 @@ div[name="noticeBack"]{
 
 /*用户属性设置背景*/
 div[name="setUpBack"]{
-	width:500px;
+	/* width:500px; */
 	padding:0;
 	border:0;
 	opacity:1;
