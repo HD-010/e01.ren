@@ -100,7 +100,7 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 */
 		singUpPswd1 : function(obj){
 			$e("form[name='singUp']").valid({
-				option : [["input[name=pswd1]"]],
+				option : [["input[name=pswd1]","input[name=pswd2]"],"=="],
 				rule : "isPasswd", 
 				message : "只能输入6-20个字母、数字、下划线",
 			});
@@ -110,7 +110,7 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 */
 		singUpPswd2 : function(obj){
 			$e("form[name='singUp']").valid({
-				option : [["input[name=pswd2]"]],
+				option : [["input[name=pswd1]","input[name=pswd2]"],"==","两次输入密码不一致"],
 				rule : "isPasswd", 
 				message : "只能输入6-20个字母、数字、下划线",
 			});
@@ -125,12 +125,13 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 * 完成注册表单提交
 		 */
 		singUpSubmit : function(){
-			
 			$e("form[name='singUp']").required([
 			    "input[name=uname]",                                
 			    "input[name=pswd1]",                                
 			    "input[name=pswd2]"                               
-			]).submit();
+			]).submit({
+				url:"http://www.baidu.com"
+			});
 		},
 		
 	};

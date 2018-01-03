@@ -23,10 +23,10 @@ define("easyForm",['jquery'],function($){
 		formTag : "",
 		//验证失败显示的信息
 		message : "",
-		//表单数据，是表单对象的所有输入对象，包括隐藏域对象
-		obj : {},
 		//表单必填项，在这里面的项必须通过合法验证,才能够完成easyForm.submit()动作
 		requiredOption : [],
+		//用户输入的某个验证规则的对象
+		validRule : {},
 		
 		//---------------valid()操作的属性------------------
 		validOption : "",				//需要验证的项
@@ -73,50 +73,99 @@ define("easyForm",['jquery'],function($){
 		valid : function(obj){
 			//在验证开始之前先清空页面上数据格式非法的提示信息
 			$("div[name=validNotice]").remove();
-			//定义默验证项为空，验证规则为空
-			obj = obj || {option : [[""]],rule : ""};
 			
-			this.validOption = obj.option[0];	      //需要验证的项
-			this.message = obj.message;
+			//***************初始化验证参数*****************//
+			//定义默认验证项为空，验证规则为空
+			this.validRule = obj || {option : [[""],""],rule : ""};
+			this.validOption = this.validRule.option[0];	      //需要验证的项
+			this.message = this.validRule.message;
+			
 			var optionNum = this.validOption.length;  //计算需要进行验证的option项的个数
-			var relu = obj.rule;				//获取验证规则
 			
 			//如果optionNum == 0,则提示错误
 			if(optionNum === 0)return;
 			
-			
 			//如果optionNum == 1,则不进行关系验证
 			if(optionNum == 1){
-				var selecter = this.validOption[0]
-				var value = $(selecter).val();
-				var index = this.findIndexByName(selecter,this.allValidOption);
-				console.log(index);
-				//将rule验证结果赋值给easyFrom.validRes
-				eval("(this.validRes = rule."+relu+"('"+value+"'))");
-				//如果验证失败，显示提示信息并
-				if(!this.validRes){
-					this.notice($(selecter));
-					//添加项与验证结果的对应关系到this.allValidOption,如果allValidOption中已经存在该项，则不进行添加，只是修改value值
-					if(index == -1){
-						eval("(this.allValidOption.push({name:'"+selecter+"',value:false}))");
-					}else{
-						eval("(this.allValidOption["+index+"]['value'] = false)");
-					}
-					
-					return;
-				}
-				//添加项与验证结果的对应关系到this.allValidOption,如果allValidOption中已经存在该项，则不进行添加，只是修改value值
-				if(index == -1){
-					eval("(this.allValidOption.push({name:'"+selecter+"',value:true}))");
-				}else{
-					eval("(this.allValidOption["+index+"]['value'] = true)");
-				}
+				this.validing(0);
 			}
+			
 			//如查optionNum > 1,则需要进行关系验证
-			//..................
+			if(optionNum > 1){
+				//记录多步验证中每一步验证的状态，如果所有步骤都验证完成，并且没有false失败状态,则进入关系运算符比较
+				var validingRes = true;
+				for(var i = 0; i < optionNum; i ++){
+					if(!this.validing(i)){
+						validingRes = false;
+						break;
+					}
+				}
+				//进入关系运算符比较,如果比较返回true,则不作任何动作。否则，将this.allValidOption中对应对象的value属性改为false,并提示用户
+				if(validingRes){
+					//获取关系运算符
+					if(this.validRule.option[1] != undefined) {
+						var relation = this.validRule.option[1];
+						var compareRes;
+						this.compare(relation);
+					}else{
+						return;
+					}  
+				}
+				
+			}
 			
 			
 		},
+		
+		/**
+		 * 循环每个值按照给定的关系进行对比
+		 */
+		compare : function(relation){
+			var compareRes = true;
+			for(var i = 0; i < this.validOption.length - 1; i ++){
+				var res;
+				eval("(res = ($(this.validOption[i]).val()" + relation + "$(this.validOption[i+1]).val()))");
+				if(!res){
+					var index = this.findIndexByName(this.validOption[i],this.allValidOption);
+					this.allValidOption[index].value = false;
+					this.message = this.validRule.option[2];
+					this.notice($(this.validOption[i+1]));
+				}
+			}
+			return compareRes;
+		},
+		/**
+		 * 对单项数据进行rule验证。如果不合法则退出验证并提示用户
+		 * 验证失败返回false,验证通过则返回true
+		 */
+	    validing : function(index){
+	    	var relu = this.validRule.rule;				//获取验证规则
+	    	var selecter = this.validOption[index];
+			var value = $(selecter).val();
+			var index = this.findIndexByName(selecter,this.allValidOption);
+			//console.log(index);
+			//将rule验证结果赋值给easyFrom.validRes
+			eval("(this.validRes = rule."+relu+"('"+value+"'))");
+			//如果验证失败，显示提示信息并
+			if(!this.validRes){
+				this.notice($(selecter));
+				//添加项与验证结果的对应关系到this.allValidOption,如果allValidOption中已经存在该项，则不进行添加，只是修改value值
+				if(index == -1){
+					eval("(this.allValidOption.push({name:'"+selecter+"',value:false}))");
+				}else{
+					eval("(this.allValidOption["+index+"]['value'] = false)");
+				}
+				
+				return false;
+			}
+			//添加项与验证结果的对应关系到this.allValidOption,如果allValidOption中已经存在该项，则不进行添加，只是修改value值
+			if(index == -1){
+				eval("(this.allValidOption.push({name:'"+selecter+"',value:true}))");
+			}else{
+				eval("(this.allValidOption["+index+"]['value'] = true)");
+			}
+			return true;
+	    },
 		
 		/**
 		 * 提交，数据提交需要做以下验证：
@@ -125,7 +174,30 @@ define("easyForm",['jquery'],function($){
 		 * 如果已经通过验证，则检查其验证结果是否为true,如果为假则说明验证失败。
 		 * params object 表单数据提交相关的参数
 		 */
-		submit : function(){
+	    submit : function(obj){
+	    	obj = obj || {};
+	    	
+    		if(obj.url === undefined){
+    			console.log("提交地址不能为空");
+    			return;
+    		}
+	    	
+	    	//提交前验证
+	    	if(!this.submitValid()){
+	    		//验证失败
+	    		console.log("验证失败");
+	    		return false;
+	    	}
+	    	
+	    	alert("提交成功");
+	    	/*$.ajax({
+	    		url:obj.url,
+	    		success:obj.success,
+	    		error:obj.error
+	    	});*/
+	    	
+	    },
+		submitValid : function(){
 			this.message = "必填项不能为空！";
 			for(var i in this.requiredOption){
 				var isValid = false;
@@ -144,18 +216,20 @@ define("easyForm",['jquery'],function($){
 				}
 				//当前项没有经过验证，说明当前项还没有填写
 				if(!isValid){
-					console.log(this.requiredOption[i]);
-					console.log(this.requiredOption);
-					console.log(this.allValidOption);
 					this.notice($(this.requiredOption[i]));
 					return;
 				}
 			}
 		},
+		
+		/**
+		 * 
+		 */
 		/**
 		 * 在当前操作的表单元素对象下显示数据格式非法的提示信息
 		 */
 		notice : function(elementObj){
+			if(this.message.length == 0) return;
 			var notice = "<div name=validNotice style='position: absolute;border: 0;border-radius: 4px;background-color:lavenderblush;padding: 4px;color: peru;text-align: center;'> " + this.message + " </div>";
 			elementObj.parent().append(notice);
 		},
