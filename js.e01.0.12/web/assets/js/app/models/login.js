@@ -98,24 +98,28 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		/**
 		 * 验证用户密码
 		 */
-		singUpPswd : function(obj){
-			//console.log($(obj).val())
+		singUpPswd1 : function(obj){
+			$e("form[name='singUp']").valid({
+				option : [["input[name=pswd1]"]],
+				rule : "isPasswd", 
+				message : "只能输入6-20个字母、数字、下划线",
+			});
 		},
 		/**
 		 * 验证用户密码确认
 		 */
 		singUpPswd2 : function(obj){
-			//console.log($(obj).val())
+			$e("form[name='singUp']").valid({
+				option : [["input[name=pswd2]"]],
+				rule : "isPasswd", 
+				message : "只能输入6-20个字母、数字、下划线",
+			});
 		},
 		/**
 		 * 验证验证码有效性
 		 */
 		singUpVerification : function(obj){
-			$e("form[name='singUp']").valid({
-				option : [["input[name=Verification]"]],
-				rule : "isEmail", 
-				message : "电子邮箱模式错误",
-			});
+			
 		},
 		/**
 		 * 完成注册表单提交
@@ -125,8 +129,7 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 			$e("form[name='singUp']").required([
 			    "input[name=uname]",                                
 			    "input[name=pswd1]",                                
-			    "input[name=pswd2]",                                
-			    "input[name=Verification]"                              
+			    "input[name=pswd2]"                               
 			]).submit();
 		},
 		

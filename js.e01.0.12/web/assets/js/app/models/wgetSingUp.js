@@ -41,7 +41,8 @@ define(["jquery","common","logObj","wget","login"],function($,common,logObj,wget
 		//系统属性设置视图事件绑定列表
 		bindWgetSingUpEvent : function(){
 			$("input[name='uname']").on("blur",function(){login.singUpUName(this)});
-			$("input[name='pswd[]']").on("blur",function(){login.singUpPswd(this)});
+			$("input[name='pswd1']").on("blur",function(){login.singUpPswd1(this)});
+			$("input[name='pswd2']").on("blur",function(){login.singUpPswd2(this)});
 			$("input[name='Verification']").on("blur",function(){login.singUpVerification(this)});
 			$("input[name='singUpSubmit']").on("click",function(){login.singUpSubmit()});
 			$("div[name='maskParentTag']").on("click",function(){wget.cancleMask()});

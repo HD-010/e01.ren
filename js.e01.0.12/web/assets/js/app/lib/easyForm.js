@@ -143,7 +143,7 @@ define("easyForm",['jquery'],function($){
 					if(this.allValidOption[j]['name'] == this.requiredOption[i]){
 						if(!this.allValidOption[j]['value']){ //当前项已经验证过，但验证失败
 							this.message = "数据格式错误";
-							this.notice(this.requiredOption[i]);
+							this.notice($(this.requiredOption[i]));
 							return;
 						}else{								//当前项已经验证过，且验证通过
 							isValid = true;
