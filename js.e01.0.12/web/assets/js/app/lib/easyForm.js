@@ -28,21 +28,12 @@ define("easyForm",['jquery'],function($){
 		//表单必填项，在这里面的项必须通过合法验证,才能够完成easyForm.submit()动作
 		requiredOption : [],
 		
-		//验证数据对象
-		data : {
-			//验证结果是否有为真，为真为1，为假为0.数据结构为 被验证元素名称："值"。这里的"被验证元素名称"可以是jquery中的选择符
-			validate:[],
-		},
-		
 		//---------------valid()操作的属性------------------
 		validOption : "",				//需要验证的项
-		validData : [],				    //需要验证的数据，索引与validOption相对应
 		validRes : '',					//对数据的验证结果，是一个临时数据
 		allValidOption : [],			//所有已经验证过的项的选择符
 		//---------------valid()操作的属性end------------------
 		
-		//当前操作的选择符
-		selector : "",
 		//序列化后的串
 		sializeObj : "",
 		
@@ -91,7 +82,7 @@ define("easyForm",['jquery'],function($){
 			var relu = obj.rule;				//获取验证规则
 			
 			//如果optionNum == 0,则提示错误
-			//..................
+			if(optionNum === 0)return;
 			
 			
 			//如果optionNum == 1,则不进行关系验证
