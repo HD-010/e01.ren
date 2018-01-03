@@ -38,7 +38,7 @@ define("easyForm",['jquery'],function($){
 		validOption : "",				//需要验证的项
 		validData : [],				    //需要验证的数据，索引与validOption相对应
 		validRes : '',					//对数据的验证结果，是一个临时数据
-		allValidOption : {},			//所有已经验证过的项的选择符
+		allValidOption : [],			//所有已经验证过的项的选择符
 		//---------------valid()操作的属性end------------------
 		
 		//当前操作的选择符
@@ -96,22 +96,30 @@ define("easyForm",['jquery'],function($){
 			
 			//如果optionNum == 1,则不进行关系验证
 			if(optionNum == 1){
-				var currenElement = $(this.validOption[0]);
-				var value = currenElement.val();
+				var selecter = this.validOption[0]
+				var value = $(selecter).val();
+				var index = this.findIndexByName(selecter,this.allValidOption);
+				console.log(index);
 				//将rule验证结果赋值给easyFrom.validRes
 				eval("(this.validRes = rule."+relu+"('"+value+"'))");
 				//如果验证失败，显示提示信息并
 				if(!this.validRes){
-					this.notice(currenElement);
-					//添加项与验证结果的对应关系到this.allValidOption
-					//eval("(this.allValidOption."+currenElement+" = false)");
-					eval("("this.allValidOption.push({name:"+currenElement+",value:false})")");
+					this.notice($(selecter));
+					//添加项与验证结果的对应关系到this.allValidOption,如果allValidOption中已经存在该项，则不进行添加，只是修改value值
+					if(index == -1){
+						eval("(this.allValidOption.push({name:'"+selecter+"',value:false}))");
+					}else{
+						eval("(this.allValidOption["+index+"]['value'] = false)");
+					}
 					
 					return;
 				}
-				//添加项与验证结果的对应关系到this.allValidOption
-				//eval("(this.allValidOption."+currenElement+" = true)");
-				eval("("this.allValidOption.push({name:"+currenElement+",value:true})")");
+				//添加项与验证结果的对应关系到this.allValidOption,如果allValidOption中已经存在该项，则不进行添加，只是修改value值
+				if(index == -1){
+					eval("(this.allValidOption.push({name:'"+selecter+"',value:true}))");
+				}else{
+					eval("(this.allValidOption["+index+"]['value'] = true)");
+				}
 			}
 			//如查optionNum > 1,则需要进行关系验证
 			//..................
@@ -129,18 +137,25 @@ define("easyForm",['jquery'],function($){
 		submit : function(){
 			this.message = "必填项不能为空！";
 			for(var i in this.requiredOption){
-				if(this.requiredOption[i] in this.allValidOption){
-					var isValid= false;
-					eval("(isValid= this.allValidOption."+this.requiredOption[i]+")");
-					if(!isValid){
-						this.message = "数据格式错误";
-						this.notice(this.requiredOption[i]);
-						return;
+				var isValid = false;
+				for(var j = 0;j < this.allValidOption.length; j++){
+					//当前项已经验证过
+					if(this.allValidOption[j]['name'] == this.requiredOption[i]){
+						if(!this.allValidOption[j]['value']){ //当前项已经验证过，但验证失败
+							this.message = "数据格式错误";
+							this.notice(this.requiredOption[i]);
+							return;
+						}else{								//当前项已经验证过，且验证通过
+							isValid = true;
+							break;
+						}
 					}
-					console.log("验证通过的值 ：");
-					console.log(isValid);
-				}else{
+				}
+				//当前项没有经过验证，说明当前项还没有填写
+				if(!isValid){
 					console.log(this.requiredOption[i]);
+					console.log(this.requiredOption);
+					console.log(this.allValidOption);
 					this.notice($(this.requiredOption[i]));
 					return;
 				}
@@ -165,16 +180,23 @@ define("easyForm",['jquery'],function($){
 			return -1;
 		},
 		/**
-		 * 根据对象的name值获取对应的value值
+		 * 根据对象的name值获取对应的index值
 		 * obj object 形式如：
 		 * [
 		 * 	{name:"input[name=uname]",value:true},
 		 * 	{name:"input[name=pswd1]",value:false},
 		 * ]
 		 */
-		findValByName:function(name,obj){
-			//for()
+		findIndexByName:function(name,obj){
+			for(var j = 0;j < obj.length; j++){
+				//当前项已经验证过
+				if(obj[j]['name'] == name){
+					return j;
+				}
+			}
+			return -1;
 		},
+		
 		each : function(obj){
 			for(var i = 0; i < obj.length; i++){
 				if(
