@@ -14,8 +14,10 @@
 		rule : "isTrueName", 
 	});
  */
-define("easyForm",['jquery'],function($){
-	
+define("easyForm",function(require){
+	var $=require('jquery');
+	//当前被验证的模块
+	var currentModel;
 	var easyForm = {
 		//当前版本
 		version : "easyForm 0.1.01",
@@ -23,6 +25,8 @@ define("easyForm",['jquery'],function($){
 		formTag : "",
 		//验证失败显示的信息
 		message : "",
+		//禁止提交（初始false允许提交）
+		submitForbid : false,
 		//表单必填项，在这里面的项必须通过合法验证,才能够完成easyForm.submit()动作
 		requiredOption : [],
 		//用户输入的某个验证规则的对象
@@ -143,6 +147,8 @@ define("easyForm",['jquery'],function($){
 	    	var selecter = this.validOption[index];
 			var value = $(selecter).val();
 			var index = this.findIndexByName(selecter,this.allValidOption);
+			//开启数据提交权限
+			this.submitForbid = false;
 			//console.log(index);
 			//将rule验证结果赋值给easyFrom.validRes
 			eval("(this.validRes = rule."+relu+"('"+value+"'))");
@@ -176,7 +182,7 @@ define("easyForm",['jquery'],function($){
 		 */
 	    submit : function(obj){
 	    	obj = obj || {};
-	    	
+	    	if(this.submitForbid) return;
     		if(obj.url === undefined){
     			console.log("提交地址不能为空");
     			return;
@@ -189,7 +195,10 @@ define("easyForm",['jquery'],function($){
 	    		return false;
 	    	}
 	    	
-	    	alert("提交成功");
+	    	//如果当前被验证的模块没有加载则先加载
+	    	if(typeof currentModel == "undefined"){
+	    		console.log("ok");
+	    	}
 	    	/*$.ajax({
 	    		url:obj.url,
 	    		success:obj.success,
@@ -217,9 +226,11 @@ define("easyForm",['jquery'],function($){
 				//当前项没有经过验证，说明当前项还没有填写
 				if(!isValid){
 					this.notice($(this.requiredOption[i]));
-					return;
+					return false;
 				}
 			}
+			//所有项都验证完毕，且没有发现非法数据，则返回true表示所有数据合法
+			return true;
 		},
 		
 		/**
@@ -229,9 +240,10 @@ define("easyForm",['jquery'],function($){
 		 * 在当前操作的表单元素对象下显示数据格式非法的提示信息
 		 */
 		notice : function(elementObj){
-			if(this.message.length == 0) return;
+			if(!this.message) return;
 			var notice = "<div name=validNotice style='position: absolute;border: 0;border-radius: 4px;background-color:lavenderblush;padding: 4px;color: peru;text-align: center;'> " + this.message + " </div>";
 			elementObj.parent().append(notice);
+			this.submitForbid = true;
 		},
 		/**
 		 * 判断值是否存在于数组中，如果存在则返回该值对应的第一个键名
