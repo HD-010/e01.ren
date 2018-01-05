@@ -181,6 +181,7 @@ define("easyForm",function(require){
 		 * params object 表单数据提交相关的参数
 		 */
 	    submit : function(obj){
+	    	var url,data,success,error;
 	    	obj = obj || {};
 	    	if(this.submitForbid) return;
     		if(obj.url === undefined){
@@ -195,21 +196,30 @@ define("easyForm",function(require){
 	    		return false;
 	    	}
 	    	
-	    	//***********************回调函数为引用 形式*******************
-	    	//如果当前被验证的模块没有加载则先加载
-	    	if(typeof currentModel == "undefined"){
-	    		model = obj.success.substr(0,obj.success.indexOf('.'));
-	    		eval("(this.currentModel = require('"+model+"'))");
+	    	url = obj.url;
+	    	data = obj.data;
+	    	if(typeof obj.success == "function"){
+	    		//***********************回调函数匿名函数*******************	
+	    		success = obj.success,
+    			error = obj.error
+	    	}else{
+	    		//***********************回调函数为引用 形式*******************
+	    		//如果当前被验证的模块没有加载则先加载
+	    		if(typeof currentModel == "undefined"){
+	    			model = obj.success.substr(0,obj.success.indexOf('.'));
+	    			eval("(this.currentModel = require('"+model+"'))");
+	    		}
+    			success = this.currentModel.success,
+    			error = this.currentModel.error
 	    	}
-	    	console.log(this.currentModel.success);
 	    	
 	    	$.ajax({
-	    		url:obj.url,
-	    		data:obj.data,
-	    		success:this.currentModel.success,
-	    		error:this.currentModel.error
-	    	});
-	    	//***********************回调函数匿名函数*******************
+    			url:url,
+    			data:data,
+    			success:success,
+    			error:error
+    		});
+	    	
 	    },
 		submitValid : function(){
 			this.message = "必填项不能为空！";
