@@ -130,10 +130,18 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 			    "input[name=pswd1]",                                
 			    "input[name=pswd2]"                               
 			]).submit({
-				url:"http://www.baidu.com"
+				url:"http://www.baidu.com",
+				success:'login.success',
+				error:'login.error'
 			});
 		},
 		
+		success : function(){
+			
+		},
+		error : function(){
+			
+		}
 	};
 	
 	return login;

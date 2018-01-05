@@ -195,16 +195,21 @@ define("easyForm",function(require){
 	    		return false;
 	    	}
 	    	
+	    	//***********************回调函数为引用 形式*******************
 	    	//如果当前被验证的模块没有加载则先加载
 	    	if(typeof currentModel == "undefined"){
-	    		console.log("ok");
+	    		model = obj.success.substr(0,obj.success.indexOf('.'));
+	    		eval("(this.currentModel = require('"+model+"'))");
 	    	}
-	    	/*$.ajax({
-	    		url:obj.url,
-	    		success:obj.success,
-	    		error:obj.error
-	    	});*/
+	    	console.log(this.currentModel.success);
 	    	
+	    	$.ajax({
+	    		url:obj.url,
+	    		data:obj.data,
+	    		success:this.currentModel.success,
+	    		error:this.currentModel.error
+	    	});
+	    	//***********************回调函数匿名函数*******************
 	    },
 		submitValid : function(){
 			this.message = "必填项不能为空！";
