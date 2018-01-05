@@ -10,7 +10,7 @@ class Porcess
         extract($_REQUEST);
         for($i = 0; $i < count($keys); $i ++){
             $keyName = htmlspecialchars($keys[$i]);
-            $GLOBALS[$keys[$i]] = $$keyName;
+            $GLOBALS[$keys[$i]] = trim($$keyName);
         }
         //设置跨访问
         header("Access-Control-Allow-Origin:*");

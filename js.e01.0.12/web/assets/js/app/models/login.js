@@ -68,7 +68,7 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 * 验证用户名是否存在
 		 */
 		checkUName : function(obj){
-			$e("form[name='singUp']").valid({
+			$e("form[name='singIn']").valid({
 				option : [["input[name=uname]"]],
 				rule : "isTrueName", 
 				message : "只能输入1-30个以字母开头的字串",
@@ -78,7 +78,7 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 * 验证用户密码是否正确
 		 */
 		checkPswd : function(obj){
-			$e("form[name='singUp']").valid({
+			$e("form[name='singIn']").valid({
 				option : [["input[name=pswd]"]],
 				rule : "isPasswd", 
 				message : "只能输入6-20个字母、数字、下划线",
@@ -88,7 +88,7 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 * 验证用户名是否存在
 		 */
 		toSubmit : function(obj){
-			$e("form[name='singUp']").required([
+			$e("form[name='singIn']").required([
 			    "input[name=uname]",                                
 			    "input[name=pswd]",                                
 			]).submit({
@@ -97,6 +97,8 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 				error:'login.error'
 			});
 		},
+		
+		
 		
 		/*-------------------------用户注册验证-----------------------*/
 		/**

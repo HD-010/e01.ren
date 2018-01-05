@@ -23,14 +23,18 @@ class LoginController extends Controller
         echo "success";
         //$this->render('out',[456]);
     }
+    
+    
     /**
      * 用户登录系统
      */
     public function actionSingIn(){
-        global $distinctId;
+        global $uname,$pwsd;
         
-        echo "登录成功";
+        print_r($uname);
     }
+    
+    
     /**
      * 新用户注册 
      */
