@@ -1,5 +1,6 @@
 <style>
 form[name='singUp']{
+	width:300px;
 	margin-top:6px;
 }
 div[name='singUpTitle']{
@@ -15,17 +16,16 @@ div[name='singUpTitle']{
 }
 
 form[name='singUp'] ul{
-	margin-top:12px;
+	margin-top:20px;
 }
 form[name='singUp'] ul li{
-	height:20px;
-	margin-bottom:12px;
+	height:22px;
+	margin-bottom:18px;
 	font-size:11px;
-	text-align:left;
-	margin-left:16px;
+	text-align:center;
 }
 form[name='singUp'] ul li input{
-	height:20px;
+	height:22px;
 	border-radius: 2px;
 	font-size:11px;
 	text-align:center;
@@ -35,16 +35,31 @@ form[name='singUp'] ul li a{
 }
 li[name='singUpTitle']{
 }
-li[name='singUpUName']{
+li[name='singUpUName'] input{
+	width:200px;
 }
-li[name='singUpPswd']{
+li[name='singUpPswd'] input{
+	width:200px;
 }
+li[name='singUpPswd2'] input{
+	width:200px;
+}
+
 li[name='singUpVerification'] input{
-	width:90px;
+	width:140px;
+}
+li[name='singUpVerification'] span[name='picVerification']{
+	width:50px;
+	height:18px;
+	border:1px solid white;
+	display:inline-block;
 }
 li[name='singUpBt']{
 	border-bottom: 12px solid white;
 	text-align:center;
+}
+div[name='validNotice']{
+	right:10px;
 }
 
 </style>
@@ -55,10 +70,10 @@ li[name='singUpBt']{
     	<li name="singUpUName">用 户 名 <span><input type="text" name="uname" value="" placeholder="请输入邮箱号或手机号码" /></span></li>
     	<li name="singUpPswd">登录密码 <span><input type="password" name="pswd1" placeholder="请输入登录密码"</span></li>
     	<li name="singUpPswd2">确认密码 <span><input type="password" name="pswd2" placeholder="请确认登录密码"</span></li>
-    	<li name="singUpVerification">验 证 码 <span><input type="text" name="Verification" placeholder="请输入验证码"</span>&nbsp;<span>8595</span></li>
+    	<li name="singUpVerification">验 证 码 <span><input type="text" name="Verification" placeholder="请输入验证码"</span>&nbsp;<span name="picVerification">8595</span></li>
     	<li name="singUpBt">
-    		&nbsp;&nbsp;&nbsp;<span><input type="reset" value=" 重置 "</span>
-    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><input type="button" name="singUpSubmit" value=" 提交 "</span>
+    		<span><input type="reset" value=" 重置 "</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    		<span><input type="button" name="singUpSubmit" value=" 提交 "</span>
     	</li>
     </ul>
 </form>

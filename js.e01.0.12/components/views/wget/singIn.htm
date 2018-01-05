@@ -1,5 +1,6 @@
 <style>
 form[name='singIn']{
+	width:300px;
 	margin-top:6px;
 }
 div[name='singInTitle']{
@@ -15,16 +16,16 @@ div[name='singInTitle']{
 }
 
 form[name='singIn'] ul{
-	margin-top:12px;
+	margin-top:20px;
 }
 form[name='singIn'] ul li{
-	height:20px;
-	margin-bottom:12px;
+	height:22px;
+	margin-bottom:18px;
 	text-align:center;
 }
 form[name='singIn'] ul li input{
 	text-align: center;
-	height:20px;
+	height:22px;
 	border-radius: 2px;
 	font-size:11px;
 }
@@ -33,15 +34,21 @@ form[name='singIn'] ul li a{
 }
 li[name='singInTitle']{
 }
-li[name='singInUName']{
+li[name='singInUName'] input{
+	width:240px;
 }
-li[name='singInPswd']{
+li[name='singInPswd'] input{
+	width:240px;
 }
 li[name='singInBt']{
-	margin-top:10px;
+	margin-top:20px;
 }
 li[name='singCue']{
 	border-bottom: 12px solid white;
+	margin-top:-10px;
+}
+div[name='validNotice']{
+	right:10px;
 }
 
 </style>
@@ -52,8 +59,8 @@ li[name='singCue']{
     	<li name="singInUName"><span><input type="text" name="uname" value="" placeholder="请输入用户名或手机号码" /></span></li>
     	<li name="singInPswd"><span><input type="password" name="pswd" placeholder="请输入登录密码"</span></li>
     	<li name="singInBt">
-    		<span><input type="reset" value=" 重置 "</span>&nbsp;&nbsp;
-    		<span><input type="submit" name="singinSubmit" value=" 登录 "</span>
+    		<span><input type="reset" value=" 重置 "</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    		<span><input type="button" name="singinSubmit" value=" 登录 "</span>
     	</li>
     	<li name="singCue">
     		<a name="modifyPwsd" href="javascript:">忘记密码？</a>
