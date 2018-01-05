@@ -23,6 +23,8 @@ define("easyForm",function(require){
 		version : "easyForm 0.1.01",
 		//调用过的表单
 		formTag : "",
+		//表单对象
+		obj : "",
 		//验证失败显示的信息
 		message : "",
 		//禁止提交（初始false允许提交）
@@ -39,8 +41,9 @@ define("easyForm",function(require){
 		//---------------valid()操作的属性end------------------
 		
 		//序列化后的串
-		sializeObj : "",
-		
+		sializeStr : "",
+		//表单数据对象
+		formDataObj : {},
 		/**
 		 * 初始化必填项
 		 * arr array 各项的选择符名称的集合
@@ -49,27 +52,33 @@ define("easyForm",function(require){
 			this.requiredOption = arr;
 			return this;
 		},
-		
+		//提取表单数据对象
+		formData :function(){
+			this.sialize("object");
+			return this.formDataObj;
+		},
 		/**
 		 * 序列化表单元素
 		 * 将表单元素序列化为name=value的字符串对象，赋值给easyForm.sializeObj
+		 * tag 表示格式化后的数据类型，默认string表示序列化为字串，object表示序列化为对象
 		 */
-		sialize : function(){
+		sialize : function(type){
+			type = type || 'string';
 			//每次调用对上一次调用生成的数据进行清空，以确保生成的数据是最新数据
-			this.sializeObj = "";
+			this.sializeStr = "";
 			//这是整个表单对象，及form标签中的html代码
 			var htmlObj = this.obj.get(0);
 			//获取表单中所有input对象
 			var inputObj = $(htmlObj).find("input");
-			this.each(inputObj);
+			this.each(inputObj,type);
 			//获取表单中所有select对象
 			var selectObj = $(htmlObj).find("select");
-			this.each(selectObj);
+			this.each(selectObj,type);
 			//获取表单中所有textarea对象
 			var textareaObj = $(htmlObj).find("textarea");
-			this.each(textareaObj);
+			this.each(textareaObj,type);
 			
-			return this.sializeObj.substring(1);
+			return this.sializeStr.substring(1);
 		},
 		/**
 		 * 各项值验证的入口方法，如果在方法执行过程中，一旦验证不合法，会取消到剩余项的验证并向用户提示非法输入的信息。
@@ -181,46 +190,61 @@ define("easyForm",function(require){
 		 * params object 表单数据提交相关的参数
 		 */
 	    submit : function(obj){
-	    	var url,data,success,error;
-	    	obj = obj || {};
+	    	//如果禁止提交，则取消执行
 	    	if(this.submitForbid) return;
+	    	
+	    	//提交表的必要条件验证，提交地址不能为空
     		if(obj.url === undefined){
     			console.log("提交地址不能为空");
     			return;
     		}
-	    	
-	    	//提交前验证
+    		
+	    	//提交前的数据验证，如果验证失败，则取消执行
 	    	if(!this.submitValid()){
 	    		//验证失败
 	    		console.log("验证失败");
 	    		return false;
 	    	}
 	    	
-	    	url = obj.url;
-	    	data = obj.data;
-	    	if(typeof obj.success == "function"){
-	    		//***********************回调函数匿名函数*******************	
-	    		success = obj.success,
-    			error = obj.error
-	    	}else{
-	    		//***********************回调函数为引用 形式*******************
-	    		//如果当前被验证的模块没有加载则先加载
-	    		if(typeof currentModel == "undefined"){
-	    			model = obj.success.substr(0,obj.success.indexOf('.'));
-	    			eval("(this.currentModel = require('"+model+"'))");
-	    		}
-    			success = this.currentModel.success,
-    			error = this.currentModel.error
-	    	}
+	    	//预定义ajax的参数对象
+	    	var preData = {
+	    		data:this.formData(),
+	    	};
 	    	
-	    	$.ajax({
-    			url:url,
-    			data:data,
-    			success:success,
-    			error:error
-    		});
+	    	//列出提交表的数据对象中可能出现的属性为函数的属性名称
+	    	var callback = ["success","error"];
+	    	//整理ajax参数对象,将用户定义的ajax的参数对象类分添加到preData中
+	    	for(var o in obj){
+	    		if(this.inArray(o,callback) == -1){
+	    			//这些属性不会以函数的形式出现
+	    			//添加对象属性
+	    			eval("(preData."+o+" = obj."+o+")");
+	    		}else{
+	    			//这些属性可能会以函数的形式出现，若出现则将其添加到preData的成员方法
+	    			var dataType;		//定义成员方法出现的类型，可能是string,可能是function
+	    			eval("(dataType = typeof obj."+o+")");
+	    			if(dataType == "function"){
+	    				eval("(preData."+o+" = obj."+o+")");
+	    			}else{
+	    				if(typeof currentModel == "undefined"){
+	    					var model;
+	    	    			eval("(model = obj."+o+".substr(0,obj."+o+".indexOf('.')))");
+	    	    			eval("(currentModel = require('"+model+"'))");
+	    	    		}
+	    				eval("(preData."+o+" = currentModel."+o+")");
+	    			}
+	    		}
+	    	}
+	    	//console.log(preData);
+	    	$.ajax(preData);
+	    	
+	    	//提交完成后禁止重复提交
+	    	this.submitForbid = true;
 	    	
 	    },
+	    /**
+	     * 提交前的数据验证
+	     */
 		submitValid : function(){
 			this.message = "必填项不能为空！";
 			for(var i in this.requiredOption){
@@ -289,7 +313,12 @@ define("easyForm",function(require){
 			return -1;
 		},
 		
-		each : function(obj){
+		/**
+		 * 序列化表单数据
+		 * obj 为表单对象
+		 * type 为序列化数据为指定的类型
+		 */
+		each : function(obj,type){
 			for(var i = 0; i < obj.length; i++){
 				if(
 					obj.eq(i).attr("type") == "button" ||
@@ -300,10 +329,26 @@ define("easyForm",function(require){
 				}
 				name = obj.eq(i).attr("name");
 				value = obj.eq(i).val();
-				var str = "&"+name+"="+value.trim();
-				this.sializeObj += str;
+				
+				//将表单数据序列化为字符串
+				if(type == 'string'){
+					var str = "&"+name+"="+value.trim();
+					this.sializeStr += str;
+				}
+				//将表单数据序列化对象
+				if(type == 'object'){
+					eval("("+"this.formDataObj."+name+" = '"+value+"')");
+				}
 			}
 		},
+		
+		/**
+		 * 自定义验证规则
+		 */
+		setRule : function(){
+			var ruleNme,ruler;
+			rule.ruleName = ruler;
+		}
 		
 	};
 	

@@ -5,7 +5,6 @@ use Yii;
 use yii\base\Controller;
 use app\modules\openapi\models\Porcess;
 
-
 class LoginController extends Controller
 {
     public function actions(){
@@ -20,17 +19,25 @@ class LoginController extends Controller
     /**
      * 用户退出系统
      */
-    public function actionSingout(){
+    public function actionSingoOut(){
         echo "success";
         //$this->render('out',[456]);
     }
     /**
      * 用户登录系统
      */
-    public function actionSingin(){
+    public function actionSingIn(){
         global $distinctId;
         
-        return $this->renderPartial("singin",['df'=>"kddk"]);
+        echo "登录成功";
+    }
+    /**
+     * 新用户注册 
+     */
+    public function actionSingUp(){
+        global $uname;
+        print_r($uname);
+        //echo "注册成功，已经成功登录！;
     }
     
     

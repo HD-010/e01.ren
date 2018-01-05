@@ -68,20 +68,34 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 * 验证用户名是否存在
 		 */
 		checkUName : function(obj){
-			console.log("用户名不存在");
-			return "用户名不存在";
+			$e("form[name='singUp']").valid({
+				option : [["input[name=uname]"]],
+				rule : "isTrueName", 
+				message : "只能输入1-30个以字母开头的字串",
+			});
 		},
 		/**
 		 * 验证用户密码是否正确
 		 */
 		checkPswd : function(obj){
-			return "密码不存在";
+			$e("form[name='singUp']").valid({
+				option : [["input[name=pswd]"]],
+				rule : "isPasswd", 
+				message : "只能输入6-20个字母、数字、下划线",
+			});
 		},
 		/**
 		 * 验证用户名是否存在
 		 */
 		toSubmit : function(obj){
-			return "登录成功";
+			$e("form[name='singUp']").required([
+			    "input[name=uname]",                                
+			    "input[name=pswd]",                                
+			]).submit({
+				url:this.url+"/sing-in",
+				success:'login.success',
+				error:'login.error'
+			});
 		},
 		
 		/*-------------------------用户注册验证-----------------------*/
@@ -119,7 +133,10 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 		 * 验证验证码有效性
 		 */
 		singUpVerification : function(obj){
-			
+			$e("form[name='singUp']").valid({
+				option : [["input[name=Verification]"]],
+				rule : "isDigit", 
+			});
 		},
 		/**
 		 * 完成注册表单提交
@@ -128,16 +145,17 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 			$e("form[name='singUp']").required([
 			    "input[name=uname]",                                
 			    "input[name=pswd1]",                                
-			    "input[name=pswd2]"                               
+			    "input[name=pswd2]",                               
+			    "input[name=Verification]",                               
 			]).submit({
-				url:"http://www.baidu.com",
+				url:this.url+"/sing-up",
 				success:'login.success',
 				error:'login.error'
 			});
 		},
 		
-		success : function(){
-			
+		success : function(data,state){
+			console.log(data)
 		},
 		error : function(){
 			
