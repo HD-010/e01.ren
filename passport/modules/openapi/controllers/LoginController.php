@@ -4,7 +4,8 @@ namespace app\modules\openapi\controllers;
 use Yii;
 use yii\base\Controller;
 use app\modules\openapi\models\Porcess;
-use app\modules\openapi\models\Login;
+use app\models\User;
+use app\modules\openapi\models\UserProfiles;
 
 class LoginController extends Controller
 {
@@ -22,7 +23,7 @@ class LoginController extends Controller
      */
     public function actionSingoOut(){
         echo "success";
-        //$this->render('out',[456]);
+        
     }
     
     
@@ -30,10 +31,33 @@ class LoginController extends Controller
      * 用户登录系统
      */
     public function actionSingIn(){
-        global $uname,$pwsd;
-        $login = new Login();
-        $state = $login->singIn();
-        print_r($state);
+        global $uname,$pswd;
+        
+        
+        $identity = User::findOne(['UNAME' => $uname]);
+        if(!$identity){
+            return json_encode([
+                'state' => 'fail',
+                'message' => '用户不存在'
+            ]);
+        }
+        $password = $identity->PSWD;
+        if($password == $pswd){
+            Yii::$app->user->login($identity);
+            
+            return json_encode([
+                'state' => 'success',
+                'id' => $identity->ID,
+                'uname' => $identity->UNAME,
+                'tel' => $identity->TEL
+            ]);
+        }else{
+            return json_encode([
+                'state' => 'fail',
+                'message' => '用户名或密码不正确'
+            ]);
+        }
+        
     }
     
     
@@ -41,9 +65,19 @@ class LoginController extends Controller
      * 新用户注册 
      */
     public function actionSingUp(){
-        global $uname;
-        print_r($uname);
-        //echo "注册成功，已经成功登录！;
+        global $Verification;
+        
+        //验证用户验证码
+        if(!$Verification){
+            return json_encode(['state'=>'fail','message'=>'验证码错误']);
+        }
+        //写入注册用户资料
+        $singUp = new UserProfiles();
+        if($singUp->singUp()){
+            return json_encode(['state'=>'success','message'=>'注册成功']);
+        }else{
+            return json_encode(['state'=>'fail','message'=>'注册失败']);
+        }
     }
     
     
