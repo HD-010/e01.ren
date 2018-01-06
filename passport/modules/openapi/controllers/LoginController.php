@@ -4,6 +4,7 @@ namespace app\modules\openapi\controllers;
 use Yii;
 use yii\base\Controller;
 use app\modules\openapi\models\Porcess;
+use app\modules\openapi\models\Login;
 
 class LoginController extends Controller
 {
@@ -30,8 +31,9 @@ class LoginController extends Controller
      */
     public function actionSingIn(){
         global $uname,$pwsd;
-        
-        print_r($uname);
+        $login = new Login();
+        $state = $login->singIn();
+        print_r($state);
     }
     
     
@@ -58,7 +60,6 @@ class LoginController extends Controller
             "js" => Yii::getAlias("@webAssets/js/")
         ]);
     }
-    
     
     
 }
