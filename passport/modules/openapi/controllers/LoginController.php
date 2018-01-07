@@ -31,30 +31,42 @@ class LoginController extends Controller
      * 用户登录系统
      */
     public function actionSingIn(){
-        global $uname,$pswd;
+        global $uname,$pswd,$message;
+       
+        //检测用户登录账类型，是tel|qq|uname
+        $userProfiles = new UserProfiles();
+        $countType = $userProfiles->countType($uname);
         
+        //如果账户类型不存在，则返回错
+        if(!$countType) {
+            return json_encode(['state' => 'fail','message' => '用户不存在']);
+        }
         
-        $identity = User::findOne(['UNAME' => $uname]);
+        //获取用户认证信息
+        $identity = User::findOne([strtoupper($countType) => $uname]);
         if(!$identity){
             return json_encode([
                 'state' => 'fail',
-                'message' => '用户不存在'
+                'message' => '用户不存在',
             ]);
-        }
+        } 
+        
         $password = $identity->PSWD;
+        if(strlen($pswd) != 32){
+            $pswd = $userProfiles->securityStr($pswd);
+        }
         if($password == $pswd){
             Yii::$app->user->login($identity);
-            
             return json_encode([
                 'state' => 'success',
                 'id' => $identity->ID,
                 'uname' => $identity->UNAME,
-                'tel' => $identity->TEL
+                'mobil' => $identity->MOBILE
             ]);
         }else{
             return json_encode([
                 'state' => 'fail',
-                'message' => '用户名或密码不正确'
+                'message' => '用户名或密码不正确',
             ]);
         }
         
@@ -65,16 +77,25 @@ class LoginController extends Controller
      * 新用户注册 
      */
     public function actionSingUp(){
-        global $Verification;
+        global $uname,$pswd, $Verification;
         
         //验证用户验证码
         if(!$Verification){
             return json_encode(['state'=>'fail','message'=>'验证码错误']);
         }
         //写入注册用户资料
-        $singUp = new UserProfiles();
-        if($singUp->singUp()){
-            return json_encode(['state'=>'success','message'=>'注册成功']);
+        //检测用户登录账类型，是tel|qq|uname
+        $userProfiles = new UserProfiles();
+        $countType = $userProfiles->countType($uname);
+        $pswd = $userProfiles->securityStr($pswd);
+        
+        if($userProfiles->singUp($countType)){
+            return json_encode([
+                'state'=>'success',
+                'message'=>'注册成功',
+                'uname' => $uname,
+                'pswd' => $pswd
+            ]);
         }else{
             return json_encode(['state'=>'fail','message'=>'注册失败']);
         }

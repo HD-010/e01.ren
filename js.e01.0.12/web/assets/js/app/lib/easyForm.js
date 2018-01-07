@@ -3,7 +3,8 @@
  * 作者：弘德誉曦
  * 
  * 关于数据验证的使用说明：
-    //加入需要进行验证的项，这是一个二维数组，描述项与项之间的关系。有以下两种情况：
+ * 如何校验表单数据类型
+    //加入需要验证的项，这是一个二维数组，描述项与项之间的关系。有以下两种情况：
     //一、格式如 option :[["input[name=name1]","input[name=name2]","input[name=name3]"],"关系运算符"]
     //二、如果不需要将多项进行对比，则只需要写明项名称，如 option : [["input[name=uname]"]]
     //以上定义的两种option意思如下：
@@ -13,6 +14,44 @@
 		option : [["input[name=uname]"]],
 		rule : "isTrueName", 
 	});
+	
+	如何获取表单数据序列化字串？
+	$e("form[name='singUp']").sialize()
+	
+	如何获取表单数据序列化对象？
+	$e("form[name='singUp']").formData()
+	
+	如何校验必填项？
+	$e("form[name='singUp']").required([
+	    "input[name=uname]",                                
+	    "input[name=pswd]",                                
+	    "input[name=pswd2]",                               
+	    "input[name=Verification]",                               
+	])
+	
+	如何提交表单？
+	$e("form[name='singUp']").required([
+	    "input[name=uname]",                                
+	    "input[name=pswd]",                                
+	    "input[name=pswd2]",                               
+	    "input[name=Verification]",                               
+	]).submit({					//该对象为jquery  ajax参数对象
+		url:this.url+"/sing-up",
+		dataType:"JSON",
+		success:function(data){
+			console.log(data)
+			if(data.state == 'success'){
+				//显示注册 成功提示信息
+				var message = $e().msg("注册成功，正在登录...");
+				$("div[name=singUpTitle]").append(message);
+				login.data = data;
+				//三秒后自动完成登录
+				setTimeout(login.singUpToIn,3000);
+			}
+		},
+		error:'login.error'
+	});
+	
  */
 define("easyForm",function(require){
 	var $=require('jquery');
@@ -126,7 +165,6 @@ define("easyForm",function(require){
 				}
 				
 			}
-			
 			
 		},
 		
@@ -284,6 +322,14 @@ define("easyForm",function(require){
 			elementObj.parent().append(notice);
 			this.submitForbid = true;
 		},
+		
+		/**
+		 * 在当前操作的表单元素对象下显示数据格式非法的提示信息
+		 */
+		msg : function(msg){
+			if(!msg) return;
+			return "<div name=validNotice style='position: absolute;border: 0;border-radius: 4px;background-color:lavenderblush;padding: 4px;color: peru;text-align: center;margin-top: 20%;'> " + msg + " </div>";
+		},
 		/**
 		 * 判断值是否存在于数组中，如果存在则返回该值对应的第一个键名
 		 */
@@ -403,7 +449,7 @@ define("easyForm",function(require){
 		 //校验手机号码：必须以数字开头，除数字外，可含有“-” 
 		 isMobil : function (s) 
 		 { 
-			 var patrn=/^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$/; 
+			 var patrn=/^(13[0-9]|15[0-9]|18[0-9])\d{8}$/; 
 			 if (!patrn.exec(s)) return false 
 			 return true 
 		 },
@@ -448,8 +494,8 @@ define("easyForm",function(require){
 			 return true 
 		 },
 		 
-		 //校验复合登录名：只能输入5-20个以字母开头、可带数字、“_”、“.”的字串  或 手机号 或email
-		 isComplexUserName : function (s){
+		 //校验复合登录名：只能输入 手机号 或email
+		 isMobilOrEmail : function (s){
 			 var res = this.isMobil(s) || this.isEmail(s);
 			 return res;
 		 },

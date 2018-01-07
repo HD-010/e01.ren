@@ -8,7 +8,7 @@
 			<ul name=t2>
 				<li><a href="javascript:" name="setSys">个性设置</a></li>
 				<li><a href="javascript:" name="journal">清空日志</a></li>
-				<li><a href="javascript:" name="login|out">退出 [->]</a></li>
+				<li><a href="javascript:" name="login|out">登录</a></li>
 			</ul>
 		</li>
 	</ul>

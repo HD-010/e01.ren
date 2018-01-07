@@ -35,7 +35,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [[], 'required'],
             [['ID'], 'integer'],
-            [['TEL'], 'string', 'max' => 11],
+            [['MOBILE'], 'string', 'max' => 11],
             [['QQ', 'WECHAT'], 'string', 'max' => 13],
             [['PSWD', 'UNAME'], 'string', 'max' => 64],
             [['TYPE'], 'string', 'max' => 16],
@@ -49,7 +49,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'ID' => 'ID',
-            'TEL' => 'Tel',
+            'MOBILE' => 'MOBILE',
             'QQ' => 'Qq',
             'WECHAT' => 'Wechat',
             'PSWD' => 'Pswd',

@@ -39,18 +39,9 @@ require([
 	
 	
 	/*-----------------------根据实际情况展示用户登录状态------------------------*/
-	if(typeof(Storage)!=="undefined"){
-		
-		/**start 预置系统参数**/
-		sessionStorage.setItem("isGuest",true);
-		sessionStorage.setItem("nick","");
-		/**end**/
-		
-	}else{
+	if(typeof(Storage) === "undefined"){
 		alert("浏览器版本过低，不能正常运行！");
 	}
-	
-	
 	
 	/*-----------------------以下设置事件样式------------------------*/
 	//设置事件样式
