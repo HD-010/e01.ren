@@ -2,6 +2,8 @@
 namespace app\modules\analysis\models;
 
 use Yii;
+use app\modules\analysis\models\Process;
+
 
 class Schema
 {
@@ -29,7 +31,8 @@ class Schema
         
     //校验步骤：
     /** 
-     * 1、将表中的字段保存到缓存中，
+     * 1、每个用户的每张表的字段名对应一个集合
+     * 将表中的字段信息保存到缓存中，（先保存到静态变量）
      */
     public function setTableDesc($tableName){
         $res = Yii::$app->db->createCommand("desc $tableName")
@@ -38,13 +41,16 @@ class Schema
         Schema::$$descName = $res;
     }
         
-    /**
-     * 2、每个用户的每张表的字段名对应一个集合
-     */
+    
     
     /**
-     * 3、校验所有字段是否都存在及数据类型是否一致，如果存在且数据类型一致则直接插入新记录。如果不存在，则以当前数据的数据类型作为字段类型添加新字段。
+     * 2、判断需要插入的字段是否在数据表中完全有对应的字段
+     * return blooen 如果有有对应的字段则返回true,如果没有则按添加相应的字段,如果添加成功返回true,如果添加失败返回fasle
+     * 校验所有字段是否都存在及数据类型是否一致，如果存在且数据类型一致则直接插入新记录。如果不存在，则以当前数据的数据类型作为字段类型添加新字段。
      */
+    public function fieldsIsFull(){
+        
+    }
     
     /**
      * 4、一个首次出现的字段需要获取它的字符类型。 
