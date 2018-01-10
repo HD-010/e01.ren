@@ -7,8 +7,8 @@ use app\modules\analysis\models\Process;
 
 class Schema
 {
-    public static $userDesc;
-    public static $eventsDesc;
+    public static $tableName;
+    public static $tableDesc;
     
     //-- 判断 vrv_paw_rule 表是否存在 thresholdMin 字段，不存在则添加; 存在则修改字段类型
     /* $sql = "DELIMITER ??
@@ -34,11 +34,13 @@ class Schema
      * 1、每个用户的每张表的字段名对应一个集合
      * 将表中的字段信息保存到缓存中，（先保存到静态变量）
      */
-    public function setTableDesc($tableName){
-        $res = Yii::$app->db->createCommand("desc $tableName")
+    
+    public static function setTableDesc($tableName){
+        //如果当前表结构已经存在则不再往数据库查询
+        if(self::$tableName == $tableName) return;
+        self::$tableName = $tableName;
+        self::$tableDesc = Yii::$app->db->createCommand("desc $tableName")
         ->queryAll();
-        $descName = $tableName.'Desc';
-        Schema::$$descName = $res;
     }
         
     
@@ -48,8 +50,40 @@ class Schema
      * return blooen 如果有有对应的字段则返回true,如果没有则按添加相应的字段,如果添加成功返回true,如果添加失败返回fasle
      * 校验所有字段是否都存在及数据类型是否一致，如果存在且数据类型一致则直接插入新记录。如果不存在，则以当前数据的数据类型作为字段类型添加新字段。
      */
-    public function fieldsIsFull(){
+    public static function moreFeilds($feilds){
+        //记录表结构中没有的字段，即为新增的属性。
+        $moreFeilds = [];
+        for($i = 0; $i < count($feilds) ;$i ++){
+            $isExists = false;      //假设字段不存在
+            for($j = 0; $j < count(self::$tableDesc); $j ++){
+                if(self::$tableDesc[$j]['Field'] === $feilds[$i]){
+                    $isExists = true;
+                    break;
+                }
+            }
+            //在表结构中没有找到当前字段，则将其记录到moreFeilds中的
+            if(!$isExists){
+                $moreFeilds[] = $feilds[$i];
+            }
+        }
+        return $moreFeilds;
+    }
+    
+    //将新增字段添加到对应的表中
+    public static function addFeild2table($feilds){
+        $sql = "ALTER user ADD MOBILE CHAR(11),ADD NICK VARCHAR(36)";
+        $addContent = "";
+        $sql = "ALTER table = :table addContent = :addContent";
+        $conn = Yii::$app->db;
+        $command = $conn->createCommand($sql);
+        $command->bindValues([
+            ':table' => self::$tableName,
+            ':addContent' => $addContent,
+        ])->execute();
         
+        echo "<pre>这是事件属性数据类型";
+        print_r($feilds);
+        echo "成功添加字段到表中</pre>";
     }
     
     /**
@@ -59,6 +93,19 @@ class Schema
     /**
      * 5、然后插入新记录。 
      */
+    
+    /**
+     * 返回数据表中所有字段的数据类型
+     */
+    public static function getDataType(){
+        $dataType = array();
+        foreach(self::$tableDesc as $v){
+            //数据类型的字符串
+            $type = substr($v['Type'], 0,stripos($v['Type'], '('));
+            $dataType[$v['Field']] = trim($type);
+        }
+        return $dataType;
+    }
         
 }
 
