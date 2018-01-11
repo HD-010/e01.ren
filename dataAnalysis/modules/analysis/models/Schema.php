@@ -69,30 +69,35 @@ class Schema
         return $moreFeilds;
     }
     
-    //将新增字段添加到对应的表中
+    /**
+     * 将新增字段添加到对应的表中
+     * @param array $feilds 新字段及定义 的数据类型
+     * return true 表示成功
+     */
     public static function addFeild2table($feilds){
-        $sql = "ALTER user ADD MOBILE CHAR(11),ADD NICK VARCHAR(36)";
+        $sql = "ALTER table user ADD TLE CHAR(11),ADD NICK VARCHAR(36)";
         $addContent = "";
-        $sql = "ALTER table = :table addContent = :addContent";
+        foreach($feilds as $name => $value){
+            //定义 的数据类型与数据库中数据类型的对照关系
+            $dataType = self::getDataType2DataType();
+            //数据类型与字段长度的对照关系
+            $dataLength = self::getDataLength();
+            //组装新增字段的长度
+            $clumAttr = $dataLength[$dataType[$value]];
+            $addContent .= ", ADD $name $clumAttr";
+        }
+        $addContent = substr($addContent,1);
+        //组装字段内容到sql
+        $sql = "ALTER table ".self::$tableName." $addContent";
         $conn = Yii::$app->db;
         $command = $conn->createCommand($sql);
-        $command->bindValues([
-            ':table' => self::$tableName,
-            ':addContent' => $addContent,
-        ])->execute();
-        
-        echo "<pre>这是事件属性数据类型";
-        print_r($feilds);
-        echo "成功添加字段到表中</pre>";
+        return $command->execute();   //返回1则插入成功
     }
     
     /**
      * 4、一个首次出现的字段需要获取它的字符类型。 
      */
-    
-    /**
-     * 5、然后插入新记录。 
-     */
+   
     
     /**
      * 返回数据表中所有字段的数据类型
@@ -105,6 +110,33 @@ class Schema
             $dataType[$v['Field']] = trim($type);
         }
         return $dataType;
+    }
+    
+    /**
+     * 设置数据类型对照关系
+     */
+    public static function getDataType2DataType(){
+        return [
+            'string' => 'varchar',
+            'boolean' => 'boolean',
+            'integer' => 'float',
+            'float' => 'float',
+            'double' => 'float',
+            'datetime' => 'datetime',
+            'date' => 'date',
+            'list' => 'text',
+        ];
+    }
+    
+    public static function getDataLength(){
+        return [
+            'varchar' => 'varchar(512)',
+            'boolean' => 'boolean',
+            'float' => 'float',
+            'datetime' => 'datetime',
+            'date' => 'date',
+            'text' => 'text',
+        ];
     }
         
 }

@@ -45,21 +45,7 @@ class Process
         return $this;
     }
     
-    /**
-     * 设置数据类型对照关系
-     */
-    public function getDataType2DataType(){
-        return [
-            'string' => 'varchar',
-            'boolean' => 'boolean',
-            'integer' => 'float',
-            'float' => 'float',
-            'double' => 'float',
-            'datetime' => 'datetime',
-            'date' => 'date',
-            'list' => 'text',
-        ];
-    }
+    
     
     /**
      * 设置事件类型与表的对照关系
@@ -197,7 +183,7 @@ class Process
      */
     public function unanimousTypeName(){
         $feildDataType = $this->getFullFeilds();
-        $type2type = $this->getDataType2DataType();
+        $type2type = Schema::getDataType2DataType();
         $temp = array();
         foreach($feildDataType as $k => $v){
             $temp[$k] = trim($type2type[$v]);
