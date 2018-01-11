@@ -204,7 +204,6 @@ class Process
         $tableFeilds = Schema::getDataType();
         
         foreach($eventDataType as $k => $v){
-            echo $v ."====".$tableFeilds[$k]."<br/>";
             if($v !== $tableFeilds[$k]){
                 $this->data['error'] = "数据类型错误";
                 return false;

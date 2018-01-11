@@ -40,11 +40,6 @@ class IndexController extends Controller
         }
         //写入新记录
         
-        
-        //字段有效性校验通过则往下执行
-        echo "<pre>";
-        print_r($data->getType());
-        echo "</pre>";
     }
 }
 
