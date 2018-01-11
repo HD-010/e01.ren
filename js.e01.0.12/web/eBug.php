@@ -61,14 +61,17 @@ class EDebug
         }
     }
     
-    // 消除日志
+    // 清除日志
     public function clearLog()
     {
         $filename = $this->readPath ? self::$basePath . $this->readPath : self::$logPath;
         // 确保文件可写,如果文件不存在则创建一个空文件
-        file_put_contents($filename, '');
         header("Access-Control-Allow-Origin:*");
-        echo "success";
+        if(file_put_contents($filename, '') === false) {
+            echo "fail";
+        }else{
+            echo "success";
+        }
     }
     
     // 写日志
@@ -83,16 +86,6 @@ class EDebug
         register_shutdown_function('EDebug::PageOnShutdown');
         // 解析目标文件
         $this->checkSyntax($this->checkFile);
-    }
-    
-    //生成测试服务端执行方法
-    
-    
-    //分发函数对象
-    public function funcLog(){
-        global $data;
-        $htmlspecialchars = htmlspecialchars_decode($data);
-        eval($htmlspecialchars);
     }
     
     // 查看日志

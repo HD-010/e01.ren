@@ -172,7 +172,9 @@ define(["jquery","common"],function($,common){
 			var url = this.clientUrl;
 			this.tranceData('clear','func',function(data){
 				logObj.tranceData(data,'func',function(data){
-					location.href = url;
+					console.log(data);
+					//清空日志后以重新读取日志的方式来刷新页面，保证控制台日志可读
+					logObj.tranceData('debug','read',logObj.tranceLog,logObj.clientUrl);
 				},url);
 			});
 		},
