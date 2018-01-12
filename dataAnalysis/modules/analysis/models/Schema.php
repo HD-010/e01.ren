@@ -81,7 +81,7 @@ class Schema
         //组装字段内容到sql
         $sql = "ALTER table ".self::$tableName." $addContent";
         $conn = Yii::$app->db;
-        return $conn->createCommand($sql)->execute(); //返回1则插入成功
+        return $conn->createCommand($sql)->execute(); //返回被引响的条数
     }
     
     

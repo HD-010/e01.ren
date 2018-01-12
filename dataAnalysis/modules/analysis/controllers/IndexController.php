@@ -9,7 +9,7 @@ use app\modules\analysis\models\Process;
 class IndexController extends Controller
 {
     //待写入的数据格式
-    public $info = '{"type":"profile_set","properties":{"TedFDsE":"2018-01-10 12:01:00","WweweHAT":"56565","QQ":"233"},"time":-657091719000,"distinct_id":"160c43903f0f8-0698e47c2c301e-454c092b-2073600-160c43903f1418","lib":{"$lib":"php","$lib_version":"1.5.0","$lib_method":"code","$lib_detail":"app\\components\\SensorsData##saLog##D:\\WWW\\web_pc\\components\\SensorsData.php##450"},"project":"taoshouyou","event":"gameview"}';
+    public $info = '{"type":"track","properties":{"TedFDsE":"2018-01-10 12:01:00","WweweHAT":"56565","QQ":"233"},"time":-657091719000,"distinct_id":"160c43903f0f8-0698e47c2c301e-454c092b-2073600-160c43903f1418","lib":{"$lib":"php","$lib_version":"1.5.0","$lib_method":"code","$lib_detail":"app\\components\\SensorsData##saLog##D:\\WWW\\web_pc\\components\\SensorsData.php##450"},"project":"taoshouyou","event":"gameview"}';
 
     public function actionIndex(){
         $schema = new Schema();
@@ -27,6 +27,7 @@ class IndexController extends Controller
             for($i = 0; $i < 5 || !$addSuccess; $i ++){
                 if(Schema::addFeilds($process->feilds2sql())) {
                     $addSuccess = true;
+                    echo "成功加入新字段！";
                     break;
                 }
             }
@@ -36,6 +37,7 @@ class IndexController extends Controller
         //字段类型不一致,将数据数据写入errors表
         if(!$valid){
             Schema::insertInValidDAta($process->inValidData2sql());
+            echo "字段类型不一致，已经将错误信息写入error表";
             return;
         }
         //将有效数据写入数据表
@@ -43,6 +45,7 @@ class IndexController extends Controller
         //如果数据写入失败，则将错误信息写入errors表
         if(!$res){
             Schema::insertInValidDAta($process->insertError2sql());
+            echo "数据写入失败，已经将错误信息写入error表";
         }
         
     }

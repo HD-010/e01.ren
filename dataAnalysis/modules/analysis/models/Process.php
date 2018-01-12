@@ -57,7 +57,10 @@ class Process
             'profile_set_once' => 'user',
             'track_signup' => 'user',
         ];
-        $this->tableName = $table2EventType[$this->type];
+        $type = array_key_exists($this->type,$table2EventType) ? $this->type : '';
+        //类型错误则谢绝入库
+        if(!$type) return;
+        $this->tableName =  $table2EventType[$type];
     }
     
     /**
@@ -225,7 +228,7 @@ class Process
      */
     public function unanimousTypeName(){
         $feildDataType = $this->getFullFeilds();
-        $type2type = Schema::getDataType2DataType();
+        $type2type = $this->getDataType2DataType();
         $temp = array();
         foreach($feildDataType as $k => $v){
             $temp[$k] = trim($type2type[$v]);
@@ -304,23 +307,22 @@ class Process
      * 将无效数据转换为sql语句
      *
      * return 返回需要插入的字段名组成的语句
-     * 格式如 ： (`contents`,`type`,`datatime`)  VALUE ('jsonStr','效验失败','2018-01-12')
+     * 格式如 ： (`contents`,`datatype`,`addtime`)  VALUE ('jsonStr','效验失败','2018-01-12')
      */
-    public function inValidData2sql($type = 0){
-        $error = ['效验失败','入库失败'];
+    public function inValidData2sql($type = 1){
         $dataStr = \GuzzleHttp\json_encode($this->data);
         $dataStr = htmlspecialchars($dataStr);
-        return "(`contents`,`type`,`datatime`)  VALUE ('{$dataStr}','{$error[$type]}','{date('Y-m-d H:i:s',time())}')";
+        return "(`contents`,`datatype`,`addtime`)  VALUE ('{$dataStr}','{$type}','{date('Y-m-d H:i:s',time())}')";
     }
     
     /**
      * 返回有效数据入库失败的sql
      *
      * return 返回需要插入的字段名组成的语句
-     * 格式如 ： (`contents`,`datatime`)  VALUE ('jsonStr','2018-01-12')
+     * 格式如 ： (`contents`,`datatype`,`datatime`)  VALUE ('jsonStr','入库失败','2018-01-12')
      */
     public function insertError2sql(){
-        return $this->inValidData2sql(1);
+        return $this->inValidData2sql(2);
     }
     
 }
