@@ -78,10 +78,15 @@ class Schema
      * return true 表示成功
      */
     public static function addFeilds($addContent){
+        $tableName = self::$tableName;
         //组装字段内容到sql
-        $sql = "ALTER table ".self::$tableName." $addContent";
+        $sql = "ALTER table ".$tableName." $addContent";
         $conn = Yii::$app->db;
-        return $conn->createCommand($sql)->execute(); //返回被引响的条数
+        self::$tableName = "";
+        $res = $conn->createCommand($sql)->execute(); //返回被引响的条数
+        //改变表结构后重新初始化表结构
+        self::setTableDesc($tableName);
+        return $res;
     }
     
     
@@ -106,7 +111,7 @@ class Schema
      */
     public static function insertValidDAta($data){
         //$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
-        $sql = "INSERT INTO `" + self::$tableName+ "` " + $data;
+        $sql = "INSERT INTO `" . self::$tableName . "` " . $data;
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }
@@ -116,7 +121,7 @@ class Schema
      * @param string $data sql子串
      */
     public static function insertInValidDAta($data){
-        $sql = "INSERT INTO errors " + $data;
+        $sql = "INSERT INTO errors " . $data; //exit($sql);
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }

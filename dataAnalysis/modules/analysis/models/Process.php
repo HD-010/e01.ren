@@ -289,14 +289,16 @@ class Process
         $values = "(";
         foreach($this->properties as $feild => $value){
             //拼接需要插入的字段名称
-            $names .= ',`' . $feild . '`';     
+            $names .= '`' . $feild . '`,';     
             //拼接需要插入的与字段名称对应的值,如果是数值或boolen类型则不加单引号
             $feildDataType = $this->getFullFeilds();
             //指定这些类型的值不加引号
             $forNumber = ['boolean','float','double','integer'];
             $tag = in_array($feildDataType[$feild], $forNumber);
-            $values .= ($tag == -1) ? ",'".$value."'" : ",".$value."";
+            $values .= $tag ? $value."," :  "'".$value."'," ;
         }
+        $names = substr($names,0,-1);
+        $values = substr($values,0,-1);
         $names .= ")";
         $values .= ")";
         return $names ." VALUE ". $values;
@@ -311,7 +313,7 @@ class Process
     public function inValidData2sql($type = 1){
         $dataStr = \GuzzleHttp\json_encode($this->data);
         $dataStr = htmlspecialchars($dataStr);
-        return "(`contents`,`datatype`,`addtime`)  VALUE ('{$dataStr}','{$type}','{date('Y-m-d H:i:s',time())}')";
+        return "(`contents`,`datatype`,`addtime`)  VALUE ('".$dataStr."','".$type."','".date('Y-m-d H:i:s',time())."')";
     }
     
     /**
