@@ -13,7 +13,6 @@ class IndexController extends Controller
 
     public function actionIndex(){
         $schema = new Schema();
-        //schema->setTableDesc('user');
         
         //初始化数据
         $process = new Process();
@@ -26,7 +25,7 @@ class IndexController extends Controller
         if($valid == -1){
             $addSuccess = false;
             for($i = 0; $i < 5 || !$addSuccess; $i ++){
-                if(Schema::addFeild2table($process->getMoreFeilds())) {
+                if(Schema::addFeilds($process->feilds2sql())) {
                     $addSuccess = true;
                     break;
                 }
@@ -34,17 +33,18 @@ class IndexController extends Controller
             //执行失败返回。
             if(!$addSuccess) return;
         }
-        //字段类型不一致
+        //字段类型不一致,将数据数据写入errors表
         if(!$valid){
+            Schema::insertInValidDAta($process->inValidData2sql());
             return;
         }
-        //写入新记录
+        //将有效数据写入数据表
+        $res = Schema::insertValidDAta($process->validData2sql());
+        //如果数据写入失败，则将错误信息写入errors表
+        if(!$res){
+            Schema::insertInValidDAta($process->insertError2sql());
+        }
         
-        
-        //字段有效性校验通过则往下执行
-        echo "<pre>";
-        print_r($data->getType());
-        echo "</pre>";
     }
 }
 
