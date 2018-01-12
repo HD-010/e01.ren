@@ -57,8 +57,45 @@ class Process
             'profile_set_once' => 'user',
             'track_signup' => 'user',
         ];
-        $this->tableName = $table2EventType[$this->type];
+        $type = array_key_exists($this->type,$table2EventType) ? $this->type : '';
+        //类型错误则谢绝入库
+        if(!$type) return;
+        $this->tableName =  $table2EventType[$type];
     }
+    
+    /**
+     * 设置数据类型对照关系
+     * @return string[]
+     */
+    public function getDataType2DataType(){
+        return [
+            'string' => 'varchar',
+            'boolean' => 'boolean',
+            'integer' => 'float',
+            'float' => 'float',
+            'double' => 'float',
+            'datetime' => 'datetime',
+            'date' => 'date',
+            'list' => 'text',
+        ];
+    }
+    
+    
+    /**
+     * 数据类型与字段长度的对照关系
+     * @return string[]
+     */
+    public function getDataLength(){
+        return [
+            'varchar' => 'varchar(512)',
+            'boolean' => 'boolean',
+            'float' => 'float',
+            'datetime' => 'datetime',
+            'date' => 'date',
+            'text' => 'text',
+        ];
+    }
+    
     
     //校验字段的有效性
     public function vaildFeilds(){
@@ -76,9 +113,17 @@ class Process
         return -1;
     }
     
+    /**
+     * 获取待处理的数据
+     * @return array 
+     */
+    public function getData(){
+        return $this->data;
+    }
+    
     
     /**
-     * 获取事件事或用户资料中的属性
+     * 获取事件或用户资料中的Properties属性
      * return array 属性名属性值对
      */
     public function getProperties(){ 
@@ -86,7 +131,7 @@ class Process
     }
     
     /**
-     * 获取事件或用户资料中的属性名称
+     * 获取事件或用户资料中Properties属性的名称
      * return array 属性名的索引数组
      */
     public function getPropertiesName(){ 
@@ -179,11 +224,11 @@ class Process
     /**
      * 将事件属性数据类型的名称统一为数据库的数据类型名称
      * 
-     * @return array[]
+     * @return array
      */
     public function unanimousTypeName(){
         $feildDataType = $this->getFullFeilds();
-        $type2type = Schema::getDataType2DataType();
+        $type2type = $this->getDataType2DataType();
         $temp = array();
         foreach($feildDataType as $k => $v){
             $temp[$k] = trim($type2type[$v]);
@@ -211,5 +256,73 @@ class Process
         }
         return true; 
     }
+    
+    /**
+     * 将新增属性转换为sql语句
+     * 
+     * return 返回需要插入的字段名组成的语句
+     */
+    public function feilds2sql(){
+        $addContent = "";
+        foreach($this->getMoreFeilds() as $name => $value){
+            //定义 的数据类型与数据库中数据类型的对照关系
+            $dataType = $this->getDataType2DataType();
+            //数据类型与字段长度的对照关系
+            $dataLength = $this->getDataLength();
+            //组装新增字段的长度
+            $clumAttr = $dataLength[$dataType[$value]];
+            $addContent .= ", ADD $name $clumAttr";
+        }
+        $addContent = substr($addContent,1);
+        return $addContent;
+    }
+    
+    /**
+     * 将有效数据转换为sql语句
+     * 
+     * return 返回需要插入的字段名组成的语句 
+     * 格式如 ： (`name`,`info`)  VALUE ('name',65)
+     */
+    public function validData2sql(){
+        //将properties转换为sql
+        $names = "(";
+        $values = "(";
+        foreach($this->properties as $feild => $value){
+            //拼接需要插入的字段名称
+            $names .= ',`' . $feild . '`';     
+            //拼接需要插入的与字段名称对应的值,如果是数值或boolen类型则不加单引号
+            $feildDataType = $this->getFullFeilds();
+            //指定这些类型的值不加引号
+            $forNumber = ['boolean','float','double','integer'];
+            $tag = in_array($feildDataType[$feild], $forNumber);
+            $values .= ($tag == -1) ? ",'".$value."'" : ",".$value."";
+        }
+        $names .= ")";
+        $values .= ")";
+        return $names ." VALUE ". $values;
+    }
+    
+    /**
+     * 将无效数据转换为sql语句
+     *
+     * return 返回需要插入的字段名组成的语句
+     * 格式如 ： (`contents`,`datatype`,`addtime`)  VALUE ('jsonStr','效验失败','2018-01-12')
+     */
+    public function inValidData2sql($type = 1){
+        $dataStr = \GuzzleHttp\json_encode($this->data);
+        $dataStr = htmlspecialchars($dataStr);
+        return "(`contents`,`datatype`,`addtime`)  VALUE ('{$dataStr}','{$type}','{date('Y-m-d H:i:s',time())}')";
+    }
+    
+    /**
+     * 返回有效数据入库失败的sql
+     *
+     * return 返回需要插入的字段名组成的语句
+     * 格式如 ： (`contents`,`datatype`,`datatime`)  VALUE ('jsonStr','入库失败','2018-01-12')
+     */
+    public function insertError2sql(){
+        return $this->inValidData2sql(2);
+    }
+    
 }
 

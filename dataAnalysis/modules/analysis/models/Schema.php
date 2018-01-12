@@ -5,6 +5,10 @@ use Yii;
 use app\modules\analysis\models\Process;
 
 
+/**
+ * @author w
+ *
+ */
 class Schema
 {
     public static $tableName;
@@ -34,7 +38,6 @@ class Schema
      * 1、每个用户的每张表的字段名对应一个集合
      * 将表中的字段信息保存到缓存中，（先保存到静态变量）
      */
-    
     public static function setTableDesc($tableName){
         //如果当前表结构已经存在则不再往数据库查询
         if(self::$tableName == $tableName) return;
@@ -70,36 +73,21 @@ class Schema
     }
     
     /**
-     * 将新增字段添加到对应的表中
+     * 3、将新增字段添加到对应的表中
      * @param array $feilds 新字段及定义 的数据类型
      * return true 表示成功
      */
-    public static function addFeild2table($feilds){
-        $sql = "ALTER table user ADD TLE CHAR(11),ADD NICK VARCHAR(36)";
-        $addContent = "";
-        foreach($feilds as $name => $value){
-            //定义 的数据类型与数据库中数据类型的对照关系
-            $dataType = self::getDataType2DataType();
-            //数据类型与字段长度的对照关系
-            $dataLength = self::getDataLength();
-            //组装新增字段的长度
-            $clumAttr = $dataLength[$dataType[$value]];
-            $addContent .= ", ADD $name $clumAttr";
-        }
-        $addContent = substr($addContent,1);
+    public static function addFeilds($addContent){
         //组装字段内容到sql
         $sql = "ALTER table ".self::$tableName." $addContent";
         $conn = Yii::$app->db;
-        $command = $conn->createCommand($sql);
-        return $command->execute();   //返回1则插入成功
+        return $conn->createCommand($sql)->execute(); //返回被引响的条数
     }
     
-    /**
-     * 4、一个首次出现的字段需要获取它的字符类型。 
-     */
-   
+    
     
     /**
+     * 一个首次出现的字段需要获取它的字符类型。 
      * 返回数据表中所有字段的数据类型
      */
     public static function getDataType(){
@@ -113,30 +101,24 @@ class Schema
     }
     
     /**
-     * 设置数据类型对照关系
+     * 插入通过校验的数据到对应的数据表中
+     * @param string $data sql子串
      */
-    public static function getDataType2DataType(){
-        return [
-            'string' => 'varchar',
-            'boolean' => 'boolean',
-            'integer' => 'float',
-            'float' => 'float',
-            'double' => 'float',
-            'datetime' => 'datetime',
-            'date' => 'date',
-            'list' => 'text',
-        ];
+    public static function insertValidDAta($data){
+        //$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
+        $sql = "INSERT INTO `" + self::$tableName+ "` " + $data;
+        $conn = Yii::$app->db;
+        return $conn->createCommand($sql)->execute();
     }
     
-    public static function getDataLength(){
-        return [
-            'varchar' => 'varchar(512)',
-            'boolean' => 'boolean',
-            'float' => 'float',
-            'datetime' => 'datetime',
-            'date' => 'date',
-            'text' => 'text',
-        ];
+    /**
+     * 插入未通过校验的数据到errors数据表中
+     * @param string $data sql子串
+     */
+    public static function insertInValidDAta($data){
+        $sql = "INSERT INTO errors " + $data;
+        $conn = Yii::$app->db;
+        return $conn->createCommand($sql)->execute();
     }
         
 }
