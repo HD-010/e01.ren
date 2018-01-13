@@ -324,13 +324,28 @@ class Process
         return $addContent;
     }
     
+    
+    public function validData2sql(){
+        return $this->{$this->storage().'ValidData2sql'}();
+    }
+    
+    /**
+     * 将有效数据转换为sql语句
+     *
+     * return 返回需要插入的字段名组成的语句
+     * 格式如 ： name = value,name = value....
+     */
+    public function updateValidData2sql(){
+        return;
+    }
+    
     /**
      * 将有效数据转换为sql语句
      * 
      * return 返回需要插入的字段名组成的语句 
      * 格式如 ： (`name`,`info`)  VALUE ('name',65)
      */
-    public function validData2sql(){
+    public function insertValidData2sql(){
         //将properties转换为sql
         $names = "(";
         $values = "(";

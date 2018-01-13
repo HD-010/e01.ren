@@ -135,8 +135,10 @@ class Schema
     /**
      * 更新用户资料
      */
-    public static function updateValidData(){
-        exit("ok");
+    public static function updateValidData($data){
+        $sql = "update users set " . $data;
+        $conn = Yii::$app->db;
+        return $conn->createCommand($sql)->execute();
     }
         
 }
