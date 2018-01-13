@@ -53,9 +53,9 @@ class Process
     public function setTable2EventType(){
         $table2EventType = [
             'track' => 'events',
-            'profile_set' => 'user',
-            'profile_set_once' => 'user',
-            'track_signup' => 'user',
+            'profile_set' => 'users',
+            'profile_set_once' => 'users',
+            'track_signup' => 'users',
         ];
         $type = array_key_exists($this->type,$table2EventType) ? $this->type : '';
         //类型错误则谢绝入库
@@ -119,8 +119,8 @@ class Process
     }
     public function getBaseTrack_signupAttr(){
         return [
-            'FIRST_ID' => $this->data['distinct_id'],
-            'SECOND_ID' => $this->data['original_id'],
+            'FIRST_ID' => $this->data['original_id'],
+            'SECOND_ID' => $this->data['distinct_id'],
             'TIME' => $this->data['time'],
             '$LIB' => $this->data['lib']['$lib'],
             '$LIB_VERSION' => $this->data['lib']['$lib_version'],
@@ -230,6 +230,18 @@ class Process
     }
     
     
+    /**
+     * 返回储存方式名称 
+     */
+    public function Storage(){
+        $storageType = [
+            'track' => 'insert',
+            'track_signup' => 'insert',
+            'profile_set' => 'update',
+            'profile_set_once' => 'update'
+        ];
+        return $storageType[$this->type];
+    }
     
     
     /**

@@ -115,7 +115,7 @@ class Schema
      * 插入通过校验的数据到对应的数据表中
      * @param string $data sql子串
      */
-    public static function insertValidDAta($data){
+    public static function insertValidData($data){
         //$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
         $sql = "INSERT INTO `" . self::$tableName . "` " . $data; //exit($sql);
         $conn = Yii::$app->db;
@@ -130,6 +130,13 @@ class Schema
         $sql = "INSERT INTO errors " . $data; 
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
+    }
+    
+    /**
+     * 更新用户资料
+     */
+    public static function updateValidData(){
+        exit("ok");
     }
         
 }
