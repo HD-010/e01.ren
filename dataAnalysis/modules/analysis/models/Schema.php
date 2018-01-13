@@ -84,6 +84,7 @@ class Schema
         $conn = Yii::$app->db;
         self::$tableName = "";
         $res = $conn->createCommand($sql)->execute(); //返回被引响的条数
+        
         //改变表结构后重新初始化表结构
         self::setTableDesc($tableName);
         return $res;
@@ -99,8 +100,13 @@ class Schema
         $dataType = array();
         foreach(self::$tableDesc as $v){
             //数据类型的字符串
-            $type = substr($v['Type'], 0,stripos($v['Type'], '('));
-            $dataType[$v['Field']] = trim($type);
+            $type = $v['Type'];
+            $index = stripos($v['Type'], '(');
+            if($index !== false){
+                $type = substr($v['Type'], 0,$index);
+            }
+            $type = trim($type);
+            $dataType[$v['Field']] = $type;
         }
         return $dataType;
     }
@@ -111,7 +117,7 @@ class Schema
      */
     public static function insertValidDAta($data){
         //$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
-        $sql = "INSERT INTO `" . self::$tableName . "` " . $data;exit($sql);
+        $sql = "INSERT INTO `" . self::$tableName . "` " . $data; //exit($sql);
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }
@@ -121,7 +127,7 @@ class Schema
      * @param string $data sql子串
      */
     public static function insertInValidDAta($data){
-        $sql = "INSERT INTO errors " . $data; //exit($sql);
+        $sql = "INSERT INTO errors " . $data; 
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }

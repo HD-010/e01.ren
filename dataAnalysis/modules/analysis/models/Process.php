@@ -59,18 +59,21 @@ class Process
         ];
         $type = array_key_exists($this->type,$table2EventType) ? $this->type : '';
         //类型错误则谢绝入库
-        if(!$type) return;
+        if(!$type) {
+            exit('事件类型错误');
+            return;
+        }
         $this->tableName =  $table2EventType[$type];
     }
     
     /**
-     * 设置数据类型对照关系
+     * 设置php数据类型与mysql数据类型的对照关系
      * @return string[]
      */
     public function getDataType2DataType(){
         return [
             'string' => 'varchar',
-            'boolean' => 'boolean',
+            'boolean' => 'tinyint',
             'integer' => 'float',
             'float' => 'float',
             'double' => 'float',
@@ -89,6 +92,7 @@ class Process
         return [
             'varchar' => 'varchar(512)',
             'boolean' => 'boolean',
+            'tinyint' => 'tinyint(1)',
             'float' => 'float',
             'datetime' => 'datetime',
             'date' => 'date',
@@ -97,18 +101,46 @@ class Process
     }
     
     
+    /**
+     * 获取事件追踪的基本属性
+     * 注函数名称需满足的要求：getBase+事件类型名称（大写首字母）+Attr
+     */
+    public function getBaseTrackAttr(){
+        return [
+            'TIME' => $this->data['time'],
+            'DISTINCT_ID' => $this->data['distinct_id'],
+            '$LIB' => $this->data['lib']['$lib'],
+            '$LIB_VERSION' => $this->data['lib']['$lib_version'],
+            '$LIB_METHOD' => $this->data['lib']['$lib_method'],
+            '$LIB_DETAIL' => $this->data['lib']['$lib_detail'],
+            'EVENT' => $this->data['event'],
+        ];
+        
+    }
+    public function getBaseTrack_signupAttr(){
+        return [
+            'FIRST_ID' => $this->data['distinct_id'],
+            'SECOND_ID' => $this->data['original_id'],
+            'TIME' => $this->data['time'],
+            '$LIB' => $this->data['lib']['$lib'],
+            '$LIB_VERSION' => $this->data['lib']['$lib_version'],
+            '$LIB_METHOD' => $this->data['lib']['$lib_method'],
+            '$LIB_DETAIL' => $this->data['lib']['$lib_detail'],
+        ];
+    }
+    
     //校验字段的有效性
     public function vaildFeilds(){
         //设置当前事件类型对应表的所有字段
         Schema::setTableDesc($this->tableName);
         
-        //校验当前事件的所有属性是否在数据表中。如果所有字段都存在于数据表中，则进一步校验字段的数据类型
+        //校验当前事件的所有属性是否在数据表中。如果所有字段都存在数据表中，则进一步校验字段的数据类型
         $valid = Schema::moreFeilds($this->getPropertiesName());
         if(empty($valid)){
             //比较同一属性名称，事件属性的数据类型和数据表字段的数据类型是否一致。如果一致则返回true(校验通过)，如果不一致则返回false
             return $this->comparEventDataType();
         }
-        //如果有新的字段，则将新增字段的数据写到moreFeilds,并返回false
+        //如果有新的字段，则将新增字段的数据赋值给moreFeilds,并返回-1
         $this->moreFeilds = $valid;
         return -1;
     }
@@ -196,6 +228,9 @@ class Process
     public function getFullFeilds(){
         return $this->getFeildsDataType($this->getPropertiesName());
     }
+    
+    
+    
     
     /**
      * 返回事件属性的名称及属性数据类型的对应关系
@@ -287,14 +322,18 @@ class Process
         //将properties转换为sql
         $names = "(";
         $values = "(";
-        foreach($this->properties as $feild => $value){
+        $validData = $this->getValidData();
+        foreach($validData as $feild => $value){
             //拼接需要插入的字段名称
             $names .= '`' . $feild . '`,';     
             //拼接需要插入的与字段名称对应的值,如果是数值或boolen类型则不加单引号
             $feildDataType = $this->getFullFeilds();
             //指定这些类型的值不加引号
-            $forNumber = ['boolean','float','double','integer'];
-            $tag = in_array($feildDataType[$feild], $forNumber);
+            $forNumber = ['float','double','integer'];
+            $tag = false;
+            if(array_key_exists($feild,$feildDataType)){
+                $tag = in_array($feildDataType[$feild], $forNumber);
+            }
             $values .= $tag ? $value."," :  "'".$value."'," ;
         }
         $names = substr($names,0,-1);
@@ -302,6 +341,15 @@ class Process
         $names .= ")";
         $values .= ")";
         return $names ." VALUE ". $values;
+    }
+    
+    /**
+     * 字段检验和数据校验后获取有效数据
+     */
+    public function getValidData(){
+        $validData = $this->properties;         
+        $baseAttr = $this->{'getBase'.ucfirst($this->type).'Attr'}();
+        return array_merge($validData,$baseAttr);
     }
     
     /**
