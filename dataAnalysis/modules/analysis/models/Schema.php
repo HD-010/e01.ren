@@ -111,7 +111,7 @@ class Schema
      */
     public static function insertValidDAta($data){
         //$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
-        $sql = "INSERT INTO `" . self::$tableName . "` " . $data;
+        $sql = "INSERT INTO `" . self::$tableName . "` " . $data;exit($sql);
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }
