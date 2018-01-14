@@ -3,7 +3,7 @@ namespace app\modules\analysis\models;
 
 use app\modules\analysis\models\Schema;
 use app\models\Validata;
-
+use app\components\T;
 /**
  * @author 弘德誉曦
  * 
@@ -40,7 +40,7 @@ class Process
         $this->distinct_id = $this->data['distinct_id'];
         $this->lib = $this->data['lib'];
         $this->project = $this->data['project'];
-        $this->event = $this->data['event'];
+        $this->event = T::arrayValue('event',$this->data,"");
         $this->setTable2EventType();
         return $this;
     }
@@ -128,12 +128,15 @@ class Process
             '$LIB_DETAIL' => $this->data['lib']['$lib_detail'],
         ];
     }
+    public function getBaseProfile_setAttr(){
+        return [];
+    }
+    
     
     //校验字段的有效性
     public function vaildFeilds(){
         //设置当前事件类型对应表的所有字段
         Schema::setTableDesc($this->tableName);
-        
         //校验当前事件的所有属性是否在数据表中。如果所有字段都存在数据表中，则进一步校验字段的数据类型
         $valid = Schema::moreFeilds($this->getPropertiesName());
         if(empty($valid)){
@@ -324,23 +327,64 @@ class Process
         return $addContent;
     }
     
-    
+    /**
+     * 将有效数据转换为sql语句
+     * 
+     * 返回sql语句的子串
+     */
     public function validData2sql(){
+        //在获取sql语句前进行校验，如果校验失败则返回 false
+        if(!$this->{'valid'.ucfirst($this->Storage()).'Befor'}()) return false;
         return $this->{$this->storage().'ValidData2sql'}();
     }
     
     /**
-     * 将有效数据转换为sql语句
+     * 添加记录之前校验
+     *
+     */
+    public function validInsertBefor(){
+        return true;
+    }
+    
+    /**
+     * 更新之前校验用户资料是否已经存在（如果用户资料不存在则不更新资料）
+     * 
+     * 如果用户资料已经存在，则返回true,反之false
+     * return boolen
+     */
+    public function validUpdateBefor(){
+        return Schema::validUpdateBefor($this->distinct_id);
+    }
+    
+    /**
+     * 将有效数据转换为sql update语句
      *
      * return 返回需要插入的字段名组成的语句
      * 格式如 ： name = value,name = value....
      */
     public function updateValidData2sql(){
-        return;
+        $str = "";
+        $validData = $this->getValidData();
+        foreach($validData as $feild => $value){
+            //拼接需要插入的与字段名称对应的值,如果是数值或boolen类型则不加单引号
+            $feildDataType = $this->getFullFeilds();
+            //指定这些类型的值不加引号
+            $forNumber = ['float','double','integer'];
+            $tag = false;
+            if(array_key_exists($feild,$feildDataType)){
+                $tag = in_array($feildDataType[$feild], $forNumber);
+            }
+            $value = $tag ? $value."," :  "'".$value."'," ;
+            //拼接需要插入的字段名称
+            $str .= '`' . $feild . '` = ' . $value ;
+        }
+        $str = substr($str,0,-1);
+        $str .= " where second_id ='" . $this->distinct_id . "'";
+        return $str;
     }
     
     /**
-     * 将有效数据转换为sql语句
+     * 将有效数据转换为sql insert语句
      * 
      * return 返回需要插入的字段名组成的语句 
      * 格式如 ： (`name`,`info`)  VALUE ('name',65)

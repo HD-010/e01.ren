@@ -116,6 +116,8 @@ class Schema
      * @param string $data sql子串
      */
     public static function insertValidData($data){
+        //如果$data为false，说明字段校验，数据格式校验都通过。但不符合插入条件，不作任何处理
+        if(!$data) return true;
         //$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
         $sql = "INSERT INTO `" . self::$tableName . "` " . $data; //exit($sql);
         $conn = Yii::$app->db;
@@ -134,9 +136,19 @@ class Schema
     
     /**
      * 更新用户资料
+     * 注：从事件发生的顺序来讲，修改用户资料一定是在用户登录绑定之后的操作的。所以只有用户登录绑定后才能修改用户资料成功
      */
     public static function updateValidData($data){
-        $sql = "update users set " . $data;
+        //如果$data为false，说明字段校验，数据格式校验都通过。但不符合插入条件，不作任何处理
+        if(!$data) return true;
+        $sql = "UPDATE USERS SET " . $data;
+        $conn = Yii::$app->db;
+        return $conn->createCommand($sql)->execute();
+    }
+    
+    //用户资料更新前校验当前用户资料是否存在。存在返回true，否则返回false
+    public static function validUpdateBefor($second_id){
+        $sql = "SELECT 1 FROM USERS WHERE SECOND_ID = '".$second_id."'";
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }
