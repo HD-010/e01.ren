@@ -8,7 +8,6 @@ class IndexController extends Controller
 {
     public function actionIndex(){
         echo __FUNCTION__;
-        
     }
 }
 
