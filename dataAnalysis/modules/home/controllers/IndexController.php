@@ -7,7 +7,8 @@ use yii\base\Controller;
 class IndexController extends Controller
 {
     public function actionIndex(){
-        echo __FUNCTION__;
+        
+        return $this->renderPartial('home',[]);
     }
 }
 
