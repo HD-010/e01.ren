@@ -53,6 +53,7 @@ class EDebug
     public function processData()
     {
         // 从$_REQUSEA中获取参数的名称
+        header("Access-Control-Allow-Origin:*");
         $keys = array_keys($_REQUEST);
         extract($_REQUEST);
         for ($i = 0; $i < count($keys); $i ++) {
@@ -64,9 +65,9 @@ class EDebug
     // 清除日志
     public function clearLog()
     {
+        global $data;
         $filename = $this->readPath ? self::$basePath . $this->readPath : self::$logPath;
         // 确保文件可写,如果文件不存在则创建一个空文件
-        header("Access-Control-Allow-Origin:*");
         if(file_put_contents($filename, '') === false) {
             echo "fail";
         }else{
@@ -193,7 +194,6 @@ class EDebug
             }
             $lineContet[] = '`DE`';
         }
-        header("Access-Control-Allow-Origin:*");
         echo implode('`p`', $lineContet);
     }
     

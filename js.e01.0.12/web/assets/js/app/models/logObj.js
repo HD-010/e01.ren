@@ -116,6 +116,9 @@ define(["jquery","common"],function($,common){
 		 * uri 测试服端接口 该参数默认是服务端接口
 		 */
 		tranceData:function(data,oper,callBack,uri){
+			console.log(data);
+			console.log(oper);
+			console.log(uri);
 			$.ajax({
 				url : uri || logObj.serverUrl,
 				type : 'POST',
@@ -170,13 +173,13 @@ define(["jquery","common"],function($,common){
 		//清空测试服务端日志
 		clear : function (){
 			var url = this.clientUrl;
-			this.tranceData('clear','func',function(data){
+			this.tranceData('clear','clear',function(data){
 				logObj.tranceData(data,'func',function(data){
 					console.log(data);
 					//清空日志后以重新读取日志的方式来刷新页面，保证控制台日志可读
 					logObj.tranceData('debug','read',logObj.tranceLog,logObj.clientUrl);
 				},url);
-			});
+			},url);
 		},
 
 	};

@@ -19,25 +19,23 @@ class IndexController extends Controller
     
     
     public function actionStorage(){
-        $schema = new Schema();
-        
         //初始化数据
         $process = new Process();
         $data = $process->initAnalysis($this->info);
         //校验字段的有效性
         $valid = $process->vaildFeilds();
-        //有新增字段,为保证新字段能添加成功，保留5次添加机会，如果5次都添加失败，则不再往下执行
+        //如果$valid==-1,表示有新增字段
         if($valid == -1){
+            //添加新增字段
             Schema::addFeilds($process->feilds2sql());
         }
-        //字段类型不一致,将数据数据写入errors表
-        //var_dump($valid);exit;
+        //如果$valid==false,表示字段类型不一致,将数据数据写入errors表
         if(!$valid){
             Schema::insertInValidDAta($process->inValidData2sql());
             return;
         }
+        
         //将有效数据写入数据表(下一步在这里可以实现批量入库)
-            
         $res = Schema::{$process->Storage().'ValidData'}($process->validData2sql());
         
         //如果数据写入失败，则将错误信息写入errors表
