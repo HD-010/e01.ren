@@ -296,8 +296,8 @@ class SensorsAnalytics {
      */
     public function clear_super_properties() {
         $this->_super_properties = array(
-                '$lib' => 'php',
-                '$lib_version' => SENSORS_ANALYTICS_SDK_VERSION,
+                //'$lib' => 'php',
+                //'$lib_version' => SENSORS_ANALYTICS_SDK_VERSION,
                 );
     }
 
@@ -345,7 +345,7 @@ class SensorsAnalytics {
             $data['original_id'] = $original_id;
         }
 
-        $data = $this->_normalize_data($data); 
+        $data = $this->_normalize_data($data);
         return $this->_consumer->send($this->_json_dumps($data));
     }
 
