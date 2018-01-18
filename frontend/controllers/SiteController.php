@@ -12,6 +12,8 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use app\components\EdbugData;
+
 
 /**
  * Site controller
@@ -72,6 +74,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        EdbugData::log([
+            'eventName' => 'eventName', //事件名称
+            'properties' => [
+                "name" => "sansam",
+                "age" => 69,
+            ], //事件属性
+            'eventType'=>'PageView' //事件类型 如：PageView|UserAgent|WebClick
+        ]);
         return $this->render('index');
     }
 
