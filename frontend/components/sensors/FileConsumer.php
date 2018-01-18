@@ -90,6 +90,7 @@ class FileConsumer extends AbstractConsumer {
      */
     public function send_to_server($line){
         $contents = $this->get_log_contents($line);
+        if(empty($contents)) return;
         $url = "http://data-analysis.e01.ren/?r=analysis/index/test";
         $res = EbugTranceData::curl_post($url,$contents);
     }
