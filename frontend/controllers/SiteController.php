@@ -12,7 +12,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
-use app\components\EdbugData;
+use app\components\EbugData;
 
 
 /**
@@ -74,7 +74,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        EdbugData::log([
+        EbugData::log([
             'eventName' => 'eventName', //事件名称
             'properties' => [
                 "name" => "sansam",

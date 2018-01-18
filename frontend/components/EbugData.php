@@ -7,7 +7,7 @@ use app\models\User;
 use Facebook\WebDriver\Cookie;
 
 
-class EdbugData
+class EbugData
 {
     // 事件属性
     public $properties = [];
@@ -33,7 +33,7 @@ class EdbugData
      */
     public static function log($sensorsData, $cache = 0)
     {
-        $sd = new EdbugData();
+        $sd = new EbugData();
 
         //初始化神策对象
         $sd->m();

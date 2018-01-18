@@ -3,7 +3,7 @@ namespace app\components\sensors;
 
 class EbugTranceData
 {
-    public function curl_post($url,$data){
+    public static function curl_post($url,$data){
         $post_data = [
             "data" => json_encode($data),
         ];
@@ -19,6 +19,7 @@ class EbugTranceData
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         $output = curl_exec($ch);
         curl_close($ch);
+        
         //打印获得的数据
         return $output;
     }

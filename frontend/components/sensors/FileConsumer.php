@@ -6,11 +6,9 @@ class FileConsumer extends AbstractConsumer {
 
     private $file_handler;
     private $log_path;
-    private $data_path;
 
     public function __construct($filename) {
         $this->log_path = dirname($filename)."/ebug.log";
-        $this->data_path = $filename;
         $this->file_handler = fopen($filename, 'a+');
     }
 
@@ -41,7 +39,7 @@ class FileConsumer extends AbstractConsumer {
             $this->init_log();
         } else {    //文件存在则读取文件内容，并判断是否需要发送日志内容，返回发送日志的开始行号
             $cont = file($this->log_path);
-            if(($cont[1] + 10*60) < time()) {
+            if(($cont[1] + 5) < time()) {
                 return (int)$cont[0];
             }
         }
@@ -54,7 +52,7 @@ class FileConsumer extends AbstractConsumer {
      * 设置上一次读取日志的时间当前时间戳
      * 没有返回值
      */
-    public function init_log($line=0){
+    public function init_log($line=1){
         $data = $line."\r\n";          //上一次读取日志的最后一行
         $data .= time();   //上一次读取日志的时间
         file_put_contents($this->log_path, $data);
@@ -71,8 +69,8 @@ class FileConsumer extends AbstractConsumer {
         $contets = [];
         //获取日志内容
         rewind($this->file_handler);
-        while(($line_content = fgets($this->file_handler, 4096)) !== false){
-            if($curent_line <= $line){
+        while(($line_content = fgets($this->file_handler, 4096000)) !== false){
+            if($curent_line < $line){
                 $curent_line ++;
                 continue;
             }
@@ -81,8 +79,8 @@ class FileConsumer extends AbstractConsumer {
             }
             $contets[] = $line_content;
             $curent_line ++;
-        } 
-        //$this->init_log($line + $curent_line);
+        }
+        $this->init_log($curent_line);
         return $contets;
     }
     
@@ -94,7 +92,6 @@ class FileConsumer extends AbstractConsumer {
         $contents = $this->get_log_contents($line);
         $url = "http://data-analysis.e01.ren/?r=analysis/index/test";
         $res = EbugTranceData::curl_post($url,$contents);
-        print_r($res);
     }
     
 }
