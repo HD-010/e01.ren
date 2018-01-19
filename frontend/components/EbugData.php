@@ -9,6 +9,12 @@ use Facebook\WebDriver\Cookie;
 
 class EbugData
 {
+    //服务地址
+    public $serverUrl = "http://data-analysis.e01.ren/?r=analysis/index/test";
+    //数据接收口令
+    public $token = "6B7160A53D3A497C559C659BD2960497";
+    //项目名称
+    public $project = "生产环境";
     // 事件属性
     public $properties = [];
     // 事件名称
@@ -72,7 +78,11 @@ class EbugData
      */
     public function init()
     {
-        define('EBUG_SERVER','http://data-analysis.e01.ren/?r=analysis/index/test');
+        if(!defined('EBUG_SERVER')){
+            define('EBUG_SERVER',$this->serverUrl);
+            define('TOKEN',$this->token);
+            define('PROJECT',$this->project);
+        }
         
         $logPath = Yii::getAlias(Yii::$app->params["ebugPath"]).'.'.date('Ymd',time());
         $consumer = new \app\components\ebug\FileConsumer($logPath);

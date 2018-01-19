@@ -89,9 +89,16 @@ class FileConsumer extends AbstractConsumer {
      * @param unknown $line
      */
     public function send_to_server($line){
+        
         $contents = $this->get_log_contents($line);
         if(empty($contents)) return;
-        $res = EbugTranceData::curl_post(EBUG_SERVER,$contents);
+        $post_data = [
+            "token" => TOKEN,
+            "project" => PROJECT,
+            "data" => json_encode($contents),
+            "serverName" => $_SERVER['SERVER_NAME']
+        ];
+        $res = EbugTranceData::curl_post($post_data);
     }
     
 }

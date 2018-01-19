@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Controller;
 use app\modules\analysis\models\Schema;
 use app\modules\analysis\models\Process;
+use app\modules\analysis\models\Client;
 
 class IndexController extends Controller
 {
@@ -65,6 +66,10 @@ class IndexController extends Controller
      * @return boolean|string
      */
     public function actionTest(){
+        $client = new Client();
+        //数据存储前身份验证,验证失败则退出不作任何处理
+        if(!$client->realClient()) return;
+        
         //接收post传来的json数据
         $data = json_decode(Yii::$app->request->post('data', []));
         //$data = $this->arrInfo;
@@ -98,6 +103,15 @@ class IndexController extends Controller
         }
         //返回运行成功状态
         return 'success';
+    }
+    
+    
+    
+    public function actionToken(){
+        $str = "e01.ren";
+        $client = new Client();
+        $token = $client->createToken($str);
+        echo $token;
     }
 }
 
