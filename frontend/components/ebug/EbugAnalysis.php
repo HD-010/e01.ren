@@ -1,16 +1,16 @@
 <?php
 
-namespace app\components\sensors;
+namespace app\components\ebug;
 use Yii;
 define('SENSORS_ANALYTICS_SDK_VERSION', '1.5.0');
 
-class SensorsAnalytics {
+class EbugAnalysis {
 
     private $_consumer;
     private $_super_properties;
 
     /**
-     * 初始化一个 SensorsAnalytics 的实例用于数据发送。
+     * 初始化一个 EbugAnalysis 的实例用于数据发送。
      *
      * @param AbstractConsumer $consumer
      */
@@ -22,10 +22,10 @@ class SensorsAnalytics {
     private function _normalize_data($data) {
         // 检查 distinct_id
         if (!isset($data['distinct_id']) or strlen($data['distinct_id']) == 0) {
-            throw new SensorsAnalyticsIllegalDataException("property [distinct_id] must not be empty");
+            throw new EbugAnalysisIllegalDataException("property [distinct_id] must not be empty");
         }
         if (strlen($data['distinct_id']) > 255) {
-            throw new SensorsAnalyticsIllegalDataException("the max length of [distinct_id] is 255");
+            throw new EbugAnalysisIllegalDataException("the max length of [distinct_id] is 255");
         }
         $data['distinct_id'] = strval($data['distinct_id']);
 
@@ -33,7 +33,7 @@ class SensorsAnalytics {
         $ts = (int)($data['time']);
         $ts_num = strlen($ts);
         if ($ts_num < 10 || $ts_num > 13) {
-            // throw new SensorsAnalyticsIllegalDataException("property [time] must be a timestamp in microseconds");
+            // throw new EbugAnalysisIllegalDataException("property [time] must be a timestamp in microseconds");
         }
 
         if ($ts_num == 10) {
@@ -44,26 +44,26 @@ class SensorsAnalytics {
         $name_pattern = "/^((?!^distinct_id$|^original_id$|^time$|^properties$|^id$|^first_id$|^second_id$|^users$|^events$|^event$|^user_id$|^date$|^datetime$)[a-zA-Z_$][a-zA-Z\\d_$]{0,99})$/i";
         // 检查 Event Name
         if (isset($data['event']) && !preg_match($name_pattern, $data['event'])) {
-            throw new SensorsAnalyticsIllegalDataException("event name must be a valid variable name. [name='${data['event']}']");
+            throw new EbugAnalysisIllegalDataException("event name must be a valid variable name. [name='${data['event']}']");
         }
 
         // 检查 properties
         if (isset($data['properties']) && is_array($data['properties'])) {
             foreach ($data['properties'] as $key => $value) {
                 if (!is_string($key)) {
-                    throw new SensorsAnalyticsIllegalDataException("property key must be a str. [key=$key]");
+                    throw new EbugAnalysisIllegalDataException("property key must be a str. [key=$key]");
                 }
                 if (strlen($data['distinct_id']) > 255) {
-                    throw new SensorsAnalyticsIllegalDataException("the max length of property key is 256. [key=$key]");
+                    throw new EbugAnalysisIllegalDataException("the max length of property key is 256. [key=$key]");
                 }
 
                 if (!preg_match($name_pattern, $key)) {
-                    throw new SensorsAnalyticsIllegalDataException("property key must be a valid variable name. [key='$key']]");
+                    throw new EbugAnalysisIllegalDataException("property key must be a valid variable name. [key='$key']]");
                 }
 
                 // 只支持简单类型或数组或DateTime类
                 if (!is_scalar($value) && !is_array($value) && !$value instanceof DateTime) {
-                    throw new SensorsAnalyticsIllegalDataException("property value must be a str/int/float/datetime/list. [key='$key' value='$value']");
+                    throw new EbugAnalysisIllegalDataException("property value must be a str/int/float/datetime/list. [key='$key' value='$value']");
                 }
 
                 // 如果是 DateTime，Format 成字符串
@@ -72,18 +72,18 @@ class SensorsAnalytics {
                 }
 
                 if (is_string($value) && strlen($data['distinct_id']) > 8191) {
-                    throw new SensorsAnalyticsIllegalDataException("the max length of property value is 8191. [key=$key]");
+                    throw new EbugAnalysisIllegalDataException("the max length of property value is 8191. [key=$key]");
                 }
 
                 // 如果是数组，只支持 Value 是字符串格式的简单非关联数组
                 if (is_array($value)) {
                     if (array_values($value) !== $value) {
-                        throw new SensorsAnalyticsIllegalDataException("[list] property must not be associative. [key='$key']");
+                        throw new EbugAnalysisIllegalDataException("[list] property must not be associative. [key='$key']");
                     }
 
                     foreach ($value as $lvalue) {
                         if (!is_string($lvalue)) {
-                            throw new SensorsAnalyticsIllegalDataException("[list] property's value must be a str. [value='$lvalue']");
+                            throw new EbugAnalysisIllegalDataException("[list] property's value must be a str. [value='$lvalue']");
                         }
                     }
                 }
@@ -93,7 +93,7 @@ class SensorsAnalytics {
                 $data['properties'] = new \ArrayObject();
             }
         } else {
-            throw new SensorsAnalyticsIllegalDataException("property must be an array.");
+            throw new EbugAnalysisIllegalDataException("property must be an array.");
         }
         return $data;
     }
@@ -201,10 +201,10 @@ class SensorsAnalytics {
         }
         // 检查 original_id
         if (!$original_id or strlen($original_id) == 0) {
-            throw new SensorsAnalyticsIllegalDataException("property [original_id] must not be empty");
+            throw new EbugAnalysisIllegalDataException("property [original_id] must not be empty");
         }
         if (strlen($original_id) > 255) {
-            throw new SensorsAnalyticsIllegalDataException("the max length of [original_id] is 255");
+            throw new EbugAnalysisIllegalDataException("the max length of [original_id] is 255");
         }
         return $this->_track_event('track_signup', '$SignUp', $distinct_id, $original_id, $all_properties);
     }

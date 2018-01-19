@@ -1,5 +1,5 @@
 <?php
-namespace app\components\sensors;
+namespace app\components\ebug;
 
 class DebugConsumer extends AbstractConsumer {
 
@@ -14,12 +14,12 @@ class DebugConsumer extends AbstractConsumer {
      * @param string $url_prefix 服务器的URL地址
      * @param bool $write_data 是否把发送的数据真正写入
      * @param int $request_timeout 请求服务器的超时时间,单位毫秒.
-     * @throws SensorsAnalyticsDebugException
+     * @throws EbugAnalysisDebugException
      */
     public function __construct($url_prefix, $write_data = True, $request_timeout = 1000) {
         $parsed_url = parse_url($url_prefix);
         if ($parsed_url === false) {
-            throw new SensorsAnalyticsDebugException("Invalid server url of Sensors Analytics.");
+            throw new EbugAnalysisDebugException("Invalid server url of Sensors Analytics.");
         }
 
         // 将 URI Path 替换成 Debug 模式的 '/debug'
@@ -56,7 +56,7 @@ class DebugConsumer extends AbstractConsumer {
         }
 
         if ($response['ret_code'] >= 300) {
-            throw new SensorsAnalyticsDebugException("Unexpected response from SensorsAnalytics.");
+            throw new EbugAnalysisDebugException("Unexpected response from EbugAnalysis.");
         }
     }
 
@@ -65,7 +65,7 @@ class DebugConsumer extends AbstractConsumer {
      *
      * @param array $data
      * @return array
-     * @throws SensorsAnalyticsDebugException
+     * @throws EbugAnalysisDebugException
      */
     protected function _do_request($data) {
         $params = array();
@@ -93,8 +93,8 @@ class DebugConsumer extends AbstractConsumer {
         
         $http_response_header = curl_exec($ch);
         if (!$http_response_header) {
-            throw new SensorsAnalyticsDebugException(
-                   "Failed to connect to SensorsAnalytics. [error='" + curl_error($ch) + "']"); 
+            throw new EbugAnalysisDebugException(
+                   "Failed to connect to EbugAnalysis. [error='" + curl_error($ch) + "']"); 
         }
         
         $result = array(

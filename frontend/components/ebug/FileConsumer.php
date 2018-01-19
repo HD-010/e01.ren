@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components\sensors;
+namespace app\components\ebug;
 
 class FileConsumer extends AbstractConsumer {
 

@@ -1,5 +1,5 @@
 <?php
-namespace app\components\sensors;
+namespace app\components\ebug;
 
 
 abstract class AbstractConsumer {

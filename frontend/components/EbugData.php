@@ -71,8 +71,8 @@ class EbugData
     public function m()
     {
         $logPath = Yii::getAlias(Yii::$app->params["ebugPath"]).'.'.date('Ymd',time());
-        $consumer = new \app\components\sensors\FileConsumer($logPath);
-        $this->sa = new \app\components\sensors\SensorsAnalytics($consumer);
+        $consumer = new \app\components\ebug\FileConsumer($logPath);
+        $this->sa = new \app\components\ebug\EbugAnalysis($consumer);
     }
 
     /**
