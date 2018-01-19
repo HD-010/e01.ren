@@ -38,7 +38,7 @@ class EbugData
         $ebug = new EbugData();
 
         //初始化神策对象
-        $ebug->m();
+        $ebug->init();
 
         // 将匿名用户和注册用户做关联
         $ebug->saSingUp();
@@ -70,9 +70,10 @@ class EbugData
     /**
      * 创建神对象
      */
-    public function m()
+    public function init()
     {
         define('EBUG_SERVER','http://data-analysis.e01.ren/?r=analysis/index/test');
+        
         $logPath = Yii::getAlias(Yii::$app->params["ebugPath"]).'.'.date('Ymd',time());
         $consumer = new \app\components\ebug\FileConsumer($logPath);
         $this->ebug = new \app\components\ebug\EbugAnalysis($consumer);

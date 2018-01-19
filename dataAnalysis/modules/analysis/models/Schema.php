@@ -13,6 +13,7 @@ class Schema
 {
     public static $tableName;
     public static $tableDesc;
+    public static $data;
     
     //-- 判断 vrv_paw_rule 表是否存在 thresholdMin 字段，不存在则添加; 存在则修改字段类型
     /* $sql = "DELIMITER ??
@@ -115,11 +116,13 @@ class Schema
      * 插入通过校验的数据到对应的数据表中
      * @param string $data sql子串
      */
-    public static function insertValidData($data){
+    public static function insertValidData(){
         //如果$data为false，说明字段校验，数据格式校验都通过。但不符合插入条件，不作任何处理
-        if(!$data) return true;
-        //$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
-        $sql = "INSERT INTO `" . self::$tableName . "` " . $data; //exit($sql);
+        if(!self::$data) return true;
+        //sql格式：$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
+        $sql = "INSERT INTO `" . self::$tableName . "` " . self::$data; //exit($sql);
+        //数据存储完毕，清除$data中的数据
+        self::$data = "";
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }

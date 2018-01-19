@@ -28,12 +28,7 @@ class Process
      * @param string $jsonStr
      */
     public function initAnalysis($jsonStr){
-        $char = mb_detect_encoding($jsonStr);
-        $info = iconv($char, 'UTF-8', $jsonStr);
-        $info = str_replace('\\','/',$info);
-        $dataArr = json_decode($info,TRUE,512);
-        $err = json_last_error();
-        $this->data =  $err ? "json数据转换失败" : $dataArr;
+        $this->data = $this->formaterData($jsonStr);
         $this->properties = $this->data['properties'];
         $this->type = $this->data['type'];
         $this->time = $this->data['time'];
@@ -43,6 +38,21 @@ class Process
         $this->event = T::arrayValue('event',$this->data,"");
         $this->setTable2EventType();
         return $this;
+    }
+    
+    /**
+     * 格式化json数据
+     * @param unknown $data
+     * @return string|mixed
+     */
+    public function formaterData($data){
+        $char = mb_detect_encoding($data);
+        $info = iconv($char, 'UTF-8', $data);
+        $info = str_replace('\\','/',$info);
+        $dataArr = json_decode($info,TRUE,512);
+        $err = json_last_error();
+        $data =  $err ? "json数据转换失败" : $dataArr;
+        return $data;
     }
     
     
@@ -385,8 +395,8 @@ class Process
     
     /**
      * 将有效数据转换为sql insert语句
-     * 
-     * return 返回需要插入的字段名组成的语句 
+     *
+     * return 返回需要插入的字段名组成的语句
      * 格式如 ： (`name`,`info`)  VALUE ('name',65)
      */
     public function insertValidData2sql(){
@@ -394,25 +404,49 @@ class Process
         $names = "(";
         $values = "(";
         $validData = $this->getValidData();
-        foreach($validData as $feild => $value){
+        $tableDesc = Schema::$tableDesc;
+        for($i = 0; $i < count(Schema::$tableDesc); $i ++){
+            $name = Schema::$tableDesc[$i]['Field'];
             //拼接需要插入的字段名称
-            $names .= '`' . $feild . '`,';     
-            //拼接需要插入的与字段名称对应的值,如果是数值或boolen类型则不加单引号
-            $feildDataType = $this->getFullFeilds();
-            //指定这些类型的值不加引号
-            $forNumber = ['float','double','integer'];
-            $tag = false;
-            if(array_key_exists($feild,$feildDataType)){
-                $tag = in_array($feildDataType[$feild], $forNumber);
+            $names .= '`' . $name . '`,';
+            
+            if(array_key_exists($name,$validData)){
+                //拼接需要插入的与字段名称对应的值,如果是数值或boolen类型则不加单引号
+                $feildDataType = $this->getFullFeilds();
+                //指定这些类型的值不加引号
+                $forNumber = ['float','double','integer'];
+                $tag = false;
+                if(array_key_exists($name,$feildDataType)){
+                    $tag = in_array($feildDataType[$name], $forNumber);
+                }
+                $values .= $tag ? $validData[$name]."," :  "'".$validData[$name]."'," ;
+                
+            }else{
+                $values .= "null,";
             }
-            $values .= $tag ? $value."," :  "'".$value."'," ;
         }
         $names = substr($names,0,-1);
         $values = substr($values,0,-1);
         $names .= ")";
         $values .= ")";
-        return $names ." VALUE ". $values;
+        if(Schema::$data){
+            Schema::$data .= ",".$values;
+        }else{
+            Schema::$data = $names ." VALUES ". $values;
+        }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /**
      * 字段检验和数据校验后获取有效数据
