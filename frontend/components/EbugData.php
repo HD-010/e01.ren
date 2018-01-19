@@ -15,6 +15,8 @@ class EbugData
     public $eventName;
     //浏览器对象
     public $browser;
+    //用户成功登录
+    public $loginSuccess;
 
     /**
      * 发送神策日志
@@ -33,35 +35,35 @@ class EbugData
      */
     public static function log($sensorsData, $cache = 0)
     {
-        $sd = new EbugData();
+        $ebug = new EbugData();
 
         //初始化神策对象
-        $sd->m();
+        $ebug->m();
 
         // 将匿名用户和注册用户做关联
-        $sd->saSingUp();
+        $ebug->saSingUp();
 
         // 将日志缓存或直接发送
         if ($cache) {
-            $sd->setCacheData($sensorsData);
+            $ebug->setCacheData($sensorsData);
         } else {
             // 设置共公属性
-            $sd->setCommonProperties();
+            $ebug->setCommonProperties();
 
             // 设置该事件所属类型对应的事件属性
             $eventType = T::arrayValue('eventType',$sensorsData, "");
             if ($eventType) {
-                $sd->{'set' . $eventType . 'Properties'}();
+                $ebug->{'set' . $eventType . 'Properties'}();
             }
 
             // 设置更多（包括服务端或客户端或两者都有）属性
-            $sd->setMorProperties($sensorsData);
+            $ebug->setMorProperties($sensorsData);
 
             // 合并所有已设置的属性
-            $sd->mergeProperties();
+            $ebug->mergeProperties();
 
-            $eventName = (array_key_exists('eventName', $sensorsData) && $sensorsData['eventName']) ? $sensorsData['eventName'] : $sd->eventName;
-            $sd->saLog($eventName, $sd->properties[0]); // 写入ssbiglogdata
+            $eventName = (array_key_exists('eventName', $sensorsData) && $sensorsData['eventName']) ? $sensorsData['eventName'] : $ebug->eventName;
+            $ebug->eblog($eventName, $ebug->properties[0]); // 写入ssbiglogdata
         }
     }
 
@@ -70,9 +72,10 @@ class EbugData
      */
     public function m()
     {
+        define('EBUG_SERVER','http://data-analysis.e01.ren/?r=analysis/index/test');
         $logPath = Yii::getAlias(Yii::$app->params["ebugPath"]).'.'.date('Ymd',time());
         $consumer = new \app\components\ebug\FileConsumer($logPath);
-        $this->sa = new \app\components\ebug\EbugAnalysis($consumer);
+        $this->ebug = new \app\components\ebug\EbugAnalysis($consumer);
     }
 
     /**
@@ -391,14 +394,14 @@ class EbugData
      * @param unknown $event
      * @param unknown $properties
      */
-    public function saLog($event, $properties)
+    public function eblog($event, $properties)
     {
         // 埋点中匿名ID以js SDK生成的为准，如果UID不存在则不写入日志
         if (! $this->getUserId()) {
             return;
         }
-        $this->sa->track($this->getUserId(), $event, $properties);
-        $this->sa->close();
+        $this->ebug->track($this->getUserId(), $event, $properties);
+        $this->ebug->close();
     }
 
     /**
@@ -414,10 +417,11 @@ class EbugData
         ! $session->isActive or $session->open();
 
         // 用户登录成功后，作一次用户联系
+        //if(!$this->loginSuccess) return;
         if (! is_object(Yii::$app->user->identity) || isset($session['signup_lock'])) {
             return;
         }
-        $this->sa->track_signup($this->getUserId(), $this->getDistinctId());
+        $this->ebug->track_signup($this->getUserId(), $this->getDistinctId());
         $session['signup_lock'] = 1; // 禁止当前会话过程中重复关联用户id
         $this->saSetProfiles();//记录用户资料
     }
@@ -428,9 +432,9 @@ class EbugData
     public function saSetProfiles()
     {
         $profiles = $this->filterNull($this->getProfiles()); // 过滤空属性
-        $this->sa->profile_set($this->getUserId(), $profiles);
+        $this->ebug->profile_set($this->getUserId(), $profiles);
         $profiles = $this->filterNull($this->getProfilesOnce()); // 过滤空属性
-        $this->sa->profile_set_once($this->getUserId(), $profiles);
+        $this->ebug->profile_set_once($this->getUserId(), $profiles);
     }
 
     /**
