@@ -63,6 +63,9 @@ class IndexController extends Controller
     
     /**
      * 数据存储前的数据处理
+     * 根据token验证用户身份，如果验证失败则退出
+     * 将接收到的json串，解码为含多条json数据的数组
+     * 依次调用存储方法存储数据
      * @return boolean|string
      */
     public function actionTest(){
