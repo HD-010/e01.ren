@@ -2,7 +2,7 @@
 
 namespace app\components\ebug;
 use Yii;
-define('SENSORS_ANALYTICS_SDK_VERSION', '1.5.0');
+define('SENSORS_ANALYTICS_SDK_VERSION', '1.0');
 
 class EbugAnalysis {
 

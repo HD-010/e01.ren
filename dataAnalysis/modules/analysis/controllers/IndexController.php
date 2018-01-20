@@ -72,7 +72,6 @@ class IndexController extends Controller
         $client = new Client();
         //数据存储前身份验证,验证失败则退出不作任何处理
         if(!$client->realClient()) return;
-        
         //接收post传来的json数据
         $data = json_decode(Yii::$app->request->post('data', []));
         //$data = $this->arrInfo;

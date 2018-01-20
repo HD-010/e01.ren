@@ -7,7 +7,7 @@ class EbugTranceData
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,EBUG_SERVER);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
         // post数据
         curl_setopt($ch, CURLOPT_POST, 1);
         //执行的最长秒数
