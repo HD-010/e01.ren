@@ -5,7 +5,6 @@ use Yii;
 use app\modules\analysis\models\Schema;
 use app\models\Validata;
 use app\components\T;
-use yii\base\ErrorException;
 /**
  * @author 弘德誉曦
  * 
@@ -59,10 +58,9 @@ class Process
         return $data;
     }
     
-    
-    
     /**
      * 设置事件类型与表的对照关系
+     * 表名字串则：客户端域名（不带点） + 项目名称  + 属性对应名称
      */
     public function setTable2EventType(){
         $table2EventType = [
@@ -78,7 +76,11 @@ class Process
             return;
         }
         
-        $this->tableName =  str_replace('.', '', $this->serverName)."_".$this->project."_".$table2EventType[$type];
+        //表名字串则：客户端域名（不带点） + 项目名称  + 属性对应名称
+        $servername = str_replace('.', '', $this->serverName);
+        if(!$servername) return;
+        if(!$this->project) return;    
+        $this->tableName = $servername ."_".$this->project."_".$table2EventType[$type];
     }
     
     /**

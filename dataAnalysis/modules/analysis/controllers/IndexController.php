@@ -84,20 +84,17 @@ class IndexController extends Controller
         //计算接收到待处理数据的条数
         $number = count($data);
         for($i =0; $i < $number; $i ++){
-            if($number > 1){
+            //只有一条数据需要立即存储
+            //当前数据是最后一条，需要立即存储
+            if(($number == 1) || ($i == $number-1)){
+                $this->send = true;
+            }else{
                 //当前数据的事件类型与下一条数据的事件类型不同，需要立即存储。
                 $currData = $this->process->formaterData($data[$i]);
                 $nextData = $this->process->formaterData($data[$i + 1]);
                 if($currData['type'] != $nextData['type']){
                     $this->send = true;
                 }
-                //当前数据是最后一条，需要立即存储
-                if($i == $number-1){
-                    $this->send = true;
-                }
-            }else{
-                //只有一条数据需要立即存储
-                $this->send = true;
             }
             //设置当前处理数据
             $this->info = $data[$i];
