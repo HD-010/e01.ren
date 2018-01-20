@@ -14,7 +14,7 @@ class EbugData
     //数据接收口令
     public $token = "6B7160A53D3A497C559C659BD2960497";
     //项目名称
-    public $project = "生产环境";
+    public $project = "development";
     // 事件属性
     public $properties = [];
     // 事件名称
@@ -25,7 +25,7 @@ class EbugData
     public $loginSuccess;
 
     /**
-     * 发送神策日志
+     * 发送ebug日志
      *
      * @param array $sensorsData
      *            形式如 : [
@@ -43,7 +43,7 @@ class EbugData
     {
         $ebug = new EbugData();
 
-        //初始化神策对象
+        //初始化ebug对象
         $ebug->init();
 
         // 将匿名用户和注册用户做关联

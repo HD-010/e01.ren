@@ -94,7 +94,6 @@ class FileConsumer extends AbstractConsumer {
         if(empty($contents)) return;
         $post_data = [
             "token" => TOKEN,
-            "project" => PROJECT,
             "data" => json_encode($contents),
             "serverName" => $_SERVER['SERVER_NAME']
         ];

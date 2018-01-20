@@ -4,6 +4,7 @@
 
 $this->title = 'My Yii Application';
 ?>
+<script data-main="./assets/js/app/main" src="./assets/js/require.js"></script>
 <div class="site-index">
 
     <div class="jumbotron">

@@ -101,7 +101,6 @@ class IndexController extends Controller
             }
             //设置当前处理数据
             $this->info = $data[$i];
-            \EDebug::setInfo($this->info);
             //调用数据存储程序
             $this->actionStorage();
         }

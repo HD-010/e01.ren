@@ -1,9 +1,11 @@
 <?php
 namespace app\modules\analysis\models;
 
+use Yii;
 use app\modules\analysis\models\Schema;
 use app\models\Validata;
 use app\components\T;
+use yii\base\ErrorException;
 /**
  * @author 弘德誉曦
  * 
@@ -20,6 +22,7 @@ class Process
     public $distinct_id;//用户标识
     public $lib;        //使用的库
     public $project;    //项目名称
+    public $serverName; //客户端域名 
     public $event;      //事件名称
     public $tableName;  //当前事件类型对应的表名称
     public $moreFeilds; //新增属性
@@ -29,12 +32,13 @@ class Process
      */
     public function initAnalysis($jsonStr){
         $this->data = $this->formaterData($jsonStr);
-        $this->properties = $this->data['properties'];
-        $this->type = $this->data['type'];
-        $this->time = $this->data['time'];
-        $this->distinct_id = $this->data['distinct_id'];
-        $this->lib = $this->data['lib'];
-        $this->project = $this->data['project'];
+        $this->properties = T::arrayValue('properties', $this->data,'');
+        $this->type = T::arrayValue('type', $this->data,'');
+        $this->time = T::arrayValue('time', $this->data,'');
+        $this->distinct_id = T::arrayValue('distinct_id', $this->data,'');
+        $this->lib = T::arrayValue('lib', $this->data,'');
+        $this->project = T::arrayValue('project', $this->data,'');
+        $this->serverName = Yii::$app->request->post('serverName','');
         $this->event = T::arrayValue('event',$this->data,"");
         $this->setTable2EventType();
         return $this;
@@ -73,7 +77,8 @@ class Process
             exit('事件类型错误');
             return;
         }
-        $this->tableName =  $table2EventType[$type];
+        
+        $this->tableName =  str_replace('.', '', $this->serverName)."_".$this->project."_".$table2EventType[$type];
     }
     
     /**

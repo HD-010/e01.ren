@@ -325,17 +325,13 @@ class EbugAnalysis {
      */
     public function _track_event($update_type, $event_name, $distinct_id, $original_id, $properties) {
         $event_time = $this->_extract_user_time($properties);
-        $project = 'tsytest';
-        if(isset(Yii::$app->params['ENV']) && (Yii::$app->params['ENV'] == 'product') ) {
-            $project = 'taoshouyou';
-        }
         $data = array(
             'type' => $update_type,
             'properties' => $properties,
             'time' => $event_time,
             'distinct_id' => $distinct_id,
             'lib' => $this->_get_lib_properties(),
-            'project' => $project,
+            'project' => PROJECT,
         );
 
         if (strcmp($update_type, "track") == 0) {
