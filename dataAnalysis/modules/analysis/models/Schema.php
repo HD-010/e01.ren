@@ -122,7 +122,7 @@ class Schema
         //如果$data为false，说明字段校验，数据格式校验都通过。但不符合插入条件，不作任何处理
         if(!self::$data) return true;
         //sql格式：$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
-        $sql = "INSERT INTO `" . self::$tableName . "` " . self::$data;\EDebug::setInfo($sql);
+        $sql = "INSERT INTO `" . self::$tableName . "` " . self::$data;
         //数据存储完毕，清除$data中的数据
         self::$data = "";
         $conn = Yii::$app->db;
