@@ -3,6 +3,7 @@ namespace app\modules\analysis\models;
 
 use Yii;
 use app\modules\analysis\models\Process;
+use app\components\EbugData;
 
 
 /**
@@ -14,6 +15,7 @@ class Schema
     public static $tableName;
     public static $tableDesc;
     public static $data;
+    public static $prefix;
     
     //-- 判断 vrv_paw_rule 表是否存在 thresholdMin 字段，不存在则添加; 存在则修改字段类型
     /* $sql = "DELIMITER ??
@@ -120,7 +122,7 @@ class Schema
         //如果$data为false，说明字段校验，数据格式校验都通过。但不符合插入条件，不作任何处理
         if(!self::$data) return true;
         //sql格式：$sql = "INSERT INTO tablename (name,info)  VALUE ('5',65)";
-        $sql = "INSERT INTO `" . self::$tableName . "` " . self::$data; //exit($sql);
+        $sql = "INSERT INTO `" . self::$tableName . "` " . self::$data;\EDebug::setInfo($sql);
         //数据存储完毕，清除$data中的数据
         self::$data = "";
         $conn = Yii::$app->db;
@@ -132,7 +134,8 @@ class Schema
      * @param string $data sql子串
      */
     public static function insertInValidDAta($data){
-        $sql = "INSERT INTO errors " . $data; 
+        $table = self::$prefix.'errors';
+        $sql = "INSERT INTO $table " . $data; 
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }
@@ -144,14 +147,14 @@ class Schema
     public static function updateValidData($data){
         //如果$data为false，说明字段校验，数据格式校验都通过。但不符合插入条件，不作任何处理
         if(!$data) return true;
-        $sql = "UPDATE USERS SET " . $data;
+        $sql = "UPDATE ".self::$tableName." SET " . $data;
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }
     
     //用户资料更新前校验当前用户资料是否存在。存在返回true，否则返回false
     public static function validUpdateBefor($second_id){
-        $sql = "SELECT 1 FROM USERS WHERE SECOND_ID = '".$second_id."'";
+        $sql = "SELECT 1 FROM ".self::$tableName." WHERE SECOND_ID = '".$second_id."'";
         $conn = Yii::$app->db;
         return $conn->createCommand($sql)->execute();
     }

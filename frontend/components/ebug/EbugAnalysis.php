@@ -30,17 +30,15 @@ class EbugAnalysis {
         $data['distinct_id'] = strval($data['distinct_id']);
 
         // 检查 time
-        $ts = (int)($data['time']);
+        //$ts = (int)($data['time']);
+        $ts = (float)($data['time']);
         $ts_num = strlen($ts);
         if ($ts_num < 10 || $ts_num > 13) {
             // throw new EbugAnalysisIllegalDataException("property [time] must be a timestamp in microseconds");
+            $ts = time();
         }
 
-        if ($ts_num == 10) {
-            $ts *= 1000;
-        }
-        $data['time'] = $ts;
-
+        $data['time'] = date('Y-m-d H:i:s',ceil($ts));
         $name_pattern = "/^((?!^distinct_id$|^original_id$|^time$|^properties$|^id$|^first_id$|^second_id$|^users$|^events$|^event$|^user_id$|^date$|^datetime$)[a-zA-Z_$][a-zA-Z\\d_$]{0,99})$/i";
         // 检查 Event Name
         if (isset($data['event']) && !preg_match($name_pattern, $data['event'])) {

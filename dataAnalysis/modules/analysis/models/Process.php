@@ -79,8 +79,10 @@ class Process
         //表名字串则：客户端域名（不带点） + 项目名称  + 属性对应名称
         $servername = str_replace('.', '', $this->serverName);
         if(!$servername) return;
-        if(!$this->project) return;    
-        $this->tableName = $servername ."_".$this->project."_".$table2EventType[$type];
+        if(!$this->project) return;
+        $prefix = $servername ."_".$this->project."_";
+        $this->tableName = $prefix.$table2EventType[$type];
+        Schema::$prefix = $prefix;
     }
     
     /**
