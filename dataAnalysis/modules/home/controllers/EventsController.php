@@ -21,6 +21,6 @@ class EventsController extends Controller
         
         //输出显示数据
         
-        return $this->renderPartial('index',[]);
+        return $this->render('index',[]);
     }
 }
