@@ -212,7 +212,9 @@ class EbugData
     {
         return [
             'name',
-            'age'
+            'age',
+            'target',
+            'src'
         ];
     }
 
