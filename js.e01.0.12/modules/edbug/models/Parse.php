@@ -30,7 +30,6 @@ class Parse
     public function getEBugStyle(){
         $contents = file_get_contents(Yii::getAlias('@app/assets/static/js/eBugStyle.js'));
         echo $contents;
-    
     }
      
     //获取视图小部件

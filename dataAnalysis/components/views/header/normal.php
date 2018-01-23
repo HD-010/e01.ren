@@ -1,5 +1,5 @@
 <div name=top>
-	<div name=log>eBug</div>
+	<div name=log>eAnalysis</div>
 	<ul name=state>
 		<li name=nickName></li>
 	</ul>
@@ -14,4 +14,3 @@
 	</ul>
 </div>
 <div class=space></div>
-<script data-main="./assets/js/app/header_normal" src="./assets/js/require.js"></script>

@@ -1,1 +1,5 @@
-<div>这是home</div>
+<div>
+<?php 
+echo $data;
+?>
+</div>

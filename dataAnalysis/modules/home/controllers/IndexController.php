@@ -8,7 +8,9 @@ class IndexController extends Controller
 {
     public function actionIndex(){
         
-        return $this->renderPartial('home',[]);
+        return $this->render('home',[
+            'data' => 'eAnalysis首页'
+        ]);
     }
 }
 
