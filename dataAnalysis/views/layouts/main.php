@@ -9,6 +9,7 @@ use app\components\Header;
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>eAnalysis</title>
     <link rel="stylesheet" type="text/css" href="http://data-analysis.e01.ren/assets/css/analysis.css" />
+    <script data-main="/assets/js/app/main" src="/assets/js/require.js"></script> 
 </head>
 <body>
 
