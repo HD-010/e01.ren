@@ -20,7 +20,6 @@ class EventsController extends Controller
         //获取所有数据的条数
         $dataCount = (new DataProcess())->getData();
         
-        
         /**************************************************/
         //处理筛选条件
         
@@ -37,10 +36,6 @@ class EventsController extends Controller
         ]);
     }
     
-    
-    public function actionGraph(){
-        
-    }
     
     
 }
