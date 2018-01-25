@@ -19,6 +19,5 @@ use app\components\Header;
 	<?=$content;?>
 </div>
 
-<div name=codeList></div>
 </body>
 </html>
