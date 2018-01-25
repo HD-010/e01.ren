@@ -6,10 +6,11 @@
 }
 
 .eventsOpt {
-	width: 100%;
+	/* width: 100%; */
 	border: 1px solid silver;
 	display: block;
 	background-color: #EBEBEB;
+	margin-left:208px;
 }
 
 .eventsOpt ul {
@@ -54,7 +55,7 @@
 </style>
 
 
-<div class="eventsOpt">
+<div name="eventsOpt" class="eventsOpt">
 	<form>
 		<ul class="map">
 			<li>事件分析</li>
@@ -62,22 +63,24 @@
 		<ul>
 			<li>显示</li>
 			<li><select name="eventName">
-					<option>任意事件</option>
+					<option value=all>任意事件</option>
 			</select></li>
 			<li>的</li>
 			<li><select name="eventOpt">
 					<option>总次数</option>
+					<option>触发用户数</option>
+					<option>均资料</option>
+					<option>IP(去重)</option>
+					<option>国家(去重)</option>
+					<option>省份(去重)</option>
+					<option>城市(去重)</option>
 			</select></li>
 			<li><a onclick="function(){return false;}" href="#">✛</a></li>
 		</ul>
 		<ul>
-			<li>显示</li>
-			<li><select name="eventName">
-					<option>任意事件</option>
-			</select></li>
-			<li>的</li>
-			<li><select name="eventOpt">
-					<option>总次数</option>
+			<li>按</li>
+			<li><select name="eventAttr">
+					<option value="all">总体</option>
 			</select></li>
 			<li>查看<a onclick="function(){return false;}" href="#">✛</a></li>
 		</ul>

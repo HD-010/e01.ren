@@ -6,6 +6,10 @@ use yii\base\Controller;
 use app\modules\analysis\models\Parse;
 use app\modules\home\models\DataProcess;
 
+/**
+ * @author 弘德誉曦
+ * 数据统计控制器
+ */
 class EventsController extends Controller
 {
     public $eventName;     //事件名称
