@@ -1,0 +1,55 @@
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+
+# localhost name resolution is handled within DNS itself.
+
+#	::1     localhost
+10.2.5.6 	gitlab.tsy.com 
+10.2.6.66 	jenkins.tsy.com wiki.tsy.com
+
+127.0.0.1	webpc.taoshouyou.com 
+127.0.0.1	webh5.tsy.com 
+127.0.0.1	yii.yii.me 
+127.0.0.1	test.yii.me 
+127.0.0.1	frontend.yii.me 
+127.0.0.1	backend.yii.me 
+127.0.0.1	me.me	
+127.0.0.1	twebh5.tsy.com
+127.0.0.1	passport.taoshouyou.com
+
+127.0.0.1	webh5.taoshouyou.com
+127.0.0.1	webapp.taoshouyou.com
+127.0.0.1 	img-test.taoshouyou.com
+
+127.0.0.1       localhost 
+127.0.0.1       a.tsy.com 
+127.0.0.1       test.tsy.com 
+127.0.0.1       passport.tsy.com
+127.0.0.1	webapp.tsy.com	
+
+#-----------------------------------------#
+127.0.0.1       e01.ren
+127.0.0.1       www.e01.ren
+127.0.0.1	js.e01.ren
+127.0.0.1	passport.e01.ren
+127.0.0.1	js.e01.com
+127.0.0.1	data-analysis.e01.ren
+127.0.0.1	echarts.e01.ren
+127.0.0.1	workman-chat.com
+127.0.0.1	workman-todpole.com
+127.0.0.1	workman-msg.com

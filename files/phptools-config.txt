@@ -1,0 +1,21 @@
+a.tsy.com|gohosts.cn|80|D:\WWW\dailian\apppc\web
+frontend.yii.me|yii.yii.me|80|D:\WWW\me\yii\frontend\web
+test.yii.me|test.yii.me|80|D:\WWW\me\yii\home\web
+backend.yii.me|yii.me|80|D:\WWW\me\yii\backend\web
+twebh5.tsy.com|web_h5.tsy.com|80|D:\WWW\web_h5_me\web
+webpc.taoshouyou.com|web_h5.tsy.com|80|D:\WWW\web_pc\web
+webh5.taoshouyou.com|web_h5.tsy.com|80|D:\WWW\web_h5\web
+test.tsy.com|test.tsy.com|80|D:\WWW\zenProject\mytest
+passport.taoshouyou.com|passport.tsy.com|80|D:\WWW\passport\web
+webapp.tsy.com	|web_app.tsy.com|80|D:\WWW\web_app\web
+e01.ren|www.e01.ren|80|D:\WWW\e01.ren\frontend\web
+js.e01.com|js.e01.com|80|D:\WWW\js.e01
+js.e01.ren|js.e01.com|80|D:\WWW\e01.ren\js.e01.0.12\web
+me.me|me.me|80|D:\WWW\tongji-api-demo
+passport.e01.ren|passport.e01.com|80|D:\WWW\e01.ren\passport\web
+data-analysis.e01.ren|data-analysis.e01.com|80|D:\WWW\e01.ren\dataAnalysis\web
+echarts.e01.ren|data-analysis.e01.com|80|D:\WWW\echarts
+img-test.taoshouyou.com|web_h5.tsy.com|80|D:\WWW\image_socket
+workman-chat.com|web_h5.tsy.com|80|D:\WWW\workman\workerman-chat-for-win\Applications\Chat\Web
+workman-todpole.com|web_h5.tsy.com|80|D:\WWW\workman\workerman-todpole-for-win\Applications\Todpole\Web
+workman-msg.com|web_h5.tsy.com|80|D:\WWW\workman\web-msg-sender-for-win\web

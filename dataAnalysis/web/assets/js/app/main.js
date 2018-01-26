@@ -18,12 +18,9 @@ require(["jquery","echarts"],function($,echarts){
 	//oper.namesUri = "http://data-analysis.e01.ren/?r=home/oper/name";
 	//oper.attrUri = "http://data-analysis.e01.ren/?r=home/oper/attr";
 	
-	//为减少请求次数，将oper.namesUri，oper.attrUri合成一次请求
-	oper.eventOpt = "http://data-analysis.e01.ren/?r=home/oper/event-opt";
+	
 	
 	$(document).ready(function(){
-		//事件分析操作对象
-		oper.eventsOpt = $("span[name=eventsOpt]");
 		//漏斗分析操作对象
 		oper.funnelOpt = $("span[name=funnelOpt]");
 		//留存分析操作对象
@@ -40,6 +37,10 @@ require(["jquery","echarts"],function($,echarts){
 		oper.attributeOpt = $("span[name=attributeOpt]");
 		
 		
+		//为减少请求次数，将oper.namesUri，oper.attrUri合成一次请求
+		oper.eventOpt = "http://data-analysis.e01.ren/?r=home/oper/event-opt";
+		//事件分析操作对象
+		oper.eventsOpt = $("span[name=eventsOpt]");
 		//操作对象对应的动作
 		oper.eventsOpt.click(function(){
 			$.ajax({

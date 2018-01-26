@@ -4,12 +4,22 @@ namespace app\components;
 class T
 {
     public static function arrayValue($key,$array,$default=null){
-        if(array_key_exists($key,$array)){
-            return $array[$key];
-        }else{
-            return $default;
+        $arr = $array;
+        $keys = explode('.', $key);
+        $error = '错误：不成以数组的形式访问字符串';
+        $value = $default;
+    
+        if(!is_array($arr)) return $error;
+        foreach ($keys as $val) {
+            if (! is_array($arr)) {
+                return $error;
+            }
+            $arr = array_key_exists($val, $arr) ? $arr[$val] : false;
+            $value = $arr;
         }
+        return $value ? $value : $default;
     }
+    
     
     /**
      * 为数据添加status状态标识
