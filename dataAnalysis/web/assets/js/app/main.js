@@ -68,21 +68,22 @@ require(["jquery","echarts"],function($,echarts){
 				data:'1',
 				dataType:"json",
 				success:function(data,status){
+					console.log(data);
 					if(status === 'success'){
 						//添加事件名称项内容
 						var optHtml = "";
-						var data = data.data.names;
-						if((data.status == 1))
-						for(var i=0; i < data.length; i ++){
-							optHtml += "<option value="+data[i].events+">"+data[i].events+"</option>" ;
+						var names = data.names;
+						if((names.status == 1))
+						for(var i=0; i < names.data.length; i ++){
+							optHtml += "<option value="+names.data[i].events+">"+names.data[i].events+"</option>" ;
 						}
 						$("select[name=eventName]").append(optHtml);
 						
 						//添加事件属性项内容
 						optHtml = "";
-						data = data.data.attrs;
-						for(var i=0; i < data.length; i ++){
-							optHtml += "<option value="+data[i].column_name +">"+data[i].column_name+"</option>" ;
+						var attrs = data.attrs;
+						for(var i=0; i < attrs.data.length; i ++){
+							optHtml += "<option value="+attrs.data[i].column_name +">"+attrs.data[i].column_name+"</option>" ;
 						}
 						$("select[name=eventAttr]").append(optHtml);
 					}

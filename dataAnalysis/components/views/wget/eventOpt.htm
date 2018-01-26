@@ -45,12 +45,15 @@
 	background-color: #F8F9FA;
 }
 
-.eventsOpt a {
+.eventsOpt span {
 	height: 28px;
 	line-height: 38px;
 	border: 1px solid #F8F9FA;
 	background-color: #F8F9FA;
 	color: #4A90E2;
+}
+span.bt:hover {
+    cursor: pointer;
 }
 </style>
 
@@ -75,17 +78,17 @@
 					<option>省份(去重)</option>
 					<option>城市(去重)</option>
 			</select></li>
-			<li><a onclick="function(){return false;}" href="#">✛</a></li>
+			<li><span class=bt>✛</span></li>
 		</ul>
 		<ul>
 			<li>按</li>
 			<li><select name="eventAttr">
 					<option value="all">总体</option>
 			</select></li>
-			<li>查看<a onclick="function(){return false;}" href="#">✛</a></li>
+			<li>查看<span class=bt>✛</span></li>
 		</ul>
 		<ul>
-			<li><a onclick="function(){return false;}" href="#">✛ 筛选条件</a></li>
+			<li><span class=bt>✛ 筛选条件</span></li>
 		</ul>
 	</form>
 </div>
