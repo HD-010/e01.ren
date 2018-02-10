@@ -277,7 +277,7 @@ require(["jquery","echarts"],function($,echarts){
 	    }
 	}
 	
-	option_chart1 = {
+	var optionChart1 = {
 	    backgroundColor: bgColor,
 	    color: colors,
 	    series: [{
