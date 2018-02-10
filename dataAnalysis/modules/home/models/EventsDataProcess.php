@@ -3,7 +3,7 @@ namespace app\modules\home\models;
 
 use app\components\T;
 
-class DataProcess
+class EventsDataProcess
 {
     public $conn;
     public $query;
@@ -16,13 +16,13 @@ class DataProcess
         return $this->conn;
     }
     
+    
     public function getData(){
         //验证数据库连接是否有效，如果无效则创建新的连接
         $conn = \Yii::$app->db;
-        $sql = "select count(*) from e01ren_development_events";
+        $sql = "select distinct event,count(event),DATE_FORMAT(time,'%m-%d') as date from e01ren_development_events group by DATE_FORMAT(time,'%Y-%m-%d') ASC";
         $res = $conn->createCommand($sql)->queryAll();
         return $res;
-        //查询数据
     }
     
     /**

@@ -9,7 +9,7 @@ class IndexController extends Controller
     public function actionIndex(){
         
         return $this->render('home',[
-            'data' => 'eAnalysis首页'
+            'data' => 'eAnalysis引导（注册）页'
         ]);
     }
 }
