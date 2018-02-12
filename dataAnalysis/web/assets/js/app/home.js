@@ -2,6 +2,7 @@ require.config({
 	baseUrl : "/assets/js/app",
 	paths : {
 		jquery : "./lib/jquery",
+		easyForm : "./lib/easyForm",
 		echarts : "http://echarts.e01.ren/echarts"
 	},
 	shim:{
@@ -9,7 +10,68 @@ require.config({
 	}
 
 });
-require(["jquery","echarts"],function($,echarts){
+require(["jquery","easyForm","echarts"],function($,$e,echarts){
+	//初始化sing对象
+	function init(){
+		if(typeof localStorage.sing == undefined){
+			var sing = {
+					sing:{
+						verify : 0,
+						errNum : 1,
+					}
+			};
+			localStorage.sing = sing;
+		}
+		console.log(localStorage)
+	}
+	
+	//控制验证码输入框显示
+	function showVerify(){
+		if(localStorage.sing.verify == 1){
+			$('li[class="in up"]').css({"display":"block"});
+		}else{
+			return false;
+		}
+	}
+	//登录注册对象
+	$(document).ready(function(){
+		init();
+		showVerify();
+	});
+	
+	
+	
+	//登录提交
+	$("input[type='submit']").click(function(){
+		 var res = $e("form[name='sing']").required([
+          "input[name=uname]",                                
+          ]).submit({					//该对象为jquery  ajax参数对象
+        	  url:this.url+"/sing-up",
+        	  dataType:"JSON",
+        	  success:function(data){
+        		  console.log(data)
+        		  if(data.state == 'success'){
+        			  //显示注册 成功提示信息
+        			  var message = $e().msg("注册成功，正在登录...");
+        			  $("div[name=singUpTitle]").append(message);
+        			  login.data = data;
+        			  //三秒后自动完成登录
+        			  setTimeout(login.singUpToIn,3000);
+        		  }
+        	  }
+          });
+		  if(!res){
+			  localStorage.sing.errNum ++;
+			  //当错误次数大于3次，则要求输入验证码
+			  if(localStorage.sing.errNum >= 4){
+				  localStorage.sing.verif = 1;
+				  showVerify();
+			  }
+			  console.log(localStorage.errnum);
+		  }
+		  return false;
+	});
+	
 
 	// 指定图表的配置项和数据
 	var colors = ['#FFAE57', '#FF7853', '#EA5151', '#CC3F57', '#9A2555'];
