@@ -15,30 +15,9 @@ class EventsController extends Controller
     public $eventName;     //事件名称
     public $properties;    //事件属性
     
-    //数据分析首页
-    public function actionIndex(){
-        /**
-         * 假设条件：
-         * 1、统计所有数据
-         */
-        //获取所有数据的条数
-        
-        /**************************************************/
-        //处理筛选条件
-        
-        //根据筛选条件向数据库查找相应数据
-        
-        
-        //将数据装入jgraph图表
-        
-        
-        //输出显示数据
-        return $this->render('index',[
-            'data' => '登录后展示的首页'
-        ]);
-    }
-   
-    //数据分析事件分析
+    /**
+     * 数据分析-事件分析首页展示
+     */
     public function actionView(){
         /**
          * 假设条件：
@@ -64,6 +43,10 @@ class EventsController extends Controller
     }
     
     
+    
+    /**
+     * 获取数据分析-事件分析数据
+     */
     public function actionData(){
         /**
          * 假设条件：

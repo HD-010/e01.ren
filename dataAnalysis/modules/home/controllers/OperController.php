@@ -3,7 +3,7 @@ namespace app\modules\home\controllers;
 
 use Yii;
 use yii\base\Controller;
-use app\modules\home\models\DataProcess;
+use app\modules\home\models\EventsDataProcess;
 use app\components\T;
 
 /**
@@ -18,7 +18,7 @@ class OperController extends Controller
      */
     public function actionEventOpt(){
         //获取所有事件名称
-        $data = (new DataProcess())->getEventOpt();
+        $data = (new EventsDataProcess())->getEventOpt();
         T::outJson($data);
     }
     

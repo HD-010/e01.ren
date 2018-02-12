@@ -2,6 +2,9 @@
 body {
     overflow: hidden;
 }
+.bt:hover {
+    cursor: pointer;
+}
 .layout{
     background-color: #2E2733;
     position: fixed;
@@ -11,11 +14,11 @@ body {
     left: 0;
 }
 .homeChart1{
-	width: 60%;
+	width: 50%;
     height: 100%;
     border: 0;
 	position: absolute;
-	margin-left:5%;
+	margin-left:15%;
 	
 }
 .sing{
@@ -79,9 +82,9 @@ body {
 	<div class="homeChart1" id="homeChart1"></div>
 	<form name="sing">
     	<ul class="sing" id="sing">
-    		<li class="singTitle">用户<font>登录</font><font>&nbsp;注册</font></li>
+    		<li class="singTitle">用户<font class="bt" name="showIn">登录</font>/<font class="bt" name="showUp">注册</font></li>
     		<li><input type="text" name="username" placeholder="请输入用户名" value="" /></li>
-    		<li><input type="password" name="password" placeholder="请输入密码" value="" /></li>
+    		<li><input type="password" name="password" placeholder="密码为6-20个字母数字下划线 " value="" /></li>
     		<li class="up"><input type="password" name="password1" placeholder="请再次输入密码" value="" /></li>
     		<li class="in up">
     			<input type="text" name="verify" placeholder="请输入验证码" value="" />
@@ -89,8 +92,8 @@ body {
     		</li>
     		<li>
     			<input class="bt" type="reset"  value=" 重置 " />
-    			<input class="in" type="submit"  value=" 登录 " />
-    			<input class="up" type="submit" disabled="disabled" value=" 注册 " />
+    			<input class="in bt" type="submit"  value=" 登录 " />
+    			<input class="up bt" type="submit"  value=" 注册 " />
     		</li>
     	</ul>
 	</form>
