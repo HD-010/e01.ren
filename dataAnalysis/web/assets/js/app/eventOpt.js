@@ -18,16 +18,24 @@ require(["jquery","echarts"],function($,echarts){
 	 * */
 
 	$(".addtionOpt").click(function(){
+		
 		//父贡html内容
 		var parentHtml = $(this).parent().prev().html();
+		var parentObj = $(this).parent().prev().find("select");
+		var parentsObj = $(this).parent().prevAll().find("select");
+		
+		$(this).parent().prevAll().find("select").each(function(index){
+			console.log($(this).val());
+		});
+		var parentsVal = [];
 		
 		//子项html内容
-		var myHtml = setOptionContent(parentHtml);
+		//var myHtml = setOptionContent(parentObj.html(),);
 		
 		//添加项内容
 		var newEventOpt ="<li>和</li><li>"  + 
-		//$(this).parent().prev().html() + 
-		'<select name="eventOpt[]">' + myHtml + '</select>'+
+		$(this).parent().prev().html() + 
+		//'<select name="eventOpt[]">' + myHtml + '</select>'+
 		"</li><li><span class='bt delOpt'>✕</span></li>";
 		console.log(newEventOpt);
 		$(newEventOpt).insertBefore(this);
@@ -40,23 +48,8 @@ require(["jquery","echarts"],function($,echarts){
 		});
 		
 	});
-
-	//设置option项内容
-	function setOptionContent(str){
-		//获取父项的值
-		var val = $(str).val();
-		console.log(val);
-		var parentObj = $(str);
-		//删除项中被选中的值
-		var parentOptionObj = $(str).children("option");
-		for(var i = 0; i < parentOptionObj.length; i ++){
-			if(parentOptionObj.eq(i).text() == val){
-				parentObj.children().eq(i).remove();
-			}
-			break;
-		}
-		//console.log(parentObj.html());
-		return parentObj.html();
-	}
+function setOptionContent(){
+	
+}
 	
 });
