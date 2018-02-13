@@ -63,7 +63,7 @@ span.bt:hover {
 
 
 <div name="eventsOpt" class="eventsOpt">
-	<form>
+	<form name="eventQuery" action="" method="POST">
 		<ul class="map">
 			<li>事件分析</li>
 		</ul>
@@ -75,26 +75,30 @@ span.bt:hover {
 			<li>的</li>
 			<li>
 				<select name="eventOpt[]">
-					<option val="总次数">总次数</option>
-					<option val="触发用户数">触发用户数</option>
-					<option val="人均次数">人均次数</option>
-					<option val="IP(去重)">IP(去重)</option>
-					<option val="国家(去重)">国家(去重)</option>
-					<option val="省份(去重)">省份(去重)</option>
-					<option val="城市(去重)">城市(去重)</option>
+					<option value="总次数">总次数</option>
+					<option value="触发用户数">触发用户数</option>
+					<option value="人均次数">人均次数</option>
+					<option value="IP(去重)">IP(去重)</option>
+					<option value="国家(去重)">国家(去重)</option>
+					<option value="省份(去重)">省份(去重)</option>
+					<option value="城市(去重)">城市(去重)</option>
 				</select>
 			</li>
 			<li><span class="bt addtionOpt">✢</span></li>
 		</ul>
 		<ul>
-			<li>按</li>
-			<li><select name="eventAttr">
-					<option value="all">总体</option>
-			</select></li>
-			<li>查看<span class="bt addtion">✛</span></li>
+			<div>
+				<li>按</li>
+				<li><select name="eventAttr[]">
+						<option value="all">总体</option>
+				</select></li>
+				<li>查看<span class="bt addtionAttr">✛</span></li>
+			</div>
 		</ul>
 		<ul>
-			<li><span class="bt addtion">✛ 筛选条件</span></li>
+			<div>
+				<li><span class="bt addtion">✛ 筛选条件</span></li>
+			</div>
 		</ul>
 		<ul>
 			<li>
@@ -106,6 +110,7 @@ span.bt:hover {
 					<input type="date" name="endData" id="endData" value="" />
 				</label>
 			</li>
+			<li><button name="eventQuery">查询</button></li>
 		</ul>
 	</form>
 </div>

@@ -120,7 +120,7 @@ require(["jquery","echarts"],function($,echarts){
 						for(var i=0; i < attrs.data.length; i ++){
 							optHtml += "<option value="+attrs.data[i].column_name +">"+attrs.data[i].column_name+"</option>" ;
 						}
-						$("select[name=eventAttr]").append(optHtml);
+						$("select[name='eventAttr[]']").append(optHtml);
 					}
 				}
 			});
