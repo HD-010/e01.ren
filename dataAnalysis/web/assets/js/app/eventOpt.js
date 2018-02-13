@@ -192,7 +192,7 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 		$.ajax({
 			url:"",
 			data : data,
-			type : post,
+			type : 'post',
 			dataType : "json",
 			success : function(data){
 				console.log(data)
@@ -203,7 +203,5 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 		});
 		return false;
 	});
-	
-	
 	
 });
