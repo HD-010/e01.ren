@@ -133,9 +133,10 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 			'</select>'+
 		'</li>'+
 		'<li>'+
-			'<select name="AddtionValue[]">'+
-					'<option value="all">总体</option>'+
-			'</select>'+
+			//'<select name="AddtionValue[]">'+
+			//		'<option value="all">总体</option>'+
+			//'</select>'+
+			'<input type=text name="AddtionValue[]" value="" />'+
 		'</li>'+
 		"<li><span class='bt delOpt'>✕</span></li></div>";
 		$(newEventOpt).insertBefore($(this).parent().parent());

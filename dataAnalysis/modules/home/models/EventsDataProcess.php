@@ -20,7 +20,7 @@ class EventsDataProcess
     public function getData(){
         //验证数据库连接是否有效，如果无效则创建新的连接
         $conn = \Yii::$app->db;
-        $sql = "select distinct event,count(event),DATE_FORMAT(time,'%m-%d') as date from e01ren_development_events group by DATE_FORMAT(time,'%Y-%m-%d') ASC";
+        $sql = "select distinct event,count(event) as total,DATE_FORMAT(time,'%m-%d') as date from e01ren_development_events group by DATE_FORMAT(time,'%Y-%m-%d') order by date ASC";
         $res = $conn->createCommand($sql)->queryAll();
         return $res;
     }

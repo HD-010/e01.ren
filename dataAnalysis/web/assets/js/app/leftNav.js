@@ -81,15 +81,29 @@ require(["jquery","echarts"],function($,echarts){
 				url:oper.veiwerUri,
 				async:true,
 				type:'post',
-				data:'wgetName=eventOpt',
+				dataType:'json',
+				//这里参数所在的顺序以0开始，对应返回数据data中索引
+				data:'wgetName[]=eventOpt&wgetName[]=eventChartContent',
 				success:function(data,status){
 					if(status === 'success'){
+						//视图内容显示区域
 						var contents = $("div[name=contents]");
-						var eventsOpt = $("div[name=eventsOpt]")
-						if(eventsOpt.length){
-							eventsOpt = data;
-						}else{
-							contents.append(data);
+						//事件选项卡显示区域
+						var eventsOpt = $("div[name=eventsOpt]");
+						//图表绘制区域
+						var chartContent = $('div[name="chartContent"]');
+						
+						//当事件分析页面未加载，首次点击事件分析按钮,则将  事件选项卡 和 图表绘制区  
+						//添加到div[name=contents] DOM对象
+						if(!eventsOpt.length){
+							contents.append($(data[0])); 	//载入事件选项卡
+							contents.append($(data[1]));	//载入图表绘制区域
+						}else
+						//如果事件分析页面已经加载，再次点击事件分析按钮，则用新的  事件选项卡  内容和  图表绘制区  
+						//替换原有的相应DOM对象。
+						{
+							eventsOpt = $(data[0]);			//替换事件选项卡内容
+							chartContent = $(data[1]);		//替换绘制的图表内容
 						}
 					}
 				}

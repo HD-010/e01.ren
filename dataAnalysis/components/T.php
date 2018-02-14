@@ -3,6 +3,7 @@ namespace app\components;
 
 class T
 {
+    
     public static function arrayValue($key,$array,$default=null){
         $arr = $array;
         $keys = explode('.', $key);
@@ -33,6 +34,9 @@ class T
         );
     }
     
+    
+    
+    
     public static function outJson($data){
         //启用output buffering机制。 Output buffering支持多层次 — 例如，可以多次调用 ob_start() 函数。
         ob_start();
@@ -47,5 +51,37 @@ class T
         ob_get_contents();
         echo \GuzzleHttp\json_encode($data);
         
+    }
+    
+    /**
+     * @author 弘德誉曦
+     * 查找多维数组中同一层级的所有相同键名的值
+     *
+     * @param string $key     查找的键名
+     * @param array $array   被查找的多维数组
+     * @param string $limter  字串分隔符
+     * return string|array
+     */
+    public function implodeArr($key,$array,$limter=null){
+        $data = $limter ? '' : [];
+        if(!is_array($array)) return "";
+        foreach($array as $k => $v){
+            if(!is_array($v)) return "";
+            if(array_key_exists($key,$v)){
+                if($limter){
+                    $data .= $limter . $v[$key];
+                }else{
+                    $data[] = $v[$key];
+                }
+    
+            }else{
+                if($limter){
+                    $data .= $this->implodeArr($key,$v,$limter);
+                }else{
+                    $data = array_merge($data,$this->implodeArr($key,$v,$limter));
+                }
+            }
+        }
+        return $data;
     }
 }
