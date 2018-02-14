@@ -115,8 +115,8 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 		'</li>'+
 		'<li>'+
 			'<select name="AddtionAttr[]">'+
-			'<option value="all">总体</option>'+
-		'</select>'+
+				'<option value="all">总体</option>'+
+			'</select>'+
 		'</li>'+
 		'<li>'+
 			'<select name="AddtionOper[]">'+
@@ -141,11 +141,13 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 		$(newEventOpt).insertBefore($(this).parent().parent());
 		
 		//判断或且关系要不要显示
-		$("div[name='addAddtion']").eq(0).children().eq(0).hide();
+		showHideAddAddtion();
 		
 		//添加项内容时绑定删除项事件
 		$(".delOpt").on('click',function(){
 			$(this).parent().parent().remove();
+			//判断或且关系要不要显示
+			showHideAddAddtion();
 		});
 		
 		//添加项内容时绑定选择项事件
@@ -160,7 +162,28 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 			}
 		});
 		
+		//添加项内容时绑定改变项名称的事件
+		$('select[name="AddtionAttr[]"]').on('change',function(){
+			//setAddtionValue();
+		})
+		
+		//添加筛选项的事件属性
+		var optionHtml = $('select[name="eventAttr[]"]').eq(0).html();
+		$('select[name="AddtionAttr[]"]').html(optionHtml);
+		
 	});
+	
+	/*
+	 * 判断事件属性关系的显示方式
+	 * */
+	function showHideAddAddtion(){
+		$("div[name='addAddtion']").eq(0).children().eq(0).show();
+		if($("div[name='addAddtion']").length > 1){
+			$("div[name='addAddtion']").eq(0).children().eq(0).css("visibility","hidden");
+		}else{
+			$("div[name='addAddtion']").eq(0).children().eq(0).hide();
+		}
+	}
 	
 	/**
 	 * 日期设置控制
@@ -203,5 +226,6 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 		});
 		return false;
 	});
+	
 	
 });
