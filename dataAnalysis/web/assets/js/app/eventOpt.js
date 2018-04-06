@@ -2,8 +2,10 @@
  * 
  */
 require.config({
+	baseUrl : "/assets/js/app",
 	paths : {
 		jquery : "http://cdn.e01.ren/common/lib/jquery",
+		config : "./models/config",
 		common : "http://cdn.e01.ren/common/f/common",
 		easyForm : "http://cdn.e01.ren/form/lib/easyform",
 		echarts : "http://cdn.e01.ren/charts/echarts/echarts",
@@ -14,7 +16,7 @@ require.config({
 
 });
 
-require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
+require(["jquery","config","common","easyForm","echarts"],function($,config,common,$e,echarts){
 	/*
 	 * 点击+号添加对应项的内容
 	 * */
@@ -214,7 +216,7 @@ require(["jquery","common","easyForm","echarts"],function($,common,$e,echarts){
 	$('button[name="eventQuery"]').on("click",function(){
 		var data = $e('form[name="eventQuery"]').sialize();
 		$.ajax({
-			url:"",
+			url:config.interf.eventData,
 			data : data,
 			type : 'post',
 			dataType : "json",

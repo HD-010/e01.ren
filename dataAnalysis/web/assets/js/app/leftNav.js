@@ -5,9 +5,11 @@
  */
 
 require.config({
+	baseUrl : "/assets/js/app",
 	paths : {
 		jquery : "http://cdn.e01.ren/common/lib/jquery",
 		echarts : "http://cdn.e01.ren/charts/echarts/echarts",
+		config : "./models/config",
 	},
 	shim:{
 		echarts :{exports:"echarts"},
@@ -15,7 +17,7 @@ require.config({
 
 });
 
-require(["jquery","echarts"],function($,echarts){
+require(["jquery","echarts","config"],function($,echarts,config){
 	//默认所有项目不展开，为css默认设置
 	//关闭所有项目的展开状态
 	function hid(){
@@ -26,8 +28,6 @@ require(["jquery","echarts"],function($,echarts){
 	
 	var oper = new Object();
 	
-	//异步获取视图组件的接口
-	oper.veiwerUri = "http://data-analysis.e01.ren/?r=home/wget/get";
 	//所有事件名称的接口
 	//oper.namesUri = "http://data-analysis.e01.ren/?r=home/oper/name";
 	//oper.attrUri = "http://data-analysis.e01.ren/?r=home/oper/attr";
@@ -71,14 +71,12 @@ require(["jquery","echarts"],function($,echarts){
 		oper.attributeOpt = $("span[name=attributeOpt]");
 		
 		
-		//为减少请求次数，将oper.namesUri，oper.attrUri合成一次请求
-		oper.eventOpt = "http://data-analysis.e01.ren/?r=home/oper/event-opt";
 		//事件分析操作对象
 		oper.eventsOpt = $("span[name=eventsOpt]");
 		//操作对象对应的动作
 		oper.eventsOpt.click(function(){
 			$.ajax({
-				url:oper.veiwerUri,
+				url:config.interf.veiwerUri,
 				async:true,
 				type:'post',
 				dataType:'json',
@@ -111,7 +109,7 @@ require(["jquery","echarts"],function($,echarts){
 			
 			//获取事件分析选项中显示事件名称项内容
 			$.ajax({
-				url:oper.eventOpt,
+				url:config.interf.eventOpt,
 				async:true,
 				type:'post',
 				data:'1',

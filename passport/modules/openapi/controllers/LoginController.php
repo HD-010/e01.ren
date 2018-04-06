@@ -7,6 +7,7 @@ use app\modules\openapi\models\Porcess;
 use app\models\User;
 use app\modules\openapi\models\UserProfiles;
 
+//file_put_contents("D:/log.txt",print_r($_SERVER,1));
 class LoginController extends Controller
 {
     public function actions(){
@@ -29,10 +30,14 @@ class LoginController extends Controller
     
     /**
      * 用户登录系统
+     * 接口信息：
+       [REQUEST_URI] => /?r=openapi/login/sing-in&uname=15985496246&pswd=123456
+       [QUERY_STRING] => r=openapi/login/sing-in&uname=15985496246&pswd=123456
+       [REQUEST_METHOD] => GET
      */
     public function actionSingIn(){
         global $uname,$pswd,$message;
-       
+        file_put_contents("d:/log.txt", $uname);
         //检测用户登录账类型，是tel|qq|uname
         $userProfiles = new UserProfiles();
         $countType = $userProfiles->countType($uname);

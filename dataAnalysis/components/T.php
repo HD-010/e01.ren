@@ -4,6 +4,14 @@ namespace app\components;
 class T
 {
     
+    /**
+     * @author 弘德誉曦
+     * 以链式键名获取多维数组的值
+     * @param unknown $key
+     * @param unknown $array
+     * @param unknown $default
+     * @return string|string|boolean|unknown
+     */
     public static function arrayValue($key,$array,$default=null){
         $arr = $array;
         $keys = explode('.', $key);
@@ -37,6 +45,13 @@ class T
     
     
     
+    /**
+     * 返回json数据格式
+     * 
+     * @param unknown $data
+     * 
+     * return json
+     */
     public static function outJson($data){
         //启用output buffering机制。 Output buffering支持多层次 — 例如，可以多次调用 ob_start() 函数。
         ob_start();
@@ -62,7 +77,7 @@ class T
      * @param string $limter  字串分隔符
      * return string|array
      */
-    public function implodeArr($key,$array,$limter=null){
+    public static function implodeArr($key,$array,$limter=null){
         $data = $limter ? '' : [];
         if(!is_array($array)) return "";
         foreach($array as $k => $v){

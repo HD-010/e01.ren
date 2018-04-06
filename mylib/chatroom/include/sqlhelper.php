@@ -4,7 +4,7 @@
  * @author yx010
  *
  */
-class Sqlhelper{
+class DB{
     //数据库连接信息
     public $dbhost = 'localhost';
     public $dbname = 'chatroom';

@@ -74,14 +74,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        EbugData::log([
+        /* EbugData::log([
             'eventName' => 'eventName', //事件名称
             'properties' => [
                 "name" => "sansam",
                 "age" => 69,
             ], //事件属性
             'eventType'=>'PageView' //事件类型 如：PageView|UserAgent|WebClick
-        ]);
+        ]); */
         return $this->render('index');
     }
 

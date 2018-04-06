@@ -62,65 +62,55 @@ class EventsController extends Controller
 	        ]
          */
         
-        //获取所有数据的条数
-        $dataCount = (new EventsDataProcess())->getData();
         /**************************************************/
         //处理筛选条件
+        $where = [];
+        $startDate  = Yii::$app->request->post('startData');
+        $endDate  = Yii::$app->request->post('endData');
+        $where[] = $startDate ? " and (time between $startDate and $endDate)" : "";
+        
+        $eventName  = Yii::$app->request->post('eventName');
+        $where[] = $eventName ? " and event = $eventName " : "";
+        
+        $eventOpt = Yii::$app->request->post('eventOpt');
+        /*
+         * eventOpt为用参数：
+        *countNumber总次数
+        *userNumber触发用户数
+        *personViews人均次数
+        *IPNumberIP(去重)
+        *conutries国家(去重)
+        *provinces省份(去重)
+        *cities城市(去重)
+        */
+        
+        
+        $where[] = $eventOpt ? " and " : "";
+        //按事件的属性查询
+        $eventAttr = Yii::$app->request->post('eventAttr');
+        
+        
+        $addtionRelation = Yii::$app->request->post('addtionRelation');
+        $AddtionAttr = Yii::$app->request->post('AddtionAttr');
+        $AddtionOper = Yii::$app->request->post('AddtionOper');
+        $AddtionValue = Yii::$app->request->post('AddtionValue');
+        $post = Yii::$app->request->post();
+        \EDebug::setInfo($post);
+        
+        //根据筛选条件向数据库查找相应数据
+        
+        
+        //获取所有数据的条数
+        $dataCount = (new EventsDataProcess())->getData();
         //格式化数据
-        
-        //数据中不重复事件名称(绘图时根据事件名称绘出相应的线)
-        $uniqueEvent = array_unique(T::implodeArr('event',$dataCount));
-        sort($uniqueEvent);
-        
-        //数据中所有事件发生的时间（日期）
-        $nuiqueDate = T::implodeArr('date',$dataCount);
-        
-        //设置x轴坐标点
-        $xAxis = [
-            'type' => 'category',
-            'boundaryGap' => false,
-            'data' => $nuiqueDate,
-        ];
-        
-        $data = array();
-        //循环出所有事件
-        for($i = 0; $i < count($uniqueEvent); $i++){
-            //循环出所有日期
-	        $data[$i] = [
-	            'name' => '访问量',
-	            'type' => 'line',
-	            'smooth' => true,
-	            'data' => [],
-	        ];
-	        
-            for($j = 0; $j < count($nuiqueDate); $j++){
-                //到数组中查找相应日期对应的事件发生的次数，
-                //如果没有相应的事件，则将其发生次数设置为0
-                $keyI = $i . '.event';  //以事件名称为基准
-                $keyD = $j . '.event';  //以日期为基准
-                $keyV = $j . '.total';
-                if(T::arrayValue($keyD, $dataCount) == T::arrayValue($keyI, $dataCount)){
-                    $data[$i]['data'][$j] = T::arrayValue($keyV, $dataCount);
-                }else{
-                    $data[$i]['data'][$j] = 0;
-                }
-            }
-        }
+        $dataForEcharts = (new EventsDataProcess())->getBlockOutForEcharts($dataCount);
         
         
         //echo "<pre>".print_r($data,1)."</pre>";exit;
         
         
-        
-        
-        //根据筛选条件向数据库查找相应数据
-        
-        
-        //将数据装入jgraph图表
-        
-        
         //输出显示数据
-        echo T::outJson(['xAxis'=>$xAxis,'data'=>$data]);
+        echo T::outJson($dataForEcharts);
         
     }
     

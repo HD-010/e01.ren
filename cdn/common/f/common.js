@@ -132,7 +132,7 @@ define([ "jquery" ], function($) {
 		/************************end****************************/
 		//将字符串的首字母大写
 		ucFirst : function(str) {
-			return str.substring(0, 1).toUpperCase() + str.substring(1);
+			return str.substr(0, 1).toUpperCase() + str.substr(1);
 		},
 
 		//设置cookie
@@ -178,7 +178,7 @@ define([ "jquery" ], function($) {
 			} // 最后显示所有的属性 
 			document.write("<pre>" + props + "</pre>");
 		},
-
+		
 	};
 
 	return common;

@@ -287,6 +287,8 @@ define("easyForm",function(require){
 			this.message = "必填项不能为空！";
 			for(var i in this.requiredOption){
 				var isValid = false;
+				console.log('所有验证项：')
+				console.log(this.allValidOption);
 				for(var j = 0;j < this.allValidOption.length; j++){
 					//当前项已经验证过
 					if(this.allValidOption[j]['name'] == this.requiredOption[i]){
@@ -302,6 +304,7 @@ define("easyForm",function(require){
 				}
 				//当前项没有经过验证，说明当前项还没有填写
 				if(!isValid){
+					console.log(this.requiredOption[i] + this.message)
 					this.notice($(this.requiredOption[i]));
 					return false;
 				}
@@ -319,7 +322,6 @@ define("easyForm",function(require){
 		notice : function(elementObj){
 			if(!this.message) return;
 			var notice = "<div name=validNotice style='position: absolute;border: 0;border-radius: 4px;background-color:lavenderblush;padding: 4px;color: peru;text-align: center;'> " + this.message + " </div>";
-			console.log(notice);
 			elementObj.parent().append(notice);
 			this.submitForbid = true;
 		},

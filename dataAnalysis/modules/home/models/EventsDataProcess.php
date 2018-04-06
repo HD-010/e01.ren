@@ -62,4 +62,56 @@ class EventsDataProcess
         return $data;
     }
     
+    /**
+     * 封闭事件分析的数据
+     * @param array $dataCount 查询数据库获得的原始数据
+     * @return array 符合 echarts 使用的数据
+     */
+    public function getBlockOutForEcharts($dataCount){
+        //数据中不重复事件名称(绘图时根据事件名称绘出相应的线)
+        $uniqueEvent = array_unique(T::implodeArr('event',$dataCount));
+        sort($uniqueEvent);
+        
+        //数据中所有事件发生的时间（日期）
+        $nuiqueDate = T::implodeArr('date',$dataCount);
+        
+        //设置x轴坐标点
+        $xAxis = [
+            'type' => 'category',
+            'boundaryGap' => false,
+            'data' => $nuiqueDate,
+        ];
+        
+        $data = array();
+        //循环出所有事件
+        for($i = 0; $i < count($uniqueEvent); $i++){
+            //循环出所有日期
+            $data[$i] = [
+                'name' => '访问量',
+                'type' => 'line',
+                'smooth' => true,
+                'data' => [],
+            ];
+             
+            for($j = 0; $j < count($nuiqueDate); $j++){
+                //到数组中查找相应日期对应的事件发生的次数，
+                //如果没有相应的事件，则将其发生次数设置为0
+                $keyI = $i . '.event';  //以事件名称为基准
+                $keyD = $j . '.event';  //以日期为基准
+                $keyV = $j . '.total';
+                if(T::arrayValue($keyD, $dataCount) == T::arrayValue($keyI, $dataCount)){
+                    $data[$i]['data'][$j] = T::arrayValue($keyV, $dataCount);
+                }else{
+                    $data[$i]['data'][$j] = 0;
+                }
+            }
+        }
+        
+        return [
+            'xAxis' => $xAxis,
+            'data' => $data,
+        ];
+    }
+    
+    
 }

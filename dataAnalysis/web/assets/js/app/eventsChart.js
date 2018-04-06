@@ -2,6 +2,7 @@ require.config({
 	baseUrl : "/assets/js/app",
 	paths : {
 		jquery : "http://cdn.e01.ren/common/lib/jquery",
+		config : "./models/config",
 		charts : "./models/charts",
 		easyForm : "http://cdn.e01.ren/form/lib/easyform",
 	},
@@ -17,14 +18,12 @@ require.config({
  * 第一次：变化为等待数据加载的动画图表
  * 第二次：变化为默认数据加载成功后的真实数据图表
  */
-require(["jquery","charts","easyForm"],function($,charts,$e){
-	//数据接口
-	var serverUrl = "http://data-analysis.e01.ren/?r=home/events/data";
+require(["jquery","config","charts","easyForm"],function($,config,charts,$e){
 	// 指定图表的配置项和数据
 	
 	// 获取默认事件选项的真实数据
     $.ajax({
-    	url:serverUrl,
+    	url:config.interf.eventData,
     	type:"post",
     	data:getEventOptionsData(),
     	dataType:"JSON",

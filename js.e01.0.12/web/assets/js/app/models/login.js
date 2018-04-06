@@ -171,7 +171,7 @@ define(["sys","jquery","common","easyForm"], function(sys,$,common,$e) {
 				url:this.url+"/sing-up",
 				dataType:"JSON",
 				success:function(data){
-					console.log(data)
+					
 					if(data.state == 'success'){
 						//显示注册 成功提示信息
 						var message = $e().msg("注册成功，正在登录...");
