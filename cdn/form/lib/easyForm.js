@@ -120,7 +120,7 @@ define("easyForm",function(require){
 			return this.sializeStr.substring(1);
 		},
 		/**
-		 * 各项值验证的入口方法，如果在方法执行过程中，一旦验证不合法，会取消到剩余项的验证并向用户提示非法输入的信息。
+		 * 各项值验证的入口方法，如果在方法执行过程中，一旦验证不合法，会取消剩余项的验证并向用户提示非法输入的信息。
 		 */
 		valid : function(obj){
 			//在验证开始之前先清空页面上数据格式非法的提示信息
@@ -192,7 +192,8 @@ define("easyForm",function(require){
 	    validing : function(index){
 	    	var relu = this.validRule.rule;				//获取验证规则
 	    	var selecter = this.validOption[index];
-			var value = $(selecter).val();
+			//在当前表单对象中查找项验证项，并获取它的值
+			var value = this.obj.find(selecter).val();
 			var index = this.findIndexByName(selecter,this.allValidOption);
 			//开启数据提交权限
 			this.submitForbid = false;
@@ -501,6 +502,13 @@ define("easyForm",function(require){
 		 isMobilOrEmail : function (s){
 			 var res = this.isMobil(s) || this.isEmail(s);
 			 return res;
+		 },
+		 
+		 //校验是否有特殊字符：只能输入非特殊字符
+		 isSpecialChartor : function (s){
+			 var patrn=/((?=[\x21-\x7e]+)[^A-Za-z0-9])/; 
+			 if (patrn.exec(s)) return false;
+			 return true;
 		 },
 	};
 	var $e = function(formTag){
