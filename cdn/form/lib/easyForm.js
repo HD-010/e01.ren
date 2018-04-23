@@ -52,6 +52,30 @@
 		error:'login.error'
 	});
 	
+	如何开启重复提交？
+	$e("form[name='singUp']").required([
+	    "input[name=uname]",                                
+	    "input[name=pswd]",                                
+	    "input[name=pswd2]",                               
+	    "input[name=Verification]",                               
+	]).reSubmit().submit({					//该对象为jquery  ajax参数对象
+		url:this.url+"/sing-up",
+		dataType:"JSON",
+		success:function(data){
+			console.log(data)
+			if(data.state == 'success'){
+				//显示注册 成功提示信息
+				var message = $e().msg("注册成功，正在登录...");
+				$("div[name=singUpTitle]").append(message);
+				login.data = data;
+				//三秒后自动完成登录
+				setTimeout(login.singUpToIn,3000);
+			}
+		},
+		error:'login.error'
+	});
+	
+	
  */
 define("easyForm",function(require){
 	var $=require('jquery');
@@ -221,6 +245,15 @@ define("easyForm",function(require){
 			return true;
 	    },
 		
+	    /**
+	     * 开启重复提交功能
+	     * 默认情况下，如果表单提交失败后，则不重复提交
+	     */
+	    reSubmit : function(){
+	    	this.submitForbid = false;
+	    	return this;
+	    },
+	    
 		/**
 		 * 提交，数据提交需要做以下验证：
 		 * 检查必填项required是否被设置 ，如果已经设置，需要在allValidOption中查看各个元素是否已经通过有效性验证。

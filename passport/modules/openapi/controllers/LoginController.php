@@ -7,7 +7,6 @@ use app\modules\openapi\models\Porcess;
 use app\models\User;
 use app\modules\openapi\models\UserProfiles;
 
-//file_put_contents("D:/log.txt",print_r($_SERVER,1));
 class LoginController extends Controller
 {
     public function actions(){
@@ -34,10 +33,23 @@ class LoginController extends Controller
        [REQUEST_URI] => /?r=openapi/login/sing-in&uname=15985496246&pswd=123456
        [QUERY_STRING] => r=openapi/login/sing-in&uname=15985496246&pswd=123456
        [REQUEST_METHOD] => GET
+       
+                    登录成功返回：
+            json_encode([
+                'state' => 'success',
+                'id' => $identity->ID,
+                'uname' => $identity->UNAME,
+                'mobil' => $identity->MOBILE
+            ]);
+                    登录失败返回：    
+            json_encode([
+                'state' => 'fail',
+                'message' => '用户名或密码不正确',
+            ]); 
      */
     public function actionSingIn(){
         global $uname,$pswd,$message;
-        file_put_contents("d:/log.txt", $uname);
+        
         //检测用户登录账类型，是tel|qq|uname
         $userProfiles = new UserProfiles();
         $countType = $userProfiles->countType($uname);
@@ -60,13 +72,15 @@ class LoginController extends Controller
         if(strlen($pswd) != 32){
             $pswd = $userProfiles->securityStr($pswd);
         }
+        
         if($password == $pswd){
             Yii::$app->user->login($identity);
             return json_encode([
                 'state' => 'success',
                 'id' => $identity->ID,
                 'uname' => $identity->UNAME,
-                'mobil' => $identity->MOBILE
+                'mobil' => $identity->MOBILE,
+                'token' => $identity->TOKEN
             ]);
         }else{
             return json_encode([
@@ -89,17 +103,21 @@ class LoginController extends Controller
             return json_encode(['state'=>'fail','message'=>'验证码错误']);
         }
         //写入注册用户资料
-        //检测用户登录账类型，是tel|qq|uname
+        //检测用户注册账号类型，是tel|qq|uname
         $userProfiles = new UserProfiles();
-        $countType = $userProfiles->countType($uname);
-        $pswd = $userProfiles->securityStr($pswd);
+        $data = [
+            'countType' => $userProfiles->countType($uname),
+            'pswd' => $userProfiles->securityStr($pswd),
+            'token' => $userProfiles->securityStr(time())
+        ];
         
-        if($userProfiles->singUp($countType)){
+        
+        if($userProfiles->singUp($data)){
             return json_encode([
                 'state'=>'success',
                 'message'=>'注册成功',
                 'uname' => $uname,
-                'pswd' => $pswd
+                'pswd' => $pswd,
             ]);
         }else{
             return json_encode(['state'=>'fail','message'=>'注册失败']);

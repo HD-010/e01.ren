@@ -12,14 +12,15 @@ use app\models\Validata;
  */
 class UserProfiles
 {
-    public function singUp($countType){
+    public function singUp($data){
         global $uname,$pswd;
         
-        $countType = strtoupper($countType);
+        $countType = strtoupper($data['countType']);
         $model = new User();
         $model->$countType = $uname;
-        $model->PSWD = $pswd;
+        $model->PSWD = $data['pswd'];
         $model->TYPE = '';
+        $model->TOKEN = $data['token'];
         $res = $model->save();
         return $res;
     }
@@ -47,7 +48,7 @@ class UserProfiles
      * 
      */
     public function securityStr($str){
-        $st = md5($str);
+        $st =str_split(md5($str),1);
         $childst1 = $childst2 = '';
         for($i = 0;$i < count($st); $i ++ ){
             if($i%3){
