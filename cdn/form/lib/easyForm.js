@@ -280,7 +280,7 @@ define("easyForm",function(require){
 	    	
 	    	//预定义ajax的参数对象
 	    	var preData = {
-	    		data:this.formData(),
+	    		data:this.formData()
 	    	};
 	    	
 	    	//列出提交表的数据对象中可能出现的属性为函数的属性名称
@@ -542,7 +542,7 @@ define("easyForm",function(require){
 			 var patrn=/((?=[\x21-\x7e]+)[^A-Za-z0-9])/; 
 			 if (patrn.exec(s)) return false;
 			 return true;
-		 },
+		 }
 	};
 	var $e = function(formTag){
 		formTag = formTag || "";
