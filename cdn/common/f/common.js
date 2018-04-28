@@ -177,7 +177,7 @@ define([ "jquery" ], function($) {
 				}
 			} // 最后显示所有的属性 
 			document.write("<pre>" + props + "</pre>");
-		},
+		}
 		
 	};
 
