@@ -49,8 +49,7 @@ class LoginController extends Controller
      */
     public function actionSingIn(){
         global $uname,$pswd,$message;
-        
-        //检测用户登录账类型，是tel|qq|uname
+	//检测用户登录账类型，是tel|qq|uname
         $userProfiles = new UserProfiles();
         $countType = $userProfiles->countType($uname);
         

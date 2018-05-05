@@ -264,7 +264,7 @@ define("easyForm",function(require){
 	    submit : function(obj){
 	    	//如果禁止提交，则取消执行
 	    	if(this.submitForbid) return;
-	    	
+	  
 	    	//提交表的必要条件验证，提交地址不能为空
     		if(obj.url === undefined){
     			console.log("提交地址不能为空");
@@ -307,7 +307,7 @@ define("easyForm",function(require){
 	    			}
 	    		}
 	    	}
-	    	//console.log(preData);
+
 	    	$.ajax(preData);
 	    	
 	    	//提交完成后禁止重复提交
